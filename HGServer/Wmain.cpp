@@ -55,14 +55,34 @@ FILE * pLogFile;
 //char			G_cCrashTxt[50000];
 // --------------------------------------------------------------
 
-void ThreadProc(void *ch)
+unsigned __stdcall ThreadProc(void* ch)
 {
-	while (G_bIsThread == TRUE) {
-		if (G_pGame = NULL)	G_pGame->OnTimer(NULL);
-		Sleep(100);
+	class CTile* pTile;
+	while (G_bIsThread)
+	{
+		Sleep(1000); 
+
+		for (int a = 0; a < DEF_MAXMAPS; a++)
+		{
+			if (G_pGame->m_pMapList[a] != NULL)
+			{
+				for (int iy = 0; iy < G_pGame->m_pMapList[a]->m_sSizeY; iy++)
+				{
+					for (int ix = 0; ix < G_pGame->m_pMapList[a]->m_sSizeX; ix++)
+					{
+						pTile = (class CTile*)(G_pGame->m_pMapList[a]->m_pTile + ix + iy * G_pGame->m_pMapList[a]->m_sSizeY);
+						if ((pTile != NULL) && (pTile->m_sOwner != NULL) && (pTile->m_cOwnerClass == NULL))
+						{
+							pTile->m_sOwner = NULL;
+						}
+					}
+				}
+			}
+		}
 	}
 
-	ExitThread(0);
+	_endthread();
+	return NULL;
 }
 
 LRESULT CALLBACK WndProc( HWND hWnd,UINT message,WPARAM wParam,LPARAM lParam )

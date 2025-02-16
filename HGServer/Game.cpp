@@ -751,7 +751,7 @@ BOOL CGame::bInit()
 		 m_cDayOrNight = 2;
 	else m_cDayOrNight = 1;
 
-	bReadNotifyMsgListFile("notice.txt");
+	bReadNotifyMsgListFile("..\\GameConfigs\\notice.txt");
 	m_dwNoticeTime = dwTime;
 
 	m_iCurSubLogSockIndex    = 0;
@@ -1647,6 +1647,14 @@ void CGame::RequestInitDataHandler(int iClientH, char * pData, char cKey)
 	*ip  = m_pClientList[iClientH]->m_iFightzoneNumber;
 	cp  += 4;
 
+	sp = (short*)cp;
+	*sp = m_sCharStatLimit;
+	cp += 2;
+
+	ip = (int*)cp;
+	*ip = m_iPlayerMaxLevel;
+	cp += 4;
+
 	//hbest
 	m_pClientList[iClientH]->isForceSet = FALSE;
 	m_pClientList[iClientH]->m_iPartyID = NULL;
@@ -1662,7 +1670,7 @@ void CGame::RequestInitDataHandler(int iClientH, char * pData, char cKey)
 	//Debug Event
 	//DbgWnd->AddEventMsg(MSG_SEND,pBuffer,180,0);
 
-	iRet = m_pClientList[iClientH]->m_pXSock->iSendMsg(pBuffer, 118);// Original : 115
+	iRet = m_pClientList[iClientH]->m_pXSock->iSendMsg(pBuffer, 124);// Original : 115
 	switch (iRet) {
 	case DEF_XSOCKEVENT_QUENEFULL:
 	case DEF_XSOCKEVENT_SOCKETERROR:
@@ -2004,141 +2012,144 @@ void CGame::RequestInitDataHandler(int iClientH, char * pData, char cKey)
 	// No entering enemy shops
 	int iMapside, iMapside2;
 
-			iMapside = iGetMapLocationSide(m_pMapList[m_pClientList[iClientH]->m_cMapIndex]->m_cName);
-			if (iMapside > 3) iMapside2 = iMapside - 2;
-			else iMapside2 = iMapside;
-			m_pClientList[iClientH]->m_bIsInsideOwnTown = FALSE;
-			if ((m_pClientList[iClientH]->m_cSide != iMapside2) && (iMapside != 0)) {
-				if ((iMapside <= 2) && (m_pClientList[iClientH]->m_iAdminUserLevel < 1)) {
-					if (m_pClientList[iClientH]->m_cSide != 0) {
-						m_pClientList[iClientH]->m_dwWarBeginTime = timeGetTime();
+	iMapside = iGetMapLocationSide(m_pMapList[m_pClientList[iClientH]->m_cMapIndex]->m_cName);
+	if (iMapside > 3) iMapside2 = iMapside - 2;
+	else iMapside2 = iMapside;
+	m_pClientList[iClientH]->m_bIsInsideOwnTown = FALSE;
+	if ((m_pClientList[iClientH]->m_cSide != iMapside2) && (iMapside != 0)) {
+		if ((iMapside <= 2) && (m_pClientList[iClientH]->m_iAdminUserLevel < 1)) {
+			if (m_pClientList[iClientH]->m_cSide != 0) {
+				m_pClientList[iClientH]->m_dwWarBeginTime = timeGetTime();
+				m_pClientList[iClientH]->m_bIsWarLocation = TRUE;
+				m_pClientList[iClientH]->m_iTimeLeft_ForceRecall = 1;
+				m_pClientList[iClientH]->m_bIsInsideOwnTown = TRUE;
+			}
+		}
+	}
+	else{
+		if (m_pMapList[ m_pClientList[iClientH]->m_cMapIndex ]->m_bIsFightZone == TRUE &&
+			m_iFightzoneNoForceRecall == FALSE && 
+			m_pClientList[iClientH]->m_iAdminUserLevel == 0) {
+				m_pClientList[iClientH]->m_dwWarBeginTime = timeGetTime();
+				m_pClientList[iClientH]->m_bIsWarLocation = TRUE;
+				GetLocalTime(&SysTime);
+				m_pClientList[iClientH]->m_iTimeLeft_ForceRecall = 2*60*20 - ((SysTime.wHour%2)*20*60 + SysTime.wMinute*20) - 2*20;
+			}
+		else{
+			if (memcmp(m_pMapList[ m_pClientList[iClientH]->m_cMapIndex ]->m_cLocationName, "arejail", 7) == 0 ||
+				memcmp(m_pMapList[ m_pClientList[iClientH]->m_cMapIndex ]->m_cLocationName, "elvjail", 7) == 0) {
+					if (m_pClientList[iClientH]->m_iAdminUserLevel == 0) {
 						m_pClientList[iClientH]->m_bIsWarLocation = TRUE;
-						m_pClientList[iClientH]->m_iTimeLeft_ForceRecall = 1;
-						m_pClientList[iClientH]->m_bIsInsideOwnTown = TRUE;
+						m_pClientList[iClientH]->m_dwWarBeginTime = timeGetTime();
+						if (m_pClientList[iClientH]->m_iTimeLeft_ForceRecall == 0)
+							m_pClientList[iClientH]->m_iTimeLeft_ForceRecall = 100;
+						else if(m_pClientList[iClientH]->m_iTimeLeft_ForceRecall > 100)
+							m_pClientList[iClientH]->m_iTimeLeft_ForceRecall = 100;
 					}
 				}
-			}
-			else{
-				if (m_pMapList[ m_pClientList[iClientH]->m_cMapIndex ]->m_bIsFightZone == TRUE &&
-					m_iFightzoneNoForceRecall == FALSE && 
-					m_pClientList[iClientH]->m_iAdminUserLevel == 0) {
-						m_pClientList[iClientH]->m_dwWarBeginTime = timeGetTime();
-						m_pClientList[iClientH]->m_bIsWarLocation = TRUE;
-						GetLocalTime(&SysTime);
-						m_pClientList[iClientH]->m_iTimeLeft_ForceRecall = 2*60*20 - ((SysTime.wHour%2)*20*60 + SysTime.wMinute*20) - 2*20;
-					}
-				else{
-					if (memcmp(m_pMapList[ m_pClientList[iClientH]->m_cMapIndex ]->m_cLocationName, "arejail", 7) == 0 ||
-						memcmp(m_pMapList[ m_pClientList[iClientH]->m_cMapIndex ]->m_cLocationName, "elvjail", 7) == 0) {
-							if (m_pClientList[iClientH]->m_iAdminUserLevel == 0) {
-								m_pClientList[iClientH]->m_bIsWarLocation = TRUE;
-								m_pClientList[iClientH]->m_dwWarBeginTime = timeGetTime();
-								if (m_pClientList[iClientH]->m_iTimeLeft_ForceRecall == 0)
-									m_pClientList[iClientH]->m_iTimeLeft_ForceRecall = 100;
-								else if(m_pClientList[iClientH]->m_iTimeLeft_ForceRecall > 100)
-									m_pClientList[iClientH]->m_iTimeLeft_ForceRecall = 100;
-							}
-						}
-				}
-			}
+		}
+	}
 
-			/*if ((m_pClientList[iClientH]->m_iTimeLeft_ForceRecall > 0) && 
-				(m_pClientList[iClientH]->m_bIsWarLocation == TRUE)) {
-				SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_FORCERECALLTIME, m_pClientList[iClientH]->m_iTimeLeft_ForceRecall, NULL, NULL, NULL);
-			}*/
+	/*if ((m_pClientList[iClientH]->m_iTimeLeft_ForceRecall > 0) && 
+		(m_pClientList[iClientH]->m_bIsWarLocation == TRUE)) {
+		SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_FORCERECALLTIME, m_pClientList[iClientH]->m_iTimeLeft_ForceRecall, NULL, NULL, NULL);
+	}*/
 
-			SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_SAFEATTACKMODE, NULL, NULL, NULL, NULL);
-			SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_DOWNSKILLINDEXSET, m_pClientList[iClientH]->m_iDownSkillIndex, NULL, NULL, NULL);
-			SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_ITEMPOSLIST, NULL, NULL, NULL, NULL);
+	SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_SAFEATTACKMODE, NULL, NULL, NULL, NULL);
+	SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_DOWNSKILLINDEXSET, m_pClientList[iClientH]->m_iDownSkillIndex, NULL, NULL, NULL);
+	SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_ITEMPOSLIST, NULL, NULL, NULL, NULL);
 			
-			_SendQuestContents(iClientH);
-			_CheckQuestEnvironment(iClientH);
+	_SendQuestContents(iClientH);
+	_CheckQuestEnvironment(iClientH);
 
-			// v1.432
-			if (m_pClientList[iClientH]->m_iSpecialAbilityTime == 0) {
-				SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_SPECIALABILITYENABLED, NULL, NULL, NULL, NULL);
-			}
+	// v1.432
+	if (m_pClientList[iClientH]->m_iSpecialAbilityTime == 0) {
+		SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_SPECIALABILITYENABLED, NULL, NULL, NULL, NULL);
+	}
 
-			// Crusade 
-			if (m_bIsCrusadeMode == TRUE) {
-				if (m_pClientList[iClientH]->m_dwCrusadeGUID == 0) {
-					m_pClientList[iClientH]->m_iCrusadeDuty = 0;
-					m_pClientList[iClientH]->m_iConstructionPoint = 0;
-					m_pClientList[iClientH]->m_dwCrusadeGUID = m_dwCrusadeGUID;
-				}
-				else if (m_pClientList[iClientH]->m_dwCrusadeGUID != m_dwCrusadeGUID) {
-					m_pClientList[iClientH]->m_iCrusadeDuty       = 0;
-					m_pClientList[iClientH]->m_iConstructionPoint = 0;
-					m_pClientList[iClientH]->m_iWarContribution   = 0;
-					m_pClientList[iClientH]->m_dwCrusadeGUID = m_dwCrusadeGUID;
-					SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_CRUSADE, (DWORD)m_bIsCrusadeMode, NULL, 0, NULL, -1);		
-				}
-				m_pClientList[iClientH]->m_cVar = 1;
-				SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_CRUSADE, (DWORD)m_bIsCrusadeMode, m_pClientList[iClientH]->m_iCrusadeDuty, NULL, NULL);
+	// Crusade 
+	if (m_bIsCrusadeMode == TRUE) {
+		if (m_pClientList[iClientH]->m_dwCrusadeGUID == 0) {
+			m_pClientList[iClientH]->m_iCrusadeDuty = 0;
+			m_pClientList[iClientH]->m_iConstructionPoint = 0;
+			m_pClientList[iClientH]->m_dwCrusadeGUID = m_dwCrusadeGUID;
+		}
+		else if (m_pClientList[iClientH]->m_dwCrusadeGUID != m_dwCrusadeGUID) {
+			m_pClientList[iClientH]->m_iCrusadeDuty       = 0;
+			m_pClientList[iClientH]->m_iConstructionPoint = 0;
+			m_pClientList[iClientH]->m_iWarContribution   = 0;
+			m_pClientList[iClientH]->m_dwCrusadeGUID = m_dwCrusadeGUID;
+			SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_CRUSADE, (DWORD)m_bIsCrusadeMode, NULL, 0, NULL, -1);		
+		}
+		m_pClientList[iClientH]->m_cVar = 1;
+		SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_CRUSADE, (DWORD)m_bIsCrusadeMode, m_pClientList[iClientH]->m_iCrusadeDuty, NULL, NULL);
+	}
+	else if (m_bIsHeldenianMode == TRUE) {
+		sSummonPoints = m_pClientList[iClientH]->m_iCharisma*300;
+		if (sSummonPoints > DEF_MAXSUMMONPOINTS) sSummonPoints = DEF_MAXSUMMONPOINTS;
+		if (m_pClientList[iClientH]->m_dwHeldenianGUID == NULL) {
+			m_pClientList[iClientH]->m_dwHeldenianGUID = m_dwHeldenianGUID;
+			m_pClientList[iClientH]->m_iConstructionPoint = sSummonPoints;
+		}
+		else if (m_pClientList[iClientH]->m_dwHeldenianGUID != m_dwHeldenianGUID) {
+			m_pClientList[iClientH]->m_iConstructionPoint = sSummonPoints;
+			m_pClientList[iClientH]->m_iWarContribution = 0;
+			m_pClientList[iClientH]->m_dwHeldenianGUID = m_dwHeldenianGUID;
+		}
+		m_pClientList[iClientH]->m_cVar = 2;
+		if (m_bIsHeldenianMode == TRUE) {
+			SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_CRUSADE, NULL, NULL, NULL, NULL);
+			if (m_bHeldenianInitiated == FALSE) {
+				SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_HELDENIANSTART, NULL, NULL, NULL, NULL);
 			}
-			else if (m_bIsHeldenianMode == TRUE) {
-				sSummonPoints = m_pClientList[iClientH]->m_iCharisma*300;
-				if (sSummonPoints > DEF_MAXSUMMONPOINTS) sSummonPoints = DEF_MAXSUMMONPOINTS;
-				if (m_pClientList[iClientH]->m_dwHeldenianGUID == NULL) {
-					m_pClientList[iClientH]->m_dwHeldenianGUID = m_dwHeldenianGUID;
-					m_pClientList[iClientH]->m_iConstructionPoint = sSummonPoints;
-				}
-				else if (m_pClientList[iClientH]->m_dwHeldenianGUID != m_dwHeldenianGUID) {
-					m_pClientList[iClientH]->m_iConstructionPoint = sSummonPoints;
-					m_pClientList[iClientH]->m_iWarContribution = 0;
-					m_pClientList[iClientH]->m_dwHeldenianGUID = m_dwHeldenianGUID;
-				}
-				m_pClientList[iClientH]->m_cVar = 2;
-				if (m_bIsHeldenianMode == TRUE) {
-					SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_CRUSADE, NULL, NULL, NULL, NULL);
-					if (m_bHeldenianInitiated == FALSE) {
-						SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_HELDENIANSTART, NULL, NULL, NULL, NULL);
-					}
-					SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_CONSTRUCTIONPOINT, m_pClientList[iClientH]->m_iConstructionPoint, m_pClientList[iClientH]->m_iWarContribution, NULL, NULL);
-					UpdateHeldenianStatus();
-				}
+			SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_CONSTRUCTIONPOINT, m_pClientList[iClientH]->m_iConstructionPoint, m_pClientList[iClientH]->m_iWarContribution, NULL, NULL);
+			UpdateHeldenianStatus();
+		}
+	}
+	else if ((m_pClientList[iClientH]->m_cVar == 1) && (m_pClientList[iClientH]->m_dwCrusadeGUID == m_dwCrusadeGUID)) {
+		m_pClientList[iClientH]->m_iCrusadeDuty = 0;
+		m_pClientList[iClientH]->m_iConstructionPoint = 0;
+	}
+	else {
+		if (m_pClientList[iClientH]->m_dwCrusadeGUID == m_dwCrusadeGUID) {
+			if (m_pClientList[iClientH]->m_cVar == 1) {
+				SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_CRUSADE, (DWORD)m_bIsCrusadeMode, NULL, NULL, NULL, -1);
 			}
-			else if ((m_pClientList[iClientH]->m_cVar == 1) && (m_pClientList[iClientH]->m_dwCrusadeGUID == m_dwCrusadeGUID)) {
-				m_pClientList[iClientH]->m_iCrusadeDuty = 0;
-				m_pClientList[iClientH]->m_iConstructionPoint = 0;
-			}
-			else {
-				if (m_pClientList[iClientH]->m_dwCrusadeGUID == m_dwCrusadeGUID) {
-					if (m_pClientList[iClientH]->m_cVar == 1) {
-						SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_CRUSADE, (DWORD)m_bIsCrusadeMode, NULL, NULL, NULL, -1);
-					}
-				}
-				else {
-					SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_CRUSADE, (DWORD)m_bIsCrusadeMode, NULL, 0, NULL, -1);		
-					m_pClientList[iClientH]->m_dwCrusadeGUID = 0;
-					m_pClientList[iClientH]->m_iWarContribution   = 0;
-					m_pClientList[iClientH]->m_dwCrusadeGUID = 0;
-				}
-			}
+		}
+		else {
+			SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_CRUSADE, (DWORD)m_bIsCrusadeMode, NULL, 0, NULL, -1);		
+			m_pClientList[iClientH]->m_dwCrusadeGUID = 0;
+			m_pClientList[iClientH]->m_iWarContribution   = 0;
+			m_pClientList[iClientH]->m_dwCrusadeGUID = 0;
+		}
+	}
 
-			// v1.42
-			if (memcmp(m_pClientList[iClientH]->m_cMapName, "fightzone", 9) == 0) {
-				wsprintf(G_cTxt, "Char(%s)-Enter(%s) Observer(%d)", m_pClientList[iClientH]->m_cCharName, m_pClientList[iClientH]->m_cMapName, m_pClientList[iClientH]->m_bIsObserverMode);
-				PutLogEventFileList(G_cTxt);
-			}
+	// v1.42
+	if (memcmp(m_pClientList[iClientH]->m_cMapName, "fightzone", 9) == 0) {
+		wsprintf(G_cTxt, "Char(%s)-Enter(%s) Observer(%d)", m_pClientList[iClientH]->m_cCharName, m_pClientList[iClientH]->m_cMapName, m_pClientList[iClientH]->m_bIsObserverMode);
+		PutLogEventFileList(G_cTxt);
+	}
 
-			if (m_bIsHeldenianMode == TRUE) SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_HELDENIANTELEPORT, NULL, NULL, NULL, NULL, NULL);		
-			if (m_bHeldenianInitiated == TRUE) SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_HELDENIANSTART, NULL, NULL, NULL, NULL, NULL);		
+	if (m_bIsHeldenianMode == TRUE) SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_HELDENIANTELEPORT, NULL, NULL, NULL, NULL, NULL);		
+	if (m_bHeldenianInitiated == TRUE) SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_HELDENIANSTART, NULL, NULL, NULL, NULL, NULL);		
 
-			// Crusade
-			SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_CONSTRUCTIONPOINT, m_pClientList[iClientH]->m_iConstructionPoint, m_pClientList[iClientH]->m_iWarContribution, 1, NULL);
-			//Fix Sprite Bug
-			//			SendEventToNearClient_TypeA(iClientH, DEF_OWNERTYPE_PLAYER, MSGID_EVENT_MOTION, DEF_OBJECTNULLACTION, NULL, NULL, NULL);
-			//Gizon point lefT???
-			SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_GIZONITEMUPGRADELEFT, m_pClientList[iClientH]->m_iGizonItemUpgradeLeft, NULL, NULL, NULL);
+	// Crusade
+	SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_CONSTRUCTIONPOINT, m_pClientList[iClientH]->m_iConstructionPoint, m_pClientList[iClientH]->m_iWarContribution, 1, NULL);
+	//Fix Sprite Bug
+	//			SendEventToNearClient_TypeA(iClientH, DEF_OWNERTYPE_PLAYER, MSGID_EVENT_MOTION, DEF_OBJECTNULLACTION, NULL, NULL, NULL);
+	//Gizon point lefT???
+	SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_GIZONITEMUPGRADELEFT, m_pClientList[iClientH]->m_iGizonItemUpgradeLeft, NULL, NULL, NULL);
 
-			if ((m_bIsApocalypseMode == TRUE) && (m_pMapList[m_pClientList[iClientH]->m_cMapIndex]->m_bIsApocalypseMap == TRUE)) {
-				RequestTeleportHandler(iClientH, "1   ");
-			}
+	if ((m_bIsApocalypseMode == TRUE) && (m_pMapList[m_pClientList[iClientH]->m_cMapIndex]->m_bIsApocalypseMap == TRUE)) {
+		RequestTeleportHandler(iClientH, "1   ");
+	}
 
-			if (m_bIsApocalypseMode == TRUE) {
-				SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_APOCGATESTARTMSG, NULL, NULL, NULL, NULL, NULL);
-			}
+	if (m_bIsApocalypseMode == TRUE) {
+		SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_APOCGATESTARTMSG, NULL, NULL, NULL, NULL, NULL);
+	}
+
+	SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_HUNGER, m_pClientList[iClientH]->m_iHungerStatus, NULL, NULL, NULL);
+	SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_SUPERATTACKLEFT, NULL, NULL, NULL, NULL);
 }
 
 int CGame::iComposeInitMapData(short sX, short sY, int iClientH, char * pData)
@@ -4544,6 +4555,8 @@ void CGame::InitPlayerData(int iClientH, char * pData, DWORD dwSize)
 	m_pClientList[iClientH]->m_iDefenseRatio = 0;
 	m_pClientList[iClientH]->m_cSide         = 0;
 
+	SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_HUNGER, m_pClientList[iClientH]->m_iHungerStatus, NULL, NULL, NULL);
+
 	bRet = _bDecodePlayerDatafileContents(iClientH, cp, dwSize - 19);
 	if (bRet == FALSE) {
 		wsprintf(G_cTxt, "(HACK?) Character(%s) data error!", m_pClientList[iClientH]->m_cCharName);
@@ -5222,8 +5235,8 @@ BOOL CGame::bReadSettingsConfigFile(char * cFn)
                break;
 
 			case 20: 
-               m_sMaxPlayerLevel = atoi(token); 
-               if (m_sMaxPlayerLevel == 0) m_sMaxPlayerLevel = 180; 
+				m_iPlayerMaxLevel = atoi(token);
+               if (m_iPlayerMaxLevel == 0) m_iPlayerMaxLevel = 180;
                cReadMode = 0;
                break;
 			
@@ -9416,13 +9429,7 @@ void CGame::ChatMsgHandler(int iClientH, char * pData, DWORD dwMsgSize)
 			m_dwExitProcessTime  = timeGetTime();
 			PutLogList("(!) GAME SERVER SHUTDOWN PROCESS BEGIN(by Admin-Command)!!!");
 			bSendMsgToLS(MSGID_GAMESERVERSHUTDOWNED, NULL);
-			// OccupyFlag
-			if (m_iMiddlelandMapIndex > 0) {
-				// Crusade
-				SaveOccupyFlagData();
-				//bSendMsgToLS(MSGID_REQUEST_SAVEARESDENOCCUPYFLAGDATA, NULL, NULL);
-				//bSendMsgToLS(MSGID_REQUEST_SAVEELVINEOCCUPYFLAGDATA, NULL, NULL);
-			}
+			
 			return;
 		}
 
@@ -11094,13 +11101,7 @@ void CGame::MsgProcess()
 		m_dwExitProcessTime  = timeGetTime();
 		PutLogList("(!) GAME SERVER SHUTDOWN PROCESS BEGIN(by Local command)!!!");
 		bSendMsgToLS(MSGID_GAMESERVERSHUTDOWNED, NULL);
-		// OccupyFlag
-		if (m_iMiddlelandMapIndex > 0) {
-			// Crusade
-			SaveOccupyFlagData();
-			//bSendMsgToLS(MSGID_REQUEST_SAVEARESDENOCCUPYFLAGDATA, NULL, NULL);
-			//bSendMsgToLS(MSGID_REQUEST_SAVEELVINEOCCUPYFLAGDATA, NULL, NULL);
-		}
+		
 		
 		return;
 	}
@@ -11163,13 +11164,7 @@ void CGame::MsgProcess()
 				m_dwExitProcessTime  = timeGetTime();
 				PutLogList("(!) GAME SERVER SHUTDOWN PROCESS BEGIN(by Global command)!!!");
 				bSendMsgToLS(MSGID_GAMESERVERSHUTDOWNED, NULL);
-				// OccupyFlag
-				if (m_iMiddlelandMapIndex > 0) {
-					// Crusade
-					SaveOccupyFlagData();
-					//bSendMsgToLS(MSGID_REQUEST_SAVEARESDENOCCUPYFLAGDATA, NULL, NULL);
-					//bSendMsgToLS(MSGID_REQUEST_SAVEELVINEOCCUPYFLAGDATA, NULL, NULL);
-				}
+				
 				break;
 			
 			case MSGID_TOTALGAMESERVERCLIENTS:
@@ -16308,7 +16303,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 				break;
 
 			case 2:
-				m_iPlayerMaxLevel = atoi(token);
+				//m_iPlayerMaxLevel = atoi(token);
 				cReadModeA = 0;
 				cReadModeB = 0;
 				break;
@@ -16324,10 +16319,10 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 				m_pNpcConfigList[iNpcConfigListIndex] = new class CNpc(" ");
 			}
 
-			if (memcmp(token, "world-server-max-level", 22) == 0) {
+			/*if (memcmp(token, "world-server-max-level", 22) == 0) {
 				cReadModeA = 2;
 				cReadModeB = 1;
-			}
+			}*/
 		}
 		token = pStrTok->pGet();
 		//token = strtok(NULL, seps);
@@ -20478,66 +20473,66 @@ RTH_NEXTSTEP:;
 		if (m_pClientList[iClientH]->m_iSpecialAbilityTime == 0)
 			SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_SPECIALABILITYENABLED, NULL, NULL, NULL, NULL);
 
-			// Crusade íš‰ì² ?ì±Œ íš‡ì§¤ì¨Œì±Œì©Œì©Œ?íš‘ì¨‰ì±… ì¨ì±¨ì¨‰ì±…?íš‘ì§¸ì±  íš‰íš„ì¨Œì¨”?íš‘ì©ì±¤?íš‰ CrusadeGUIDì§¸ì§• 0 íšŠì§š?ì¨˜ íš‰ì² ?ì±Œì©”íš’ ì¨ˆíš¢ì¨ì§™ì¨ˆíš¢ì¨ì±• íš„ì¨€?ì© íš‰íš˜ì¨ˆì±Œì¨‰íš‰ì¨ˆíš‚ ì§¸íš’?íš‘ì¨ˆíš¢. íš‡ì§¤ì¨Œì±Œì©Œì©Œ?íš‘ì¨‰ì±… ì©”ì§§íš‰íš˜ íš„íšŽì§¹ì°½íšŠì§¯.
-			if (m_bIsCrusadeMode == TRUE) {
-				if (m_pClientList[iClientH]->m_dwCrusadeGUID == 0) {
-					// íš‡ì§¤ì¨Œì±Œì©Œì©Œ?íš‘ì¨‰ì±…ì¨ì±¨ì¨‰ì±…?íš‘ì§¸ì±  íš‰íš„ì¨Œì¨”?íš‘ì©ì±¤?íš‰ GUIDì§¸ì§• 0?íš‘ì¨‹ì²œ ì§¸íš’?ì¨˜ íš„ì¨€?ì© íš‡ì§¤ì¨Œì±Œì©Œì©Œ?íš‘ì¨‰ì±… ì¨ì±¨ì¨‰ì±…ì©”ì§• ì¨‰ì±•ì©ì±¤ì©”íššì¨ˆíš¢ì¨ˆíš‚ ?íš‰ì¨”íš‘. ì©”ì§§íš‰íš˜ íš„íšŽì§¹ì°½íšŠì§¯.
-					m_pClientList[iClientH]->m_iCrusadeDuty = 0;
-					m_pClientList[iClientH]->m_iConstructionPoint = 0;
-					m_pClientList[iClientH]->m_dwCrusadeGUID = m_dwCrusadeGUID;
-				}
-				else if (m_pClientList[iClientH]->m_dwCrusadeGUID != m_dwCrusadeGUID) {
-					// íš‡ì§¤ì¨Œì±Œì©Œì©Œ?íš‘ì¨‰ì±…ì¨ì±¨ì¨‰ì±…?íš‘ì§¸ì±  íš‰íš„ì¨Œì¨”?íš‘ì©ì±¤?íš‰ GUIDì§¸ì§• íš‰ì² ?ì±Œ íš‡ì§¤ì¨Œì±Œì©Œì©Œ?íš‘ì¨‰ì±… ì©íšˆ?íš‘ì¨‰ì±¨ì©”íš’ ì¨ˆíš¢ì¨ì§™ì¨ˆíš¢ì¨ˆíš‚ ì§¸íš’?ì¨˜ ?ì²¬ì¨”ì²©ì©”ì§• ì¨”ì²¬ì©ì±¤íšì¨€ì¨ˆì²© íš‡ì§¤ì¨Œì±Œì©Œì©Œ?íš‘ì¨‰ì±…?íš‰ ì§¸ì°¼ì§¸ì²¬?íš‘ì¨ˆíš¢.
-					// ?íš‘ì¨Œì§¹ ì§¸ì±ˆì©”ì±™ ?ì²´ì§¸ì²©ì©”ì§• ì¨‰ì²­ì¨ì§œ íšˆì²¨ì¨©ì²˜?ì¨© íš‰íš˜ ì©Œì²  ì©ì²©ì¨ˆíš¢. íš„íšœì©Œíš˜íš‰íš— íš‡ì§¤ì¨Œì±Œì©Œì©Œ?íš‘ì¨‰ì±… ì¨ì±¨ì¨‰ì±…ì§¸ì§• íšì©ì¨Œì°¼ì¨‰íšŠ ì¨ˆíš¢?ì© ì¨ˆíš¢?ì© ?ì²´ì¨ì±•?ì²´?íš‘ ì©íš„?íš¤ì¨‰íš‰ì§¹ì°½ ?ì²´ì©”ì§• íšì§–ì©Œíš™?ì¨© íš‰íš ì©íš© íšˆì²¨ì¨©ì²˜?ì¨© ì©ì±µ?ì¨© ì©Œì²  ?íšœì¨ˆíš¢.
-					// ?íš‘?ì²´ì©”ì§• íš‰íš˜ì¨ˆì±Œì¨‰íš‰ì©ì²¬ì¨ˆì²© ì©”ì§§íš‰íš˜, ì§¸íš‰ì©Œì¨€ íšˆì²¨?íš“íšˆì§°, ?ì²´?ì±¦ ì§¸ì²©íš‰ì±…ì¨‰ì¨‰ íš„íšŽì§¹ì°½íšŠì§¯.
-					m_pClientList[iClientH]->m_iCrusadeDuty       = 0;
-					m_pClientList[iClientH]->m_iConstructionPoint = 0;
-					m_pClientList[iClientH]->m_iWarContribution   = 0;
-					m_pClientList[iClientH]->m_dwCrusadeGUID = m_dwCrusadeGUID;
-					// íš‡ì§¤ì¨Œì±Œì©Œì©Œ?íš‘ì¨‰ì±… GUIDì§¸ì§• ì¨ˆíš¢ì¨ì§™ì¨ˆíš¢. íšˆì²¨ì¨©ì²˜ ì¨˜íš˜ì§¸ì§•.
-					SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_CRUSADE, (DWORD)m_bIsCrusadeMode, NULL, 0, NULL, -1);		
-				}
-				m_pClientList[iClientH]->m_cVar = 1;
-				SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_CRUSADE, (DWORD)m_bIsCrusadeMode, m_pClientList[iClientH]->m_iCrusadeDuty, NULL, NULL);
-			}
-			else if (m_bIsHeldenianMode == TRUE) {
-				sSummonPoints = m_pClientList[iClientH]->m_iCharisma*300;
-				if (sSummonPoints > DEF_MAXSUMMONPOINTS) sSummonPoints = DEF_MAXSUMMONPOINTS;
-				if (m_pClientList[iClientH]->m_dwHeldenianGUID == NULL) {
-					m_pClientList[iClientH]->m_dwHeldenianGUID = m_dwHeldenianGUID;
-					m_pClientList[iClientH]->m_iConstructionPoint = sSummonPoints;
-				}
-				else if (m_pClientList[iClientH]->m_dwHeldenianGUID != m_dwHeldenianGUID) {
-					m_pClientList[iClientH]->m_iConstructionPoint = sSummonPoints;
-					m_pClientList[iClientH]->m_iWarContribution = 0;
-					m_pClientList[iClientH]->m_dwHeldenianGUID = m_dwHeldenianGUID;
-				}
-				m_pClientList[iClientH]->m_cVar = 2;
-				if (m_bIsHeldenianMode == TRUE) {
-					SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_HELDENIANTELEPORT, NULL, NULL, NULL, NULL);
-				}
-				if (m_bHeldenianInitiated == TRUE) {
-					SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_HELDENIANSTART, NULL, NULL, NULL, NULL);
-				}
-				SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_CONSTRUCTIONPOINT, m_pClientList[iClientH]->m_iConstructionPoint, m_pClientList[iClientH]->m_iWarContribution, NULL, NULL);
-				UpdateHeldenianStatus();
-			}
-			else if ((m_pClientList[iClientH]->m_cVar == 1) && (m_pClientList[iClientH]->m_dwCrusadeGUID == m_dwCrusadeGUID)) {
+		// Crusade íš‰ì² ?ì±Œ íš‡ì§¤ì¨Œì±Œì©Œì©Œ?íš‘ì¨‰ì±… ì¨ì±¨ì¨‰ì±…?íš‘ì§¸ì±  íš‰íš„ì¨Œì¨”?íš‘ì©ì±¤?íš‰ CrusadeGUIDì§¸ì§• 0 íšŠì§š?ì¨˜ íš‰ì² ?ì±Œì©”íš’ ì¨ˆíš¢ì¨ì§™ì¨ˆíš¢ì¨ì±• íš„ì¨€?ì© íš‰íš˜ì¨ˆì±Œì¨‰íš‰ì¨ˆíš‚ ì§¸íš’?íš‘ì¨ˆíš¢. íš‡ì§¤ì¨Œì±Œì©Œì©Œ?íš‘ì¨‰ì±… ì©”ì§§íš‰íš˜ íš„íšŽì§¹ì°½íšŠì§¯.
+		if (m_bIsCrusadeMode == TRUE) {
+			if (m_pClientList[iClientH]->m_dwCrusadeGUID == 0) {
+				// íš‡ì§¤ì¨Œì±Œì©Œì©Œ?íš‘ì¨‰ì±…ì¨ì±¨ì¨‰ì±…?íš‘ì§¸ì±  íš‰íš„ì¨Œì¨”?íš‘ì©ì±¤?íš‰ GUIDì§¸ì§• 0?íš‘ì¨‹ì²œ ì§¸íš’?ì¨˜ íš„ì¨€?ì© íš‡ì§¤ì¨Œì±Œì©Œì©Œ?íš‘ì¨‰ì±… ì¨ì±¨ì¨‰ì±…ì©”ì§• ì¨‰ì±•ì©ì±¤ì©”íššì¨ˆíš¢ì¨ˆíš‚ ?íš‰ì¨”íš‘. ì©”ì§§íš‰íš˜ íš„íšŽì§¹ì°½íšŠì§¯.
 				m_pClientList[iClientH]->m_iCrusadeDuty = 0;
 				m_pClientList[iClientH]->m_iConstructionPoint = 0;
+				m_pClientList[iClientH]->m_dwCrusadeGUID = m_dwCrusadeGUID;
+			}
+			else if (m_pClientList[iClientH]->m_dwCrusadeGUID != m_dwCrusadeGUID) {
+				// íš‡ì§¤ì¨Œì±Œì©Œì©Œ?íš‘ì¨‰ì±…ì¨ì±¨ì¨‰ì±…?íš‘ì§¸ì±  íš‰íš„ì¨Œì¨”?íš‘ì©ì±¤?íš‰ GUIDì§¸ì§• íš‰ì² ?ì±Œ íš‡ì§¤ì¨Œì±Œì©Œì©Œ?íš‘ì¨‰ì±… ì©íšˆ?íš‘ì¨‰ì±¨ì©”íš’ ì¨ˆíš¢ì¨ì§™ì¨ˆíš¢ì¨ˆíš‚ ì§¸íš’?ì¨˜ ?ì²¬ì¨”ì²©ì©”ì§• ì¨”ì²¬ì©ì±¤íšì¨€ì¨ˆì²© íš‡ì§¤ì¨Œì±Œì©Œì©Œ?íš‘ì¨‰ì±…?íš‰ ì§¸ì°¼ì§¸ì²¬?íš‘ì¨ˆíš¢.
+				// ?íš‘ì¨Œì§¹ ì§¸ì±ˆì©”ì±™ ?ì²´ì§¸ì²©ì©”ì§• ì¨‰ì²­ì¨ì§œ íšˆì²¨ì¨©ì²˜?ì¨© íš‰íš˜ ì©Œì²  ì©ì²©ì¨ˆíš¢. íš„íšœì©Œíš˜íš‰íš— íš‡ì§¤ì¨Œì±Œì©Œì©Œ?íš‘ì¨‰ì±… ì¨ì±¨ì¨‰ì±…ì§¸ì§• íšì©ì¨Œì°¼ì¨‰íšŠ ì¨ˆíš¢?ì© ì¨ˆíš¢?ì© ?ì²´ì¨ì±•?ì²´?íš‘ ì©íš„?íš¤ì¨‰íš‰ì§¹ì°½ ?ì²´ì©”ì§• íšì§–ì©Œíš™?ì¨© íš‰íš ì©íš© íšˆì²¨ì¨©ì²˜?ì¨© ì©ì±µ?ì¨© ì©Œì²  ?íšœì¨ˆíš¢.
+				// ?íš‘?ì²´ì©”ì§• íš‰íš˜ì¨ˆì±Œì¨‰íš‰ì©ì²¬ì¨ˆì²© ì©”ì§§íš‰íš˜, ì§¸íš‰ì©Œì¨€ íšˆì²¨?íš“íšˆì§°, ?ì²´?ì±¦ ì§¸ì²©íš‰ì±…ì¨‰ì¨‰ íš„íšŽì§¹ì°½íšŠì§¯.
+				m_pClientList[iClientH]->m_iCrusadeDuty       = 0;
+				m_pClientList[iClientH]->m_iConstructionPoint = 0;
+				m_pClientList[iClientH]->m_iWarContribution   = 0;
+				m_pClientList[iClientH]->m_dwCrusadeGUID = m_dwCrusadeGUID;
+				// íš‡ì§¤ì¨Œì±Œì©Œì©Œ?íš‘ì¨‰ì±… GUIDì§¸ì§• ì¨ˆíš¢ì¨ì§™ì¨ˆíš¢. íšˆì²¨ì¨©ì²˜ ì¨˜íš˜ì§¸ì§•.
+				SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_CRUSADE, (DWORD)m_bIsCrusadeMode, NULL, 0, NULL, -1);		
+			}
+			m_pClientList[iClientH]->m_cVar = 1;
+			SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_CRUSADE, (DWORD)m_bIsCrusadeMode, m_pClientList[iClientH]->m_iCrusadeDuty, NULL, NULL);
+		}
+		else if (m_bIsHeldenianMode == TRUE) {
+			sSummonPoints = m_pClientList[iClientH]->m_iCharisma*300;
+			if (sSummonPoints > DEF_MAXSUMMONPOINTS) sSummonPoints = DEF_MAXSUMMONPOINTS;
+			if (m_pClientList[iClientH]->m_dwHeldenianGUID == NULL) {
+				m_pClientList[iClientH]->m_dwHeldenianGUID = m_dwHeldenianGUID;
+				m_pClientList[iClientH]->m_iConstructionPoint = sSummonPoints;
+			}
+			else if (m_pClientList[iClientH]->m_dwHeldenianGUID != m_dwHeldenianGUID) {
+				m_pClientList[iClientH]->m_iConstructionPoint = sSummonPoints;
+				m_pClientList[iClientH]->m_iWarContribution = 0;
+				m_pClientList[iClientH]->m_dwHeldenianGUID = m_dwHeldenianGUID;
+			}
+			m_pClientList[iClientH]->m_cVar = 2;
+			if (m_bIsHeldenianMode == TRUE) {
+				SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_HELDENIANTELEPORT, NULL, NULL, NULL, NULL);
+			}
+			if (m_bHeldenianInitiated == TRUE) {
+				SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_HELDENIANSTART, NULL, NULL, NULL, NULL);
+			}
+			SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_CONSTRUCTIONPOINT, m_pClientList[iClientH]->m_iConstructionPoint, m_pClientList[iClientH]->m_iWarContribution, NULL, NULL);
+			UpdateHeldenianStatus();
+		}
+		else if ((m_pClientList[iClientH]->m_cVar == 1) && (m_pClientList[iClientH]->m_dwCrusadeGUID == m_dwCrusadeGUID)) {
+			m_pClientList[iClientH]->m_iCrusadeDuty = 0;
+			m_pClientList[iClientH]->m_iConstructionPoint = 0;
+		}
+		else {
+			if (m_pClientList[iClientH]->m_dwCrusadeGUID == m_dwCrusadeGUID) {
+				if (m_pClientList[iClientH]->m_cVar == 1) {
+					SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_CRUSADE, (DWORD)m_bIsCrusadeMode, NULL, NULL, NULL, -1);
+				}
 			}
 			else {
-				if (m_pClientList[iClientH]->m_dwCrusadeGUID == m_dwCrusadeGUID) {
-					if (m_pClientList[iClientH]->m_cVar == 1) {
-						SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_CRUSADE, (DWORD)m_bIsCrusadeMode, NULL, NULL, NULL, -1);
-					}
-				}
-				else {
-					m_pClientList[iClientH]->m_dwCrusadeGUID = 0;
-					m_pClientList[iClientH]->m_iWarContribution   = 0;
-					m_pClientList[iClientH]->m_dwCrusadeGUID = 0;
-				}
-			}		
+				m_pClientList[iClientH]->m_dwCrusadeGUID = 0;
+				m_pClientList[iClientH]->m_iWarContribution   = 0;
+				m_pClientList[iClientH]->m_dwCrusadeGUID = 0;
+			}
+		}		
 
 		// v1.42
 		// 2002-7-4 Â»Ã§Ã…ÃµÃ€Ã¥Ã€Ã‡ Â°Â¹Â¼Ã¶Â¸Â¦ Â´ÃƒÂ¸Â± Â¼Ã¶ Ã€Ã–ÂµÂµÂ·Ã 
@@ -20568,6 +20563,8 @@ RTH_NEXTSTEP:;
 				_bCheckIsQuestCompleted(iClientH);
 		}
 
+		SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_HUNGER, m_pClientList[iClientH]->m_iHungerStatus, NULL, NULL, NULL);
+		SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_SUPERATTACKLEFT, NULL, NULL, NULL, NULL);
 }
 
 void CGame::ReleaseFollowMode(short sOwnerH, char cOwnerType)
@@ -46105,7 +46102,7 @@ GameProcess();
 //}
 
 
-if ((dwTime - m_dwGameTime2) > 3000) {
+if ((dwTime - m_dwGameTime2) > 1000) {
  CheckClientResponseTime();
  SendMsgToGateServer(MSGID_GAMESERVERALIVE, NULL);
  CheckDayOrNightMode();
@@ -46147,7 +46144,7 @@ if ((dwTime - m_dwGameTime2) > 3000) {
 		}
 	}
 
-	if ((dwTime - m_dwGameTime3) > 3000) {
+	if ((dwTime - m_dwGameTime3) > 1000) {
 		SyncMiddlelandMapInfo();
 		CheckDynamicObjectList();
 		DynamicObjectEffectProcessor();
@@ -46177,19 +46174,13 @@ if ((dwTime - m_dwGameTime2) > 3000) {
 
 	if ((dwTime - m_dwGameTime5) > 1000*60*3) {
 		
-		if (m_iMiddlelandMapIndex >= 0) {
-			// Crusade
-			SaveOccupyFlagData();
-			//bSendMsgToLS(MSGID_REQUEST_SAVEARESDENOCCUPYFLAGDATA, NULL, NULL);
-			//bSendMsgToLS(MSGID_REQUEST_SAVEELVINEOCCUPYFLAGDATA, NULL, NULL);
-		}
 		m_dwGameTime5 = dwTime;
 
 		// v1.41 ���� �õ尪 �ʱ�ȭ.
 		srand( (unsigned)time( NULL ) );   
 	}
 
-	if ((dwTime - m_dwFishTime) > 4000) {
+	if ((dwTime - m_dwFishTime) > 5000) {
 		FishProcessor();
 		FishGenerator();
 		SendCollectedMana();
@@ -54272,7 +54263,7 @@ BOOL CGame::_bCheckCharacterData(int iClientH)
 		}
 	}
 				
-	if ((m_pClientList[iClientH]->m_iLevel > m_sMaxPlayerLevel) && (m_pClientList[iClientH]->m_iAdminUserLevel == 0)) {
+	if ((m_pClientList[iClientH]->m_iLevel > m_iPlayerMaxLevel) && (m_pClientList[iClientH]->m_iAdminUserLevel == 0)) {
 		try
 		{
 			wsprintf(G_cTxt, "Packet Editing: (%s) Player: (%s) level above max server level.", m_pClientList[iClientH]->m_cIPaddress, m_pClientList[iClientH]->m_cCharName);
@@ -55273,8 +55264,8 @@ void CGame::AddGizon(int iClientH) {
 	m_pClientList[iClientH]->m_iGizonItemUpgradeLeft++;
 	SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_GIZONITEMUPGRADELEFT, m_pClientList[iClientH]->m_iGizonItemUpgradeLeft, NULL, NULL, NULL);
 
-	m_pClientList[iClientH]->m_iNextLevelExp = m_iLevelExpTable[m_pClientList[iClientH]->m_iLevel + 1];
-	m_pClientList[iClientH]->m_iExp = m_iLevelExpTable[m_pClientList[iClientH]->m_iLevel];
+	m_pClientList[iClientH]->m_iNextLevelExp = m_iLevelExpTable[m_iPlayerMaxLevel + 1];
+	m_pClientList[iClientH]->m_iExp = m_iLevelExpTable[m_iPlayerMaxLevel];
 }
 
 void CGame::ForceRecallProcess() {

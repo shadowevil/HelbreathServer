@@ -807,7 +807,7 @@ public:
 	BOOL m_bIsApocalypseStarter;
 	int m_iLatestCrusadeDayOfWeek;
 
-	BOOL  m_cDayOrNight;
+	char  m_cDayOrNight;
  	int   m_iSkillSSNpoint[102];
 
 	class CMsg * m_pNoticeMsgList[DEF_MAXNOTIFYMSGS];
