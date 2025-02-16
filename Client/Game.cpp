@@ -41009,7 +41009,11 @@ int CGame::iGetManaCost(int iMagicNo)
 			else if( strcmp( m_pItemList[i]->m_cName, "KlonessWand(MS.10)" ) == 0)	iManaSave += 10;
 			else if( strcmp( m_pItemList[i]->m_cName, "ResurWand(MS.20)" ) == 0)	iManaSave += 20;
 			else if( strcmp( m_pItemList[i]->m_cName, "ResurWand(MS.10)" ) == 0)	iManaSave += 10;
-
+			// Centuu: v382 necks
+			else if (strcmp(m_pItemList[i]->m_cName, "MagicNecklace(MS12)") == 0) iManaSave += 12;
+			else if (strcmp(m_pItemList[i]->m_cName, "MagicNecklace(MS14)") == 0) iManaSave += 14;
+			else if (strcmp(m_pItemList[i]->m_cName, "MagicNecklace(MS16)") == 0) iManaSave += 16;
+			else if (strcmp(m_pItemList[i]->m_cName, "MagicNecklace(MS18)") == 0) iManaSave += 18;
 	}	}
 	// Snoopy: MS max = 80%
 	if (iManaSave > 80) iManaSave = 80;
