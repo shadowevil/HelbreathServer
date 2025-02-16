@@ -216,7 +216,7 @@ void DXC_ddraw::ChangeDisplayMode(HWND hWnd)
 	if (m_lpFrontB4 != NULL) m_lpFrontB4->Release();
 	if (m_lpDD4 != NULL)
 	{
-		if (m_bFullMode == TRUE) m_lpDD4->RestoreDisplayMode();
+		m_lpDD4->RestoreDisplayMode();
 	}
 
 	res_x = 800;
@@ -484,7 +484,7 @@ void DXC_ddraw::ClearBackB4()
 	DDSURFACEDESC2 ddsd2;	
 	ddsd2.dwSize = sizeof(ddsd2);
 	if (m_lpBackB4->Lock(NULL, &ddsd2, DDLOCK_WAIT, NULL) != DD_OK) return;
-	memset((char *)ddsd2.lpSurface, 0, ddsd2.lPitch * 480);
+	memset((char *)ddsd2.lpSurface, 0, ddsd2.lPitch * 600);
 	m_lpBackB4->Unlock(NULL);
 }
 
@@ -574,7 +574,7 @@ void DXC_ddraw::_ReleaseBackBufferDC()
 	m_lpBackB4->ReleaseDC(m_hDC);
 }
 
-void DXC_ddraw::DrawText(LPRECT pRect, char *pString, COLORREF rgb)
+void DXC_ddraw::DrawText(LPRECT pRect, const char *pString, COLORREF rgb)
 {
 	SetTextColor(m_hDC, rgb);
 	::DrawText(m_hDC, pString, strlen(pString), pRect, DT_CENTER | DT_NOCLIP | DT_WORDBREAK | DT_NOPREFIX);//v2.15

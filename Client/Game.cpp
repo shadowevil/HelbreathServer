@@ -30362,7 +30362,7 @@ void CGame::CommandProcessor(short msX, short msY, short indexX, short indexY, c
 			if ((m_bIsDialogEnabled[12] != true) || (m_stMCursor.sSelectedObjectID != 12))
 			{
 				if (((dwTime - m_stMCursor.dwSelectClickTime) < DEF_DOUBLECLICKTIME) 	// Double Click
-					&& (msX == m_stMCursor.sClickX) && (msY == m_stMCursor.sClickY))
+					&& abs(msX - m_stMCursor.sClickX) < 2 && abs(msY - m_stMCursor.sClickY) < 2) //&& (msX == m_stMCursor.sClickX) && (msY == m_stMCursor.sClickY))
 				{
 					m_stMCursor.dwSelectClickTime = m_stMCursor.dwSelectClickTime;
 					_bCheckDlgBoxDoubleClick(msX, msY);
