@@ -483,8 +483,8 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
         szAppClass,
         cTitle,
         WS_VISIBLE | // so we don't have to call ShowWindow
-        //WS_POPUP |   // non-app window
-        //WS_CAPTION | // so our menu doesn't look ultra-goofy
+        WS_POPUP |   // non-app window
+        WS_CAPTION | // so our menu doesn't look ultra-goofy
         WS_SYSMENU |  // so we get an icon in the tray
         WS_MINIMIZEBOX, 
 		CW_USEDEFAULT,

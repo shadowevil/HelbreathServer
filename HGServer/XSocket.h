@@ -71,6 +71,8 @@ public:
 	int  m_WSAErr;
 	BOOL m_bIsAvailable;
 
+	bool m_bIsWriteEnabled;
+
 private:
 	void _CloseConn();
 	
