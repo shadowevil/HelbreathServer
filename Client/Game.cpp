@@ -16421,30 +16421,44 @@ void CGame::EnableDialogBox(int iBoxID, int cType, int sV1, int sV2, char * pStr
 		break;
 
 	case 34:
-		if (m_bIsDialogEnabled[34] == FALSE)
-		{	int iSoX, iSoM;
+		if (m_bIsDialogEnabled[34] == false)
+		{
+			m_stDialogBoxInfo[34].cMode = cType;
+			m_stDialogBoxInfo[34].sV1 = -1;
+			m_stDialogBoxInfo[34].dwV1 = 0;
+		}
+		else if (m_bIsDialogEnabled[34] == false)
+		{
+			int iSoX, iSoM;
 			iSoX = iSoM = 0;
 			for (i = 0; i < DEF_MAXITEMS; i++)
-			if (m_pItemList[i] != NULL)
-			{	if ((m_pItemList[i]->m_sSprite == 6) && (m_pItemList[i]->m_sSpriteFrame == 128)) iSoX++;
-				if ((m_pItemList[i]->m_sSprite == 6) && (m_pItemList[i]->m_sSpriteFrame == 129)) iSoM++;
-			}
+				if (m_pItemList[i] != 0)
+				{
+					if ((m_pItemList[i]->m_sSprite == 6) && (m_pItemList[i]->m_sSpriteFrame == 128)) iSoX++;
+					if ((m_pItemList[i]->m_sSprite == 6) && (m_pItemList[i]->m_sSpriteFrame == 129)) iSoM++;
+				}
 			if ((iSoX > 0) || (iSoM > 0))
-			{	m_stDialogBoxInfo[34].cMode = 6; // Stone upgrade
+			{
+				m_stDialogBoxInfo[34].cMode = 6; // Stone upgrade
 				m_stDialogBoxInfo[34].sV2 = iSoX;
 				m_stDialogBoxInfo[34].sV3 = iSoM;
-				m_stDialogBoxInfo[34].sV1  = -1;
-				m_stDialogBoxInfo[34].dwV1 = NULL;
-			}else if (m_iGizonItemUpgradeLeft >0)
-			{	m_stDialogBoxInfo[34].cMode = 1;
+				m_stDialogBoxInfo[34].sV1 = -1;
+				m_stDialogBoxInfo[34].dwV1 = 0;
+			}
+			else if (m_iGizonItemUpgradeLeft > 0)
+			{
+				m_stDialogBoxInfo[34].cMode = 1;
 				m_stDialogBoxInfo[34].sV2 = -1;
 				m_stDialogBoxInfo[34].sV3 = -1;
-				m_stDialogBoxInfo[34].sV1  = -1;
-				m_stDialogBoxInfo[34].dwV1 = NULL;
-			}else
-			{	AddEventList(DRAW_DIALOGBOX_ITEMUPGRADE30, 10); // "Stone of Xelima or Merien is not present."
+				m_stDialogBoxInfo[34].sV1 = -1;
+				m_stDialogBoxInfo[34].dwV1 = 0;
+			}
+			else
+			{
+				AddEventList(DRAW_DIALOGBOX_ITEMUPGRADE30, 10); // "Stone of Xelima or Merien is not present."
 				return;
-		}	}
+			}
+		}
 		break;
 
 	case 16:
