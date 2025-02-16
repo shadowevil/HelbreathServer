@@ -221,7 +221,7 @@ BOOL InitApplication( HINSTANCE hInstance)
 	wc.cbClsExtra    = 0;                            
 	wc.cbWndExtra    = sizeof (int);
 	wc.hInstance     = hInstance;
-	wc.hIcon         = LoadCursor(NULL, IDI_APPLICATION);
+	wc.hIcon         = NULL;
 	wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
 	wc.lpszMenuName  = NULL;

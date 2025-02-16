@@ -183,7 +183,7 @@ HRESULT DXC_ddraw::iFlip()
 	HRESULT ddVal;
 	
 	if (m_lpFrontB4)
-		ddVal = m_lpFrontB4->Blt(&m_rcFlipping, m_lpBackB4, 0, DDBLT_WAIT, 0);
+		ddVal = m_lpFrontB4->Blt(&m_rcFlipping, m_lpBackB4, NULL, DDBLT_WAIT, NULL);
 
 	if (ddVal == DDERR_SURFACELOST) {
 		DDSURFACEDESC2 ddsd2;

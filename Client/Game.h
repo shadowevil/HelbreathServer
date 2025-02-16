@@ -963,6 +963,8 @@ public:
 
 	char m_cTakeHeroItemName[100]; //Drajwer - hero item str
 
+	short iMaxStats;
+	int iMaxLevel;
 };
 
 #endif // !defined(AFX_GAME_H__0089D9E3_74E6_11D2_A8E6_00001C7030A6__INCLUDED_)
