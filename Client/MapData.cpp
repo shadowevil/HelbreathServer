@@ -953,22 +953,13 @@ void CMapData::ShiftMapData(char cDir)
 	memcpy(&m_pData[0][0], &m_pTmpData[0][0], sizeof(m_pData));
 }
 
-// Función auxiliar para verificar los límites
-inline bool CMapData::IsWithinBounds(int x, int y, int maxX, int maxY) {
-	return x >= 0 && x < maxX && y >= 0 && y < maxY;
-}
-
 BOOL CMapData::bGetIsLocateable(short sX, short sY)
 {
 	int dX, dY;
-
 	if ((sX < m_sPivotX) || (sX > m_sPivotX + MAPDATASIZEX) ||
-		(sY < m_sPivotY) || (sY > m_sPivotY + MAPDATASIZEY)) 
-		return false;
-
+		(sY < m_sPivotY) || (sY > m_sPivotY + MAPDATASIZEY)) return false;
 	dX = sX - m_sPivotX;
 	dY = sY - m_sPivotY;
-
 	//Helltrayn 28/05/09. Añadimos esto para corregir el bug MIM que cierra el cliente
 	if (dX <= 0 || dY <= 0) return false;
 	if (m_pData[dX][dY].m_sOwnerType != 0) return false;
@@ -976,21 +967,42 @@ BOOL CMapData::bGetIsLocateable(short sX, short sY)
 	if (m_pData[dX][dY].m_sDynamicObjectType == DEF_DYNAMICOBJECT_MINERAL1) return false; // 4
 	if (m_pData[dX][dY].m_sDynamicObjectType == DEF_DYNAMICOBJECT_MINERAL2) return false; // 5
 
-	// Listado de valores a verificar
-	const int ownerTypes[] = { 66, 73, 81, 91, 114, 120 };
-
-	for (int type : ownerTypes) {
-		if (IsWithinBounds(dX + 1, dY + 1, MAPDATASIZEX, MAPDATASIZEY) && m_pData[dX + 1][dY + 1].m_sOwnerType == type) return FALSE;
-		if (IsWithinBounds(dX + 1, dY, MAPDATASIZEX, MAPDATASIZEY) && m_pData[dX + 1][dY].m_sOwnerType == type) return FALSE;
-		if (IsWithinBounds(dX + 1, dY - 1, MAPDATASIZEX, MAPDATASIZEY) && m_pData[dX + 1][dY - 1].m_sOwnerType == type) return FALSE;
-		if (IsWithinBounds(dX, dY + 1, MAPDATASIZEX, MAPDATASIZEY) && m_pData[dX][dY + 1].m_sOwnerType == type) return FALSE;
-		if (m_pData[dX][dY].m_sOwnerType == type) return FALSE;
-		if (IsWithinBounds(dX, dY - 1, MAPDATASIZEX, MAPDATASIZEY) && m_pData[dX][dY - 1].m_sOwnerType == type) return FALSE;
-		if (IsWithinBounds(dX - 1, dY + 1, MAPDATASIZEX, MAPDATASIZEY) && m_pData[dX - 1][dY + 1].m_sOwnerType == type) return FALSE;
-		if (IsWithinBounds(dX - 1, dY, MAPDATASIZEX, MAPDATASIZEY) && m_pData[dX - 1][dY].m_sOwnerType == type) return FALSE;
-		if (IsWithinBounds(dX - 1, dY - 1, MAPDATASIZEX, MAPDATASIZEY) && m_pData[dX - 1][dY - 1].m_sOwnerType == type) return FALSE;
-	}
-
+	if (m_pData[dX + 1][dY + 1].m_sOwnerType == 66) return false;
+	if (m_pData[dX + 1][dY].m_sOwnerType == 66) return false;
+	if ((dY > 0) && (m_pData[dX + 1][dY - 1].m_sOwnerType == 66)) return false;
+	if (m_pData[dX][dY + 1].m_sOwnerType == 66) return false;
+	if (m_pData[dX][dY].m_sOwnerType == 66) return false;
+	if ((dY > 0) && (m_pData[dX][dY - 1].m_sOwnerType == 66)) return false;
+	if ((dX > 0) && (m_pData[dX - 1][dY + 1].m_sOwnerType == 66)) return false;
+	if ((dX > 0) && (m_pData[dX - 1][dY].m_sOwnerType == 66)) return false;
+	if ((dX > 0) && (dY > 0) && (m_pData[dX - 1][dY - 1].m_sOwnerType == 66)) return false;
+	if (m_pData[dX + 1][dY + 1].m_sOwnerType == 73) return false;
+	if (m_pData[dX + 1][dY].m_sOwnerType == 73) return false;
+	if ((dY > 0) && (m_pData[dX + 1][dY - 1].m_sOwnerType == 73)) return false;
+	if (m_pData[dX][dY + 1].m_sOwnerType == 73) return false;
+	if (m_pData[dX][dY].m_sOwnerType == 73) return false;
+	if ((dY > 0) && (m_pData[dX][dY - 1].m_sOwnerType == 73)) return false;
+	if ((dX > 0) && (m_pData[dX - 1][dY + 1].m_sOwnerType == 73)) return false;
+	if ((dX > 0) && (m_pData[dX - 1][dY].m_sOwnerType == 73)) return false;
+	if ((dX > 0) && (dY > 0) && (m_pData[dX - 1][dY - 1].m_sOwnerType == 73)) return false;
+	if (m_pData[dX + 1][dY + 1].m_sOwnerType == 81) return false;
+	if (m_pData[dX + 1][dY].m_sOwnerType == 81) return false;
+	if ((dY > 0) && (m_pData[dX + 1][dY - 1].m_sOwnerType == 81)) return false;
+	if (m_pData[dX][dY + 1].m_sOwnerType == 81) return false;
+	if (m_pData[dX][dY].m_sOwnerType == 81) return false;
+	if ((dY > 0) && (m_pData[dX][dY - 1].m_sOwnerType == 81)) return false;
+	if ((dX > 0) && (m_pData[dX - 1][dY + 1].m_sOwnerType == 81)) return false;
+	if ((dX > 0) && (m_pData[dX - 1][dY].m_sOwnerType == 81)) return false;
+	if ((dX > 0) && (dY > 0) && (m_pData[dX - 1][dY - 1].m_sOwnerType == 81)) return false;
+	if (m_pData[dX + 1][dY + 1].m_sOwnerType == 91) return false;
+	if (m_pData[dX + 1][dY].m_sOwnerType == 91) return false;
+	if ((dY > 0) && (m_pData[dX + 1][dY - 1].m_sOwnerType == 91)) return false;
+	if (m_pData[dX][dY + 1].m_sOwnerType == 91) return false;
+	if (m_pData[dX][dY].m_sOwnerType == 91) return false;
+	if ((dY > 0) && (m_pData[dX][dY - 1].m_sOwnerType == 91)) return false;
+	if ((dX > 0) && (m_pData[dX - 1][dY + 1].m_sOwnerType == 91)) return false;
+	if ((dX > 0) && (m_pData[dX - 1][dY].m_sOwnerType == 91)) return false;
+	if ((dX > 0) && (dY > 0) && (m_pData[dX - 1][dY - 1].m_sOwnerType == 91)) return false;
 	return true;
 }
 
