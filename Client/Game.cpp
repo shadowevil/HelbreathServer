@@ -30372,11 +30372,13 @@ void CGame::CommandProcessor(short msX, short msY, short indexX, short indexY, c
 		break;
 	case DEF_CURSORSTATUS_SELECTED:
 		if (cLB == 0)
-		{	//ZeroEoyPnk - Bye delay...
-			if ((m_bIsDialogEnabled[12] != true) || (m_stMCursor.sSelectedObjectID != 12))
+		{
+			//ZeroEoyPnk - Bye delay...
+			if (((m_bIsDialogEnabled[12] != TRUE) || (m_stMCursor.sSelectedObjectID != 12))
+				&& ((m_bIsDialogEnabled[42] != TRUE) || (m_stMCursor.sSelectedObjectID != 42)))
 			{
 				if (((dwTime - m_stMCursor.dwSelectClickTime) < DEF_DOUBLECLICKTIME) 	// Double Click
-					&& abs(msX - m_stMCursor.sClickX) < 2 && abs(msY - m_stMCursor.sClickY) < 2) //&& (msX == m_stMCursor.sClickX) && (msY == m_stMCursor.sClickY))
+					&& (msX == m_stMCursor.sClickX) && (msY == m_stMCursor.sClickY))
 				{
 					m_stMCursor.dwSelectClickTime = m_stMCursor.dwSelectClickTime;
 					_bCheckDlgBoxDoubleClick(msX, msY);
@@ -30399,14 +30401,14 @@ void CGame::CommandProcessor(short msX, short msY, short indexX, short indexY, c
 			if (m_stMCursor.cSelectedObjectType == DEF_SELECTEDOBJTYPE_ITEM)
 			{
 				_bCheckDraggingItemRelease(msX, msY);
-				m_stMCursor.cSelectedObjectType = 0;
-				m_stMCursor.sSelectedObjectID = 0;
+				m_stMCursor.cSelectedObjectType = NULL;
+				m_stMCursor.sSelectedObjectID = NULL;
 			}
 			return;
 		}
-		else //if (cLB != 0) 			// v2.05 01-11-30
+		else 			// v2.05 01-11-30
 		{
-			if ((m_pMapData->bIsTeleportLoc(m_sPlayerX, m_sPlayerY) == true) && (m_cCommandCount == 0)) goto CP_SKIPMOUSEBUTTONSTATUS;
+			if ((m_pMapData->bIsTeleportLoc(m_sPlayerX, m_sPlayerY) == TRUE) && (m_cCommandCount == 0)) goto CP_SKIPMOUSEBUTTONSTATUS;
 
 			if ((m_stMCursor.sPrevX != msX) || (m_stMCursor.sPrevY != msY))
 			{
@@ -30414,10 +30416,11 @@ void CGame::CommandProcessor(short msX, short msY, short indexX, short indexY, c
 				m_stMCursor.sPrevX = msX;
 				m_stMCursor.sPrevY = msY;
 				if ((m_stMCursor.cSelectedObjectType == DEF_SELECTEDOBJTYPE_DLGBOX) &&
-					((m_stMCursor.sSelectedObjectID == 30) || (m_stMCursor.sSelectedObjectID == 29)))
+					(m_stMCursor.sSelectedObjectID == 30))
 				{
 					m_stMCursor.cPrevStatus = DEF_CURSORSTATUS_NULL;
 				}
+
 				if ((m_stMCursor.cSelectedObjectType == DEF_SELECTEDOBJTYPE_DLGBOX) &&
 					(m_stMCursor.sSelectedObjectID == 7) && (m_stDialogBoxInfo[7].cMode == 1))
 				{

@@ -793,9 +793,10 @@ void CMapData::Init()
 	m_dwFrameAdjustTime = 0;
 	m_sPivotX = -1;
 	m_sPivotY = -1;
-	for (y = 0; y < MAPDATASIZEY; y++)
+
 	for (x = 0; x < MAPDATASIZEX; x++)
-		m_pData[x][y].Clear();
+		for (y = 0; y < MAPDATASIZEY; y++)
+			m_pData[x][y].Clear();
 
 	for (x = 0; x < 30000; x++) {
 		m_iObjectIDcacheLocX[x] = 0;
@@ -897,68 +898,77 @@ void CMapData::ShiftMapData(char cDir)
 
 	switch (cDir) {
 	case 1:
-		for (ix = 0; ix < 25; ix++)
+		for (ix = 0; ix < 26; ix++)
 			for (iy = 0; iy < 19; iy++)
-				memcpy(&m_pTmpData[9 + ix - 3][11 + iy - 2], &m_pData[9 + ix - 3][10 + iy - 2], sizeof(class CTile));
+				memcpy(&m_pTmpData[4 + 5 - 2 + ix][6 + 5 - 2 + iy], &m_pData[4 + 5 - 2 + ix][5 + 5 - 2 + iy], sizeof(class CTile));
 		m_sPivotY--;
 		break;
 	case 2:
-		for (ix = 0; ix < 26; ix++)
+		for (ix = 0; ix < 25; ix++)
 			for (iy = 0; iy < 19; iy++)
-				memcpy(&m_pTmpData[9 + ix - 3][11 + iy - 2], &m_pData[10 + ix - 3][10 + iy - 2], sizeof(class CTile));
+				memcpy(&m_pTmpData[4 + 5 - 2 + ix][6 + 5 - 2 + iy], &m_pData[5 + 5 - 2 + ix][5 + 5 - 2 + iy], sizeof(class CTile));
 		m_sPivotX++;
 		m_sPivotY--;
 		break;
 	case 3:
-		for (ix = 0; ix < 26; ix++)
-			for (iy = 0; iy < 19; iy++)
-				memcpy(&m_pTmpData[9 + ix - 3][10 + iy - 2], &m_pData[10 + ix - 3][10 + iy - 2], sizeof(class CTile));
+		for (ix = 0; ix < 25; ix++)
+			for (iy = 0; iy < 20; iy++)
+				memcpy(&m_pTmpData[4 + 5 - 2 + ix][5 + 5 - 2 + iy], &m_pData[5 + 5 - 2 + ix][5 + 5 - 2 + iy], sizeof(class CTile));
 		m_sPivotX++;
 		break;
 	case 4:
-		for (ix = 0; ix < 26; ix++)
-			for (iy = 0; iy < 21; iy++)
-				memcpy(&m_pTmpData[9 + ix - 3][10 + iy - 2], &m_pData[10 + ix - 3][11 + iy - 2], sizeof(class CTile));
+		for (ix = 0; ix < 25; ix++)
+			for (iy = 0; iy < 19; iy++)
+				memcpy(&m_pTmpData[4 + 5 - 2 + ix][5 + 5 - 2 + iy], &m_pData[5 + 5 - 2 + ix][6 + 5 - 2 + iy], sizeof(class CTile));
 		m_sPivotX++;
 		m_sPivotY++;
 		break;
 	case 5:
-		for (ix = 0; ix < 25; ix++)
-			for (iy = 0; iy < 21; iy++)
-				memcpy(&m_pTmpData[9 + ix - 3][10 + iy - 2], &m_pData[9 + ix - 3][11 + iy - 2], sizeof(class CTile));
+		for (ix = 0; ix < 26; ix++)
+			for (iy = 0; iy < 19; iy++)
+				memcpy(&m_pTmpData[4 + 5 - 2 + ix][5 + 5 - 2 + iy], &m_pData[4 + 5 - 2 + ix][6 + 5 - 2 + iy], sizeof(class CTile));
 		m_sPivotY++;
 		break;
 	case 6:
-		for (ix = 0; ix < 26; ix++)
-			for (iy = 0; iy < 21; iy++)
-				memcpy(&m_pTmpData[10 + ix - 3][10 + iy - 2], &m_pData[9 + ix - 3][11 + iy - 2], sizeof(class CTile));
+		for (ix = 0; ix < 25; ix++)
+			for (iy = 0; iy < 19; iy++)
+				memcpy(&m_pTmpData[5 + 5 - 2 + ix][5 + 5 - 2 + iy], &m_pData[4 + 5 - 2 + ix][6 + 5 - 2 + iy], sizeof(class CTile));
 		m_sPivotX--;
 		m_sPivotY++;
 		break;
 	case 7:
-		for (ix = 0; ix < 26; ix++)
-			for (iy = 0; iy < 19; iy++)
-				memcpy(&m_pTmpData[10 + ix - 3][10 + iy - 2], &m_pData[9 + ix - 3][10 + iy - 2], sizeof(class CTile));
+		for (ix = 0; ix < 25; ix++)
+			for (iy = 0; iy < 20; iy++)
+				memcpy(&m_pTmpData[5 + 5 - 2 + ix][5 + 5 - 2 + iy], &m_pData[4 + 5 - 2 + ix][5 + 5 - 2 + iy], sizeof(class CTile));
 		m_sPivotX--;
 		break;
 	case 8:
-		for (ix = 0; ix < 26; ix++)
+		for (ix = 0; ix < 25; ix++)
 			for (iy = 0; iy < 19; iy++)
-				memcpy(&m_pTmpData[10 + ix - 3][11 + iy - 2], &m_pData[9 + ix - 3][10 + iy - 2], sizeof(class CTile));
+				memcpy(&m_pTmpData[5 + 5 - 2 + ix][6 + 5 - 2 + iy], &m_pData[4 + 5 - 2 + ix][5 + 5 - 2 + iy], sizeof(class CTile));
 		m_sPivotX--;
 		m_sPivotY--;
 		break;
 	}
-	memcpy(&m_pData, &m_pTmpData, sizeof(m_pData));
+	memcpy(&m_pData[0][0], &m_pTmpData[0][0], sizeof(m_pData));
+}
+
+// Función auxiliar para verificar los límites
+inline bool CMapData::IsWithinBounds(int x, int y, int maxX, int maxY) {
+	return x >= 0 && x < maxX && y >= 0 && y < maxY;
 }
 
 BOOL CMapData::bGetIsLocateable(short sX, short sY)
 {
 	int dX, dY;
+
 	if ((sX < m_sPivotX) || (sX > m_sPivotX + MAPDATASIZEX) ||
-		(sY < m_sPivotY) || (sY > m_sPivotY + MAPDATASIZEY)) return false;
+		(sY < m_sPivotY) || (sY > m_sPivotY + MAPDATASIZEY)) 
+		return false;
+
 	dX = sX - m_sPivotX;
 	dY = sY - m_sPivotY;
+
 	//Helltrayn 28/05/09. Añadimos esto para corregir el bug MIM que cierra el cliente
 	if (dX <= 0 || dY <= 0) return false;
 	if (m_pData[dX][dY].m_sOwnerType != 0) return false;
@@ -966,45 +976,21 @@ BOOL CMapData::bGetIsLocateable(short sX, short sY)
 	if (m_pData[dX][dY].m_sDynamicObjectType == DEF_DYNAMICOBJECT_MINERAL1) return false; // 4
 	if (m_pData[dX][dY].m_sDynamicObjectType == DEF_DYNAMICOBJECT_MINERAL2) return false; // 5
 
-	if (m_pData[dX + 1][dY + 1].m_sOwnerType == 66) return false;
-	if (m_pData[dX + 1][dY].m_sOwnerType == 66) return false;
-	if ((dY > 0) && (m_pData[dX + 1][dY - 1].m_sOwnerType == 66)) return false;
-	if (m_pData[dX][dY + 1].m_sOwnerType == 66) return false;
-	if (m_pData[dX][dY].m_sOwnerType == 66) return false;
-	if ((dY > 0) && (m_pData[dX][dY - 1].m_sOwnerType == 66)) return false;
-	if ((dX > 0) && (m_pData[dX - 1][dY + 1].m_sOwnerType == 66)) return false;
-	if ((dX > 0) && (m_pData[dX - 1][dY].m_sOwnerType == 66)) return false;
-	if ((dX > 0) && (dY > 0) && (m_pData[dX - 1][dY - 1].m_sOwnerType == 66)) return false;
+	// Listado de valores a verificar
+	const int ownerTypes[] = { 66, 73, 81, 91, 114, 120 };
 
-	if (m_pData[dX + 1][dY + 1].m_sOwnerType == 73) return false;
-	if (m_pData[dX + 1][dY].m_sOwnerType == 73) return false;
-	if ((dY > 0) && (m_pData[dX + 1][dY - 1].m_sOwnerType == 73)) return false;
-	if (m_pData[dX][dY + 1].m_sOwnerType == 73) return false;
-	if (m_pData[dX][dY].m_sOwnerType == 73) return false;
-	if ((dY > 0) && (m_pData[dX][dY - 1].m_sOwnerType == 73)) return false;
-	if ((dX > 0) && (m_pData[dX - 1][dY + 1].m_sOwnerType == 73)) return false;
-	if ((dX > 0) && (m_pData[dX - 1][dY].m_sOwnerType == 73)) return false;
-	if ((dX > 0) && (dY > 0) && (m_pData[dX - 1][dY - 1].m_sOwnerType == 73)) return false;
+	for (int type : ownerTypes) {
+		if (IsWithinBounds(dX + 1, dY + 1, MAPDATASIZEX, MAPDATASIZEY) && m_pData[dX + 1][dY + 1].m_sOwnerType == type) return FALSE;
+		if (IsWithinBounds(dX + 1, dY, MAPDATASIZEX, MAPDATASIZEY) && m_pData[dX + 1][dY].m_sOwnerType == type) return FALSE;
+		if (IsWithinBounds(dX + 1, dY - 1, MAPDATASIZEX, MAPDATASIZEY) && m_pData[dX + 1][dY - 1].m_sOwnerType == type) return FALSE;
+		if (IsWithinBounds(dX, dY + 1, MAPDATASIZEX, MAPDATASIZEY) && m_pData[dX][dY + 1].m_sOwnerType == type) return FALSE;
+		if (m_pData[dX][dY].m_sOwnerType == type) return FALSE;
+		if (IsWithinBounds(dX, dY - 1, MAPDATASIZEX, MAPDATASIZEY) && m_pData[dX][dY - 1].m_sOwnerType == type) return FALSE;
+		if (IsWithinBounds(dX - 1, dY + 1, MAPDATASIZEX, MAPDATASIZEY) && m_pData[dX - 1][dY + 1].m_sOwnerType == type) return FALSE;
+		if (IsWithinBounds(dX - 1, dY, MAPDATASIZEX, MAPDATASIZEY) && m_pData[dX - 1][dY].m_sOwnerType == type) return FALSE;
+		if (IsWithinBounds(dX - 1, dY - 1, MAPDATASIZEX, MAPDATASIZEY) && m_pData[dX - 1][dY - 1].m_sOwnerType == type) return FALSE;
+	}
 
-	if (m_pData[dX + 1][dY + 1].m_sOwnerType == 81) return false;
-	if (m_pData[dX + 1][dY].m_sOwnerType == 81) return false;
-	if ((dY > 0) && (m_pData[dX + 1][dY - 1].m_sOwnerType == 81)) return false;
-	if (m_pData[dX][dY + 1].m_sOwnerType == 81) return false;
-	if (m_pData[dX][dY].m_sOwnerType == 81) return false;
-	if ((dY > 0) && (m_pData[dX][dY - 1].m_sOwnerType == 81)) return false;
-	if ((dX > 0) && (m_pData[dX - 1][dY + 1].m_sOwnerType == 81)) return false;
-	if ((dX > 0) && (m_pData[dX - 1][dY].m_sOwnerType == 81)) return false;
-	if ((dX > 0) && (dY > 0) && (m_pData[dX - 1][dY - 1].m_sOwnerType == 81)) return false;
-
-	if (m_pData[dX + 1][dY + 1].m_sOwnerType == 91) return false;
-	if (m_pData[dX + 1][dY].m_sOwnerType == 91) return false;
-	if ((dY > 0) && (m_pData[dX + 1][dY - 1].m_sOwnerType == 91)) return false;
-	if (m_pData[dX][dY + 1].m_sOwnerType == 91) return false;
-	if (m_pData[dX][dY].m_sOwnerType == 91) return false;
-	if ((dY > 0) && (m_pData[dX][dY - 1].m_sOwnerType == 91)) return false;
-	if ((dX > 0) && (m_pData[dX - 1][dY + 1].m_sOwnerType == 91)) return false;
-	if ((dX > 0) && (m_pData[dX - 1][dY].m_sOwnerType == 91)) return false;
-	if ((dX > 0) && (dY > 0) && (m_pData[dX - 1][dY - 1].m_sOwnerType == 91)) return false;
 	return true;
 }
 
@@ -1075,6 +1061,7 @@ BOOL __fastcall CMapData::bSetOwner(WORD wObjectID, int sX, int sY, int sType, i
 				m_pData[iX][iY].m_iDeadChatMsg = NULL;
 				m_iObjectIDcacheLocX[wObjectID] = 0;
 				m_iObjectIDcacheLocY[wObjectID] = 0;
+				m_pGame->RequestFullObjectData(wObjectID);
 				return FALSE;
 		}	}
 
@@ -1108,6 +1095,7 @@ BOOL __fastcall CMapData::bSetOwner(WORD wObjectID, int sX, int sY, int sType, i
 				return FALSE;
 		}	}
 		ZeroMemory(pName, strlen(pName));
+		m_pGame->RequestFullObjectData(wObjectID);
 		return FALSE;
 	}
 	iChatIndex = NULL;
@@ -1123,6 +1111,7 @@ BOOL __fastcall CMapData::bSetOwner(WORD wObjectID, int sX, int sY, int sType, i
 			if ((iX < 0) || (iX >= MAPDATASIZEX) || (iY < 0) || (iY >= MAPDATASIZEY))
 			{	m_iObjectIDcacheLocX[wObjectID] = 0;
 				m_iObjectIDcacheLocY[wObjectID] = 0;
+				m_pGame->RequestFullObjectData(wObjectID);
 				return FALSE;
 			}
 			if (m_pData[iX][iY].m_wObjectID == wObjectID) 
@@ -1439,42 +1428,50 @@ BOOL __fastcall CMapData::bSetOwner(WORD wObjectID, int sX, int sY, int sType, i
 
 EXIT_SEARCH_LOOP:;
 
-	if (sAction == DEF_OBJECTDYING)
-	{	dX = sX - m_sPivotX;
-		dY = sY - m_sPivotY;
-	}
-	if ((iPreLoc == 0) && (m_pData[dX][dY].m_sOwnerType != NULL) && (m_pData[dX][dY].m_cOwnerAction == DEF_OBJECTDYING))
-	{	m_pData[dX][dY].m_wDeadObjectID        = m_pData[dX][dY].m_wObjectID;
-		m_pData[dX][dY].m_sDeadOwnerType       = m_pData[dX][dY].m_sOwnerType;
-		m_pData[dX][dY].m_cDeadDir             = m_pData[dX][dY].m_cDir;
-		m_pData[dX][dY].m_sDeadAppr1           = m_pData[dX][dY].m_sAppr1;
-		m_pData[dX][dY].m_sDeadAppr2           = m_pData[dX][dY].m_sAppr2;
-		m_pData[dX][dY].m_sDeadAppr3           = m_pData[dX][dY].m_sAppr3;
-		m_pData[dX][dY].m_sDeadAppr4           = m_pData[dX][dY].m_sAppr4;
-		m_pData[dX][dY].m_iDeadApprColor       = m_pData[dX][dY].m_iApprColor; // v1.4
-		m_pData[dX][dY].m_iDeadStatus          = m_pData[dX][dY].m_iStatus;
-		m_pData[dX][dY].m_cDeadOwnerFrame      = -1;
-		m_pData[dX][dY].m_dwDeadOwnerTime	   = dwTime;
-		memcpy(m_pData[dX][dY].m_cDeadOwnerName, m_pData[dX][dY].m_cOwnerName, 11);
-		m_pData[dX][dY].m_iDeadChatMsg         = m_pData[dX][dY].m_iChatMsg;
-		m_pData[dX][dY].m_wObjectID  = NULL;
-		m_pData[dX][dY].m_sOwnerType = NULL;
-		m_pData[dX][dY].m_iChatMsg   = NULL;
-		ZeroMemory(m_pData[dX][dY].m_cOwnerName, sizeof(m_pData[dX][dY].m_cOwnerName));
-		m_iObjectIDcacheLocX[m_pData[dX][dY].m_wDeadObjectID] = -1*m_iObjectIDcacheLocX[m_pData[dX][dY].m_wDeadObjectID];//dX; // v1.4
-		m_iObjectIDcacheLocY[m_pData[dX][dY].m_wDeadObjectID] = -1*m_iObjectIDcacheLocY[m_pData[dX][dY].m_wDeadObjectID];//dY;
+	if (iPreLoc == 0 && m_pData[dX][dY].m_sOwnerType != NULL)
+	{
+		if (sAction == DEF_OBJECTDYING)
+		{
+			dX = sX - m_sPivotX;
+			dY = sY - m_sPivotY;
+		}
+		if (m_pData[dX][dY].m_cOwnerAction == DEF_OBJECTDYING)
+		{
+			m_pData[dX][dY].m_wDeadObjectID = m_pData[dX][dY].m_wObjectID;
+			m_pData[dX][dY].m_sDeadOwnerType = m_pData[dX][dY].m_sOwnerType;
+			m_pData[dX][dY].m_cDeadDir = m_pData[dX][dY].m_cDir;
+			m_pData[dX][dY].m_sDeadAppr1 = m_pData[dX][dY].m_sAppr1;
+			m_pData[dX][dY].m_sDeadAppr2 = m_pData[dX][dY].m_sAppr2;
+			m_pData[dX][dY].m_sDeadAppr3 = m_pData[dX][dY].m_sAppr3;
+			m_pData[dX][dY].m_sDeadAppr4 = m_pData[dX][dY].m_sAppr4;
+			m_pData[dX][dY].m_iDeadApprColor = m_pData[dX][dY].m_iApprColor; // v1.4
+			m_pData[dX][dY].m_iDeadStatus = m_pData[dX][dY].m_iStatus;
+			m_pData[dX][dY].m_cDeadOwnerFrame = -1;
+			m_pData[dX][dY].m_dwDeadOwnerTime = dwTime;
+			memcpy(m_pData[dX][dY].m_cDeadOwnerName, m_pData[dX][dY].m_cOwnerName, 11);
+			m_pData[dX][dY].m_iDeadChatMsg = m_pData[dX][dY].m_iChatMsg;
+			m_pData[dX][dY].m_wObjectID = NULL;
+			m_pData[dX][dY].m_sOwnerType = NULL;
+			m_pData[dX][dY].m_iChatMsg = NULL;
+			ZeroMemory(m_pData[dX][dY].m_cOwnerName, sizeof(m_pData[dX][dY].m_cOwnerName));
+			m_iObjectIDcacheLocX[m_pData[dX][dY].m_wDeadObjectID] = -1 * m_iObjectIDcacheLocX[m_pData[dX][dY].m_wDeadObjectID];//dX; // v1.4
+			m_iObjectIDcacheLocY[m_pData[dX][dY].m_wDeadObjectID] = -1 * m_iObjectIDcacheLocY[m_pData[dX][dY].m_wDeadObjectID];//dY;
 
-		if (m_pData[dX][dY].m_iEffectType != 0)
-		{	m_pData[dX][dY].m_iEffectType  = 0;
-			m_pData[dX][dY].m_iEffectFrame = 0;
-			m_pData[dX][dY].m_iEffectTotalFrame = 0;
-			m_pData[dX][dY].m_dwEffectTime      = 0;
-	}	}
+			if (m_pData[dX][dY].m_iEffectType != 0)
+			{
+				m_pData[dX][dY].m_iEffectType = 0;
+				m_pData[dX][dY].m_iEffectFrame = 0;
+				m_pData[dX][dY].m_iEffectTotalFrame = 0;
+				m_pData[dX][dY].m_dwEffectTime = 0;
+			}
+		}
+	}
 
 	if (m_pData[dX][dY].m_sOwnerType != NULL)
 	{	if (   (wObjectID != (WORD)m_pGame->m_sPlayerObjectID)
 			&& (m_pData[dX][dY].m_wObjectID == (WORD)m_pGame->m_sPlayerObjectID))
-		{	return FALSE;
+		{	m_pGame->RequestFullObjectData(wObjectID); 
+			return FALSE;
 		}else
 		{	return FALSE;
 	}	}
@@ -1621,13 +1618,13 @@ int CMapData::iObjectFrameCounter(char * cPlayerName, short sViewPointX, short s
  int  cDir, cTotalFrame, cFrameMoveDots;
  static DWORD S_dwUpdateTime = timeGetTime();
  int   sWeaponType, sCenterX, sCenterY, sDist;//, sAbsX, sAbsY;
- BOOL  bAutoUpdate = FALSE;
+ BOOL  bAutoUpdate = FALSE, dynObjsNeedUpdate = FALSE;
  short dx, dy;
  long  lPan;
 
 	iRet = 0;
 	dwTime = dwRealTime = timeGetTime();
-	if ((dwTime - m_dwFrameTime) >= 90)
+	if ((dwTime - m_dwFrameTime) >= 1)
 		m_dwFrameTime = dwTime;
 
 	sVal = sViewPointX - (m_sPivotX*32);
@@ -1636,6 +1633,8 @@ int CMapData::iObjectFrameCounter(char * cPlayerName, short sViewPointX, short s
 	sCenterY = (sVal / 32) + 10;
 	m_sRectX = m_pGame->m_sVDL_X - m_sPivotX;
 	m_sRectY = m_pGame->m_sVDL_Y - m_sPivotY;
+
+	dynObjsNeedUpdate = (dwTime - m_dwDOframeTime) > 100;
 	bAutoUpdate = (dwTime - S_dwUpdateTime) > 40;
 
 	for (dX = 0; dX < MAPDATASIZEX; dX++)
@@ -1644,7 +1643,7 @@ int CMapData::iObjectFrameCounter(char * cPlayerName, short sViewPointX, short s
 		lPan = -(sCenterX - dX)*800;
 
 		// Dynamic Object
-		if ((dwTime - m_dwDOframeTime) > 100)//00496B99  JBE 00496F43
+		if (dynObjsNeedUpdate)//00496B99  JBE 00496F43
 		{	m_pData[dX][dY].m_iEffectFrame++;
 			switch (m_pData[dX][dY].m_iEffectType) {
 			case 1:
@@ -1798,7 +1797,7 @@ int CMapData::iObjectFrameCounter(char * cPlayerName, short sViewPointX, short s
 				iDelay = (m_pData[dX][dY].m_iStatus & 0x000F)*12;
 				break;
 			case DEF_OBJECTMAGIC: // 4
-				if( m_pGame->m_cSkillMastery[4] == 100 ) iDelay = -13;
+				if( m_pGame->m_cSkillMastery[4] == 100 ) iDelay = -17;
 				else iDelay = 0;
 				break;
 			default:
@@ -1811,7 +1810,7 @@ int CMapData::iObjectFrameCounter(char * cPlayerName, short sViewPointX, short s
 
 			dwFrameTime = m_stFrame[m_pData[dX][dY].m_sOwnerType][m_pData[dX][dY].m_cOwnerAction].m_sFrameTime + iDelay;
 
-			if ((dwTime - m_pData[dX][dY].m_dwOwnerTime) > dwFrameTime )
+			if ((dwTime - m_pData[dX][dY].m_dwOwnerTime) > dwFrameTime)
 			{
 				if (m_pData[dX][dY].m_sOwnerType > 0 &&
 					m_pData[dX][dY].m_sOwnerType < 7)
@@ -1823,7 +1822,7 @@ int CMapData::iObjectFrameCounter(char * cPlayerName, short sViewPointX, short s
 					m_pData[dX][dY].m_cOwnerFrame++;
 				}
 				m_pData[dX][dY].m_bSpriteOmit = !m_pData[dX][dY].m_bSpriteOmit;
-				m_pData[dX][dY].m_dwOwnerTime = dwTime;
+				m_pData[dX][dY].m_dwOwnerTime += dwFrameTime;
 				if (iRet == 0)
 				{	iRet = -1;
 					S_dwUpdateTime = dwTime;
@@ -3628,12 +3627,12 @@ int CMapData::iObjectFrameCounter(char * cPlayerName, short sViewPointX, short s
 						}
 						break;
 	}	}	}	}	}
-	if (bAutoUpdate == TRUE)
+	if (bAutoUpdate)
 	{	S_dwUpdateTime = dwTime;
 		if (iRet == 0)
 			return -1;
 	}
-	if ((dwTime - m_dwDOframeTime) > 100) m_dwDOframeTime = dwTime; //v1.4
+	if (dynObjsNeedUpdate) m_dwDOframeTime = dwTime; //v1.4
 	return iRet;
 }
 

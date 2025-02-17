@@ -29,6 +29,8 @@
 class CMapData  
 {
 public:
+	inline bool IsWithinBounds(int x, int y, int maxX, int maxY);
+
 	void * operator new (size_t size)
 	{
 		return HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, size);
