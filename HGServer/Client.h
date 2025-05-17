@@ -57,6 +57,8 @@ public:
 	//int m_iUninteruptibleCheck;
 	//char m_cConnectionCheck;
 
+	BOOL m_bIsClientConnected;
+
 	CClient(HWND hWnd);
 	virtual ~CClient();
 

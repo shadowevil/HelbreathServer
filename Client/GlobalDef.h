@@ -23,6 +23,7 @@
 #define DEF_LOWERVERSION		51
 #define DEF_SERVER_IP			"127.0.0.1"
 #define DEF_SERVER_PORT			2848
+#define DEF_GSERVER_PORT		9900
 
 #define SCREENX					80
 #define SCREENY					60

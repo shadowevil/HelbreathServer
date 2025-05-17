@@ -3,6 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "Game.h"
+#include "LoginServer.h"
 
 class CDebugWindow *DbgWnd;
 
@@ -153,7 +154,7 @@ CGame::CGame(HWND hWnd)
 	
 	m_bIsGameStarted = FALSE;
 	m_hWnd           = hWnd;
-	m_pMainLogSock   = NULL;
+	/*m_pMainLogSock   = NULL;
 	m_pGateSock      = NULL;
 	m_bIsLogSockAvailable   = FALSE;
 	m_bIsGateSockAvailable  = FALSE;
@@ -165,7 +166,10 @@ CGame::CGame(HWND hWnd)
 	m_bIsQuestAvailable     = FALSE;
 	m_bIsPortionAvailable   = FALSE;
 
-	ZeroMemory(m_cServerName, sizeof(m_cServerName));
+	ZeroMemory(m_cServerName, sizeof(m_cServerName));*/
+
+	_lsock = NULL; 
+	g_login = new LoginServer;
 
 	m_iPlayerMaxLevel = DEF_PLAYERMAXLEVEL;
 	
@@ -291,25 +295,69 @@ CGame::CGame(HWND hWnd)
 	// 2002-09-09 #1
 	m_bReceivedItemList = FALSE;
 
+	for (i = 0; i < DEF_MAXCLIENTLOGINSOCK; i++)
+		_lclients[i] = nullptr;
+
+	m_pPartyManager = new class PartyManager(this);
+
 }
 
 CGame::~CGame()
 {
 	//DbgWnd->Shutdown();
 	//delete DbgWnd;
+
+	for (int i = 0; i < DEF_MAXCLIENTLOGINSOCK; i++)
+	{
+		if (_lclients[i])
+		{
+			delete _lclients[i];
+			_lclients[i] = nullptr;
+		}
+	}
+
+	delete m_pPartyManager;
+}
+
+bool CGame::bAcceptLogin(XSocket* sock)
+{
+	if (m_bIsGameStarted == false)
+	{
+		PutLogList("Closed Connection, not initialized");
+		goto CLOSE_ANYWAY;
+	}
+
+	for (int i = 0; i < DEF_MAXCLIENTLOGINSOCK; i++)
+	{
+		auto& p = _lclients[i];
+		if (!p)
+		{
+			p = new LoginClient(m_hWnd);
+			sock->bAccept(p->_sock, WM_USER_BOT_ACCEPT + i + 1);
+			//	PutLogList("Login Client Acepted");
+			ZeroMemory(p->_ip, sizeof(p->_ip));
+			p->_sock->iGetPeerAddress(p->_ip);
+			return true;
+		}
+	}
+
+CLOSE_ANYWAY:;
+
+	auto pTmpSock = new XSocket(m_hWnd, DEF_SERVERSOCKETBLOCKLIMIT);
+	sock->bAccept(pTmpSock, NULL);
+	delete pTmpSock;
+
+	return false;
 }
 
 BOOL CGame::bAccept(class XSocket * pXSock)
 {
- register int i;
+ register int i, iTotalip = 0, a;
  class XSocket * pTmpSock;
+ char cIPtoBan[21];
+ FILE* pFile;
 
-	if ((m_bIsGateSockAvailable == FALSE)  || (m_bIsLogSockAvailable == FALSE)   || 
-		(m_bIsItemAvailable == FALSE)      || (m_bIsNpcAvailable == FALSE)       || 
-		(m_bIsMagicAvailable == FALSE)     || (m_bIsSkillAvailable == FALSE)     || 
-		(m_bIsPortionAvailable == FALSE)   || (m_bOnExitProcess == TRUE)         || 
-		(m_bIsQuestAvailable == FALSE)     || (m_bIsBuildItemAvailable == FALSE) || 
-		(m_bIsGameStarted == FALSE))
+	if (m_bIsGameStarted == FALSE)
 		goto CLOSE_ANYWAY;
 
 	for (i = 1; i < DEF_MAXCLIENTS; i++)
@@ -327,6 +375,42 @@ BOOL CGame::bAccept(class XSocket * pXSock)
 		ZeroMemory(m_pClientList[i]->m_cIPaddress, sizeof(m_pClientList[i]->m_cIPaddress));
 		m_pClientList[i]->m_pXSock->iGetPeerAddress(m_pClientList[i]->m_cIPaddress);
 		
+		a = i;
+
+		for (int v = 0; v < DEF_MAXBANNED; v++)
+		{
+			if (strcmp(m_stBannedList[v].m_cBannedIPaddress, m_pClientList[i]->m_cIPaddress) == 0)
+			{
+				goto CLOSE_CONN;
+			}
+		}
+		//centu: Anti-Downer
+		for (int j = 0; j < DEF_MAXCLIENTS; j++) {
+			if (m_pClientList[j] != NULL) {
+				if (strcmp(m_pClientList[j]->m_cIPaddress, m_pClientList[i]->m_cIPaddress) == 0) iTotalip++;
+			}
+		}
+		if (iTotalip > 9) {
+			ZeroMemory(cIPtoBan, sizeof(cIPtoBan));
+			strcpy(cIPtoBan, m_pClientList[i]->m_cIPaddress);
+			//opens cfg file
+			pFile = fopen("GameConfigs\\BannedList.cfg", "a");
+			//shows log
+			wsprintf(G_cTxt, "<%d> IP Banned: (%s)", i, cIPtoBan);
+			PutLogList(G_cTxt);
+			//modifys cfg file
+			fprintf(pFile, "banned-ip = %s", cIPtoBan);
+			fprintf(pFile, "\n");
+			fclose(pFile);
+
+			//updates BannedList.cfg on the server
+			for (int x = 0; x < DEF_MAXBANNED; x++)
+				if (strlen(m_stBannedList[x].m_cBannedIPaddress) == 0)
+					strcpy(m_stBannedList[x].m_cBannedIPaddress, cIPtoBan);
+
+			goto CLOSE_CONN;
+		}
+
 		wsprintf(G_cTxt,"<%d> Client Connected: (%s)", i, m_pClientList[i]->m_cIPaddress);
 		PutLogList(G_cTxt);
 
@@ -349,6 +433,12 @@ CLOSE_ANYWAY:;
 	pXSock->bAccept(pTmpSock, NULL); 
 	delete pTmpSock;
 
+	return FALSE;
+
+CLOSE_CONN:;
+	delete m_pClientList[a];
+	m_pClientList[a] = 0;
+	RemoveClientShortCut(a);
 	return FALSE;
 }
 
@@ -420,11 +510,14 @@ BOOL CGame::bInit()
 	for (i = 0; i < DEF_MAXCLIENTS+1; i++)
 		m_iClientShortCut[i] = 0;
 
-	if (m_pMainLogSock != NULL) delete m_pMainLogSock;
+	/*if (m_pMainLogSock != NULL) delete m_pMainLogSock;
 	if (m_pGateSock != NULL) delete m_pGateSock;
 
 	for (i = 0; i < DEF_MAXSUBLOGSOCK; i++)
-		if (m_pSubLogSock[i] != NULL) delete m_pSubLogSock[i];
+		if (m_pSubLogSock[i] != NULL) delete m_pSubLogSock[i];*/
+
+	if (_lsock != NULL) 
+		delete _lsock;
 
 	for (i = 0; i < DEF_MAXCLIENTS; i++)
 	if (m_pClientList[i] != NULL) delete m_pClientList[i];
@@ -524,7 +617,7 @@ BOOL CGame::bInit()
 
 	m_bIsGameStarted = FALSE;
 
-	m_pMainLogSock  = NULL;
+	/*m_pMainLogSock  = NULL;
 	m_pGateSock = NULL;
 	m_bIsLogSockAvailable   = FALSE;
 	m_bIsGateSockAvailable  = FALSE;
@@ -536,7 +629,9 @@ BOOL CGame::bInit()
 	m_bIsQuestAvailable     = FALSE;
 	m_bIsPortionAvailable   = FALSE;
 
-	ZeroMemory(m_cServerName, sizeof(m_cServerName));
+	ZeroMemory(m_cServerName, sizeof(m_cServerName));*/
+
+	_lsock = NULL;
 	
 	for (i = 0; i < DEF_MAXCLIENTS; i++)
 		m_pClientList[i] = NULL;
@@ -589,10 +684,10 @@ BOOL CGame::bInit()
 //	for (i = 0; i < DEF_MAXTELEPORTTYPE; i++)
 //		m_pTeleportConfigList[i] = NULL;
 
-	for (i = 0; i < DEF_MAXSUBLOGSOCK; i++) {
+	/*for (i = 0; i < DEF_MAXSUBLOGSOCK; i++) {
 		m_pSubLogSock[i] = NULL;
 		m_bIsSubLogSockAvailable[i] = FALSE;
-	}
+	}*/
 
 	for (i = 0; i < DEF_MAXBUILDITEMS; i++) 
 		m_pBuildItemList[i] = NULL;
@@ -696,47 +791,63 @@ BOOL CGame::bInit()
 	m_iLevelExp20     = m_iLevelExpTable[20]; 
 
 	m_iGameServerMode = 0;
-	if (bReadProgramConfigFile("GServer.cfg") == FALSE) {
+	if (bReadProgramConfigFile("GServer.cfg", false) == FALSE) {
 		PutLogList(" ");
 		PutLogList("(!!!) CRITICAL ERROR! Cannot execute server! GServer.cfg file contents error!");
 		return FALSE;	
 	}
-	if (bReadSettingsConfigFile("..\\GameConfigs\\Settings.cfg") == FALSE) {;
+	if (bReadProgramConfigFile("GMaps.cfg", true) == FALSE) {
+		PutLogList(" ");
+		PutLogList("(!!!) CRITICAL ERROR! Cannot execute server! GMaps.cfg file contents error!");
+		return FALSE;
+	}
+	if (bReadSettingsConfigFile("GameConfigs\\Settings.cfg") == FALSE) {;
 		PutLogList(" ");
 		PutLogList("(!!!) CRITICAL ERROR! Cannot execute server! Settings.cfg file contents error!");
 		return FALSE;
 	}
-	if (bReadAdminListConfigFile("..\\GameConfigs\\AdminList.cfg") == FALSE) {;
+	if (bReadAdminListConfigFile("GameConfigs\\AdminList.cfg") == FALSE) {;
 		PutLogList(" ");
 		PutLogList("(!!!) CRITICAL ERROR! Cannot execute server! AdminList.cfg file contents error!");
 		return FALSE;
 	}
-	if (bReadBannedListConfigFile("..\\GameConfigs\\BannedList.cfg") == FALSE) {;
+	if (bReadBannedListConfigFile("GameConfigs\\BannedList.cfg") == FALSE) {;
 		PutLogList(" ");
 		PutLogList("(!!!) CRITICAL ERROR! Cannot execute server! BannedList.cfg file contents error!");
 		return FALSE;
 	}
-	if (bReadAdminSetConfigFile("..\\GameConfigs\\AdminSettings.cfg") == FALSE) {;
+	if (bReadAdminSetConfigFile("GameConfigs\\AdminSettings.cfg") == FALSE) {;
 		PutLogList(" ");
 		PutLogList("(!!!) CRITICAL ERROR! Cannot execute server! AdminSettings.cfg file contents error!");
 		return FALSE;
 	}	
 	srand( (unsigned)time( NULL ) );   
-	m_pMainLogSock = new class XSocket(m_hWnd, DEF_SERVERSOCKETBLOCKLIMIT);
-	m_pMainLogSock->bConnect(m_cLogServerAddr, m_iLogServerPort, WM_ONLOGSOCKETEVENT);
-	m_pMainLogSock->bInitBufferSize(DEF_MSGBUFFERSIZE);
+	//m_pMainLogSock = new class XSocket(m_hWnd, DEF_SERVERSOCKETBLOCKLIMIT);
+	//m_pMainLogSock->bConnect(m_cLogServerAddr, m_iLogServerPort, WM_ONLOGSOCKETEVENT);
+	//m_pMainLogSock->bInitBufferSize(DEF_MSGBUFFERSIZE);
 
-	wsprintf(cTxt, "(!) Try to Connect main-log-socket... Addr:%s  Port:%d", m_cLogServerAddr, m_iLogServerPort);
-	PutLogList(cTxt);
-	//Sleep(100);
+	//wsprintf(cTxt, "(!) Try to Connect main-log-socket... Addr:%s  Port:%d", m_cLogServerAddr, m_iLogServerPort);
+	//PutLogList(cTxt);
+	////Sleep(100);
 
-	m_pGateSock = new class XSocket(m_hWnd, DEF_SERVERSOCKETBLOCKLIMIT);
-	m_pGateSock->bConnect(m_cGateServerAddr, m_iGateServerPort, WM_ONGATESOCKETEVENT);
-	m_pGateSock->bInitBufferSize(DEF_MSGBUFFERSIZE);
-	m_iGateSockConnRetryTimes = 1;
+	//m_pGateSock = new class XSocket(m_hWnd, DEF_SERVERSOCKETBLOCKLIMIT);
+	//m_pGateSock->bConnect(m_cGateServerAddr, m_iGateServerPort, WM_ONGATESOCKETEVENT);
+	//m_pGateSock->bInitBufferSize(DEF_MSGBUFFERSIZE);
+	//m_iGateSockConnRetryTimes = 1;
 
-	wsprintf(cTxt, "(!) Try to Connect Gate Server... Addr:%s  Port:%d", m_cGateServerAddr, m_iGateServerPort);
-	PutLogList(cTxt);
+	//wsprintf(cTxt, "(!) Try to Connect Gate Server... Addr:%s  Port:%d", m_cGateServerAddr, m_iGateServerPort);
+	//PutLogList(cTxt);
+
+	_lsock = new class XSocket(m_hWnd, DEF_SERVERSOCKETBLOCKLIMIT);
+	if (m_iGameServerMode == 1)
+	{
+		_lsock->bConnect(m_cGameServerAddrInternal, m_iLogServerPort, WM_ONLOGSOCKETEVENT);
+	}
+	else if (m_iGameServerMode == 2)
+	{
+		_lsock->bConnect(m_cGameServerAddr, m_iLogServerPort, WM_ONLOGSOCKETEVENT);
+	}
+	_lsock->bInitBufferSize(DEF_MSGBUFFERSIZE);
 
 	m_bF1pressed = m_bF4pressed = m_bF12pressed = m_bF5pressed = FALSE;
 	
@@ -751,12 +862,12 @@ BOOL CGame::bInit()
 		 m_cDayOrNight = 2;
 	else m_cDayOrNight = 1;
 
-	bReadNotifyMsgListFile("..\\GameConfigs\\notice.txt");
+	bReadNotifyMsgListFile("GameConfigs\\notice.txt");
 	m_dwNoticeTime = dwTime;
 
-	m_iCurSubLogSockIndex    = 0;
+	/*m_iCurSubLogSockIndex    = 0;
 	m_iSubLogSockFailCount   = 0;
-	m_iSubLogSockActiveCount = 0;
+	m_iSubLogSockActiveCount = 0;*/
 
 	m_pNoticementData      = NULL;
 	m_dwNoticementDataSize = 0;
@@ -767,16 +878,16 @@ BOOL CGame::bInit()
 	m_iCrusadeCount  = NULL;
 	m_bIsCrusadeMode = FALSE;
 	m_bIsApocalypseMode = FALSE;
-	m_wServerID_GSS = iDice(1,65535);
+	//m_wServerID_GSS = iDice(1,65535);
 
-	ZeroMemory(m_cGateServerStockMsg, sizeof(m_cGateServerStockMsg));
+	/*ZeroMemory(m_cGateServerStockMsg, sizeof(m_cGateServerStockMsg));
 	cp = (char *)m_cGateServerStockMsg;
 	dwp = (DWORD *)cp;
 	*dwp = MSGID_SERVERSTOCKMSG;
 	cp += 4;
 	wp = (WORD *)cp;
 	*wp = DEF_MSGTYPE_CONFIRM;
-	cp += 2;
+	cp += 2;*/
 
 	m_iIndexGSS = 6;
 	m_dwCrusadeGUID = NULL;
@@ -801,6 +912,18 @@ BOOL CGame::bInit()
 	m_iHeldenianAresdenDead = 0;
 	m_iHeldenianElvineDead = 0;
 
+	int dwMsgSize = 0;
+	m_bIsItemAvailable = _bDecodeItemConfigFileContents("GameConfigs\\Item.cfg", dwMsgSize);
+	m_bIsItemAvailable = _bDecodeItemConfigFileContents("GameConfigs\\Item2.cfg", dwMsgSize);
+	m_bIsItemAvailable = _bDecodeItemConfigFileContents("GameConfigs\\Item3.cfg", dwMsgSize);
+	m_bIsBuildItemAvailable = _bDecodeBuildItemConfigFileContents("GameConfigs\\builditem.cfg", dwMsgSize);
+	m_bIsNpcAvailable = _bDecodeNpcConfigFileContents("GameConfigs\\NPC.cfg", dwMsgSize);
+	m_bIsMagicAvailable = _bDecodeMagicConfigFileContents("GameConfigs\\Magic.cfg", dwMsgSize);
+	m_bIsSkillAvailable = _bDecodeSkillConfigFileContents("GameConfigs\\Skill.cfg", dwMsgSize);
+	m_bIsQuestAvailable = _bDecodeQuestConfigFileContents("GameConfigs\\Quest.cfg", dwMsgSize);
+	m_bIsPortionAvailable = _bDecodePortionConfigFileContents("GameConfigs\\potion.cfg", dwMsgSize);
+	_bDecodeDupItemIDFileContents("GameConfigs\\DupItemID.cfg", dwMsgSize);
+
 	return TRUE;
 }
 
@@ -824,7 +947,7 @@ void CGame::DisplayInfo(HDC hdc)
  char cTxt[350], cDave[350];  
  int  i, iLine;
 
-	wsprintf(cTxt, "Server-Name(%s) Max.Level(%d) Players(%d/%d - %d/%d) Crusade(%d:%d) SLSock(%d:%d) GTSock(%d) RBT(%d)", m_cServerName, m_iPlayerMaxLevel, m_iTotalClients, m_iMaxClients, m_iTotalGameServerClients, m_iTotalGameServerMaxClients, m_dwCrusadeGUID, (int)m_bIsCrusadeMode, m_iSubLogSockActiveCount, m_iSubLogSockFailCount, m_iGateSockConnRetryTimes, m_iAutoRebootingCount);
+	wsprintf(cTxt, "Server-Name(%s) Max.Level(%d) Players(%d/%d - %d/%d)", m_cServerName, m_iPlayerMaxLevel, m_iTotalClients, m_iMaxClients, m_iTotalGameServerClients, m_iTotalGameServerMaxClients);
 	TextOut(hdc, 5, 10, cTxt, strlen(cTxt));
 
 //#ifdef DEF_TESTSERVER
@@ -1499,7 +1622,7 @@ void CGame::RequestInitPlayerHandler(int iClientH, char * pData, char cKey)
 	
 	m_pClientList[iClientH]->m_bIsObserverMode = bIsObserverMode;
 		
-	bSendMsgToLS(MSGID_REQUEST_PLAYERDATA, iClientH);
+	InitPlayerData(iClientH, NULL, NULL); //bSendMsgToLS(MSGID_REQUEST_PLAYERDATA, iClientH);
 }
 
 // 05/22/2004 - Hypnotoad - sends client to proper location after dieing
@@ -2498,13 +2621,13 @@ void CGame::DeleteClient(int iClientH, BOOL bSave, BOOL bNotify, BOOL bCountLogo
 				SendNotifyMsg(NULL, i, DEF_NOTIFY_WHISPERMODEOFF, NULL, NULL, NULL, m_pClientList[iClientH]->m_cCharName);
 			}
 
-			ZeroMemory(cData, sizeof(cData));
+			/*ZeroMemory(cData, sizeof(cData));
 			cp = (char *)cData;
 			*cp = GSM_DISCONNECT;
 			cp++;
 			memcpy(cp, m_pClientList[iClientH]->m_cCharName, 10);
 			cp += 10;
-			bStockMsgToGateServer(cData, 11);
+			bStockMsgToGateServer(cData, 11);*/
 
 			m_pMapList[m_pClientList[iClientH]->m_cMapIndex]->ClearOwner(2, iClientH, DEF_OWNERTYPE_PLAYER,
 				m_pClientList[iClientH]->m_sX, 
@@ -2625,9 +2748,9 @@ void CGame::DeleteClient(int iClientH, BOOL bSave, BOOL bNotify, BOOL bCountLogo
 				ZeroMemory(cData, sizeof(cData));
 				cp = (char *)cData;
 
-				dwp = (DWORD *)cp;
+				/*dwp = (DWORD *)cp;
 				*dwp = MSGID_PARTYOPERATION;
-				cp += 4;
+				cp += 4;*/
 
 				wp = (WORD*)cp;
 				*wp = 4;
@@ -2644,11 +2767,11 @@ void CGame::DeleteClient(int iClientH, BOOL bSave, BOOL bNotify, BOOL bCountLogo
 				*wp = m_pClientList[iClientH]->m_iPartyID;
 				cp += 2;
 
-				SendMsgToGateServer(MSGID_PARTYOPERATION, iClientH, cData);
+				PartyOperation(cData); //SendMsgToGateServer(MSGID_PARTYOPERATION, iClientH, cData);
 			}
-			if (bSendMsgToLS(MSGID_REQUEST_SAVEPLAYERDATALOGOUT, iClientH, bCountLogout) == FALSE) LocalSavePlayerData(iClientH);
+			//if (bSendMsgToLS(MSGID_REQUEST_SAVEPLAYERDATALOGOUT, iClientH, bCountLogout) == FALSE) LocalSavePlayerData(iClientH);
 		}
-		else bSendMsgToLS(MSGID_REQUEST_NOSAVELOGOUT, iClientH, bCountLogout);
+		g_login->LocalSavePlayerData(iClientH); //else bSendMsgToLS(MSGID_REQUEST_NOSAVELOGOUT, iClientH, bCountLogout);
 	}
 	else {
 		if (m_pClientList[iClientH]->m_bIsOnServerChange == FALSE) {
@@ -2656,9 +2779,9 @@ void CGame::DeleteClient(int iClientH, BOOL bSave, BOOL bNotify, BOOL bCountLogo
 				ZeroMemory(cData, sizeof(cData));
 				cp = (char *)cData;
 
-				dwp = (DWORD *)cp;
+				/*dwp = (DWORD *)cp;
 				*dwp = MSGID_PARTYOPERATION;
-				cp += 4;
+				cp += 4;*/
 
 				wp = (WORD*)cp;
 				*wp = 4;
@@ -2675,19 +2798,19 @@ void CGame::DeleteClient(int iClientH, BOOL bSave, BOOL bNotify, BOOL bCountLogo
 				*wp = m_pClientList[iClientH]->m_iPartyID;
 				cp += 2;
 
-				SendMsgToGateServer(MSGID_PARTYOPERATION, iClientH, cData);
+				PartyOperation(cData); //SendMsgToGateServer(MSGID_PARTYOPERATION, iClientH, cData);
 			}
 
-			bSendMsgToLS(MSGID_REQUEST_NOSAVELOGOUT, iClientH, bCountLogout);
+			//bSendMsgToLS(MSGID_REQUEST_NOSAVELOGOUT, iClientH, bCountLogout);
 		}
 		else {
 			if (m_pClientList[iClientH]->m_iPartyID != NULL) {
 				ZeroMemory(cData, sizeof(cData));
 				cp = (char *)cData;
 
-				dwp = (DWORD *)cp;
+				/*dwp = (DWORD *)cp;
 				*dwp = MSGID_PARTYOPERATION;
-				cp += 4;
+				cp += 4;*/
 
 				wp = (WORD*)cp;
 				*wp = 7;
@@ -2704,10 +2827,10 @@ void CGame::DeleteClient(int iClientH, BOOL bSave, BOOL bNotify, BOOL bCountLogo
 				*wp = m_pClientList[iClientH]->m_iPartyID;
 				cp += 2;
 
-				SendMsgToGateServer(MSGID_PARTYOPERATION, iClientH, cData);
+				PartyOperation(cData); //SendMsgToGateServer(MSGID_PARTYOPERATION, iClientH, cData);
 			}
 
-			bSendMsgToLS(MSGID_REQUEST_SETACCOUNTWAITSTATUS, iClientH, FALSE); 
+			//bSendMsgToLS(MSGID_REQUEST_SETACCOUNTWAITSTATUS, iClientH, FALSE); 
 		}
 	}
 
@@ -3649,7 +3772,7 @@ void CGame::CheckClientResponseTime()
 				
 				if ((m_pMapList[m_pClientList[i]->m_cMapIndex]->m_bIsFightZone == FALSE) &&
 					((dwTime - m_pClientList[i]->m_dwAutoSaveTime) > (DWORD)DEF_AUTOSAVETIME)) {
-					bSendMsgToLS(MSGID_REQUEST_SAVEPLAYERDATA, i);
+					g_login->LocalSavePlayerData(i); //bSendMsgToLS(MSGID_REQUEST_SAVEPLAYERDATA, i);
 					m_pClientList[i]->m_dwAutoSaveTime = dwTime;
 				}
 				
@@ -3906,7 +4029,7 @@ void CGame::CheckClientResponseTime()
 
 void CGame::OnMainLogSocketEvent(UINT message, WPARAM wParam, LPARAM lParam)
 {
- int   iRet;
+ /*int   iRet;
 	
 	if (m_pMainLogSock == NULL) return;
 
@@ -3942,7 +4065,7 @@ void CGame::OnMainLogSocketEvent(UINT message, WPARAM wParam, LPARAM lParam)
 			PutLogList("(!!!) GAME SERVER SHUTDOWN PROCESS BEGIN(by main-log-socket connection Lost)!!!");
 		}
 		break;
-	}
+	}*/
 }
 
 void CGame::OnMainLogRead()
@@ -3950,7 +4073,7 @@ void CGame::OnMainLogRead()
  DWORD dwMsgSize;
  char * pData, cKey;
 
-	pData = m_pMainLogSock->pGetRcvDataPointer(&dwMsgSize, &cKey);
+	pData = _lsock->pGetRcvDataPointer(&dwMsgSize, &cKey); //m_pMainLogSock->pGetRcvDataPointer(&dwMsgSize, &cKey);
 
 	if (bPutMsgQuene(DEF_MSGFROM_LOGSERVER, pData, dwMsgSize, NULL, cKey) == FALSE) {
 		PutLogList("@@@@@@ CRITICAL ERROR in MsgQuene!!! @@@@@@");
@@ -4003,485 +4126,506 @@ BOOL CGame::bSendMsgToLS(DWORD dwMsg, int iClientH, BOOL bFlag, char* pData)
 	ZeroMemory(cGuildName, sizeof(cGuildName));
 	ZeroMemory(cGuildLoc,  sizeof(cGuildLoc));
 
+	char cFn[112] = {};
+	SYSTEMTIME SysTime;
+	FILE* pFile;
+
+	GetLocalTime(&SysTime);
+	ZeroMemory(cFn, sizeof(cFn));
+
 	switch (dwMsg) {
 	// New 07/05/2004
+	//case MSGID_GAMEMASTERLOG:
+	//	// Sub-log-socket
+	//	if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
+
+	//	if (m_pClientList[iClientH] == NULL) return FALSE;
+	//	if (pData == NULL) return FALSE ;
+
+
+	//	dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
+	//	*dwp = MSGID_GAMEMASTERLOG;
+	//	wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
+	//	*wp  = DEF_MSGTYPE_CONFIRM;
+
+	//	cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
+
+	//	iSize =  strlen(pData) ;
+	//	memcpy((char *)cp, pData, iSize);
+
+	//	iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 6 + iSize);
+	//	iSendSize = 6 + iSize;
+	//	break;
+	//	// v2.15 
+
+	//case MSGID_GAMEITEMLOG:
+	//	// Sub-log-socket
+	//	if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
+
+	//	//		if (m_pClientList[iClientH] == NULL) return FALSE;
+	//	if (pData == NULL) return FALSE ;
+
+	//	dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
+	//	*dwp = MSGID_GAMEITEMLOG;
+	//	wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
+	//	*wp  = DEF_MSGTYPE_CONFIRM;
+
+	//	cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
+
+	//	iSize =  strlen(pData) ;
+	//	memcpy((char *)cp, pData, iSize);
+
+	//	iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 6 + iSize);
+	//	iSendSize = 6 + iSize;
+	//	break;
+
+	//case MSGID_SENDSERVERSHUTDOWNMSG:
+	//	if (m_pMainLogSock == NULL) return FALSE;
+
+	//	dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
+	//	*dwp = MSGID_SENDSERVERSHUTDOWNMSG;
+	//	wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
+	//	*wp  = DEF_MSGTYPE_CONFIRM;
+	//	
+	//	iRet = m_pMainLogSock->iSendMsg(G_cData50000, 6);
+	//	break;
+	//
+	//case MSGID_GAMESERVERSHUTDOWNED:
+	//	if (m_pMainLogSock == NULL) return FALSE;
+
+	//	dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
+	//	*dwp = MSGID_GAMESERVERSHUTDOWNED;
+	//	wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
+	//	*wp  = DEF_MSGTYPE_CONFIRM;
+	//	
+	//	iRet = m_pMainLogSock->iSendMsg(G_cData50000, 6);
+	//	return TRUE;
+
+	//case MSGID_REQUEST_SETACCOUNTWAITSTATUS:
+	//case MSGID_REQUEST_SETACCOUNTINITSTATUS:
+	//	// Sub-log-socket
+	//	if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
+	//	
+	//	if (m_pClientList[iClientH] == NULL) return FALSE;
+	//	dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
+	//	*dwp = dwMsg;
+	//	wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
+	//	*wp  = DEF_MSGTYPE_CONFIRM;
+	//	
+	//	cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
+
+	//	memcpy(cp, m_pClientList[iClientH]->m_cAccountName, 10);
+	//	cp += 10;
+
+	//	ip = (int *)cp;
+	//	*ip = m_pClientList[iClientH]->m_iLevel;
+	//	cp += 4;
+	//
+	//	iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 20);
+	//	iSendSize = 16;
+	//	break;
+
+	//case MSGID_ENTERGAMECONFIRM:
+	//	
+	//	// Sub-log-socket
+	//	if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
+	//	
+	//	if (m_pClientList[iClientH] == NULL) return FALSE;
+
+	//	dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
+	//	*dwp = MSGID_ENTERGAMECONFIRM;
+	//	wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
+	//	*wp  = DEF_MSGTYPE_CONFIRM;
+	//	
+	//	cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
+
+	//	memcpy(cp, m_pClientList[iClientH]->m_cAccountName, 10);
+	//	cp += 10;
+
+	//	memcpy(cp, m_pClientList[iClientH]->m_cAccountPassword, 10);
+	//	cp += 10;
+
+	//	memcpy(cp, m_cServerName, 10);
+	//	cp += 10;
+
+	//	ZeroMemory(cTxt, sizeof(cTxt));
+	//	m_pClientList[iClientH]->m_pXSock->iGetPeerAddress(cTxt);
+	//	memcpy(cp, cTxt, 16);
+	//	cp += 16;
+
+	//	ip = (int *)cp;
+	//	*ip = m_pClientList[iClientH]->m_iLevel;
+	//	cp += 4;
+
+	//	//testcode
+	//	wsprintf(G_cTxt, "Confirmed. Account: (%s) Name: (%s) Level: (%d)", m_pClientList[iClientH]->m_cAccountName, m_pClientList[iClientH]->m_cCharName, m_pClientList[iClientH]->m_iLevel);
+	//	PutLogList(G_cTxt);
+
+
+
+	//	iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 56);
+	//	iSendSize = 56;
+	//	if ((m_bIsCrusadeMode == FALSE) && (m_pClientList[iClientH]->m_dwCrusadeGUID == m_dwCrusadeGUID)) {
+	//	break;
+	//	}
+	//	else
+	//	m_pClientList[iClientH]->m_dwCrusadeGUID = m_dwCrusadeGUID;
+
+
+	//	break;
+	//
+	//case MSGID_REQUEST_REGISTERGAMESERVER:
+	//	if (m_pMainLogSock == NULL) return FALSE;
+	//			
+	//	wsprintf(cTxt, "(!) Try to register game server(%s)", m_cServerName);
+	//	PutLogList(cTxt);
+	//	
+	//	dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
+	//	*dwp = MSGID_REQUEST_REGISTERGAMESERVER;
+	//	wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
+	//	*wp  = DEF_MSGTYPE_CONFIRM;
+	//	
+	//	cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
+
+	//	memcpy(cAccountName, m_cServerName, 10);
+	//	if (m_iGameServerMode == 1)
+	//	{
+	//		memcpy(cAddress, m_cGameServerAddrExternal, strlen(m_cGameServerAddrExternal));
+	//	}
+	//	if (m_iGameServerMode == 2)
+	//	{
+	//		memcpy(cAddress, m_cGameServerAddr, strlen(m_cGameServerAddr));
+	//	}
+	//	memcpy(cp, cAccountName, 10);
+	//	cp += 10;
+
+	//	memcpy(cp, cAddress, 16);
+	//	cp += 16;
+
+	//	wp  = (WORD *)cp;
+	//	*wp = m_iGameServerPort;
+	//	cp += 2;
+
+	//	*cp = m_iTotalMaps;
+	//	cp++;
+
+	//	for (i = 0; i < m_iTotalMaps; i++) {
+	//		memcpy(cp, m_pMapList[i]->m_cName, 11);
+	//		cp += 11;
+	//	}
+
+	//	iRet = m_pMainLogSock->iSendMsg(G_cData50000, 35 + m_iTotalMaps*11); 
+
+	//	return TRUE;
+
+	//case MSGID_REQUEST_PLAYERDATA:
+	//	
+	//	// Sub-log-socket
+	//	if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
+
+	//	if (m_pClientList[iClientH] == NULL) return FALSE;
+
+	//	dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
+	//	*dwp = MSGID_REQUEST_PLAYERDATA;
+	//	wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
+	//	*wp  = DEF_MSGTYPE_CONFIRM;
+
+	//	cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
+
+	//	//testcode
+	//	if (strlen(m_pClientList[iClientH]->m_cCharName) == 0) PutLogList("(X) CharName NULL!");
+
+	//	memcpy(cCharName, m_pClientList[iClientH]->m_cCharName, 10);
+	//	memcpy(cAccountName, m_pClientList[iClientH]->m_cAccountName, 10);
+	//	memcpy(cAccountPassword, m_pClientList[iClientH]->m_cAccountPassword, 10);
+
+	//	memcpy((char *)cp, cCharName, 10);
+	//	cp += 10;
+
+	//	memcpy((char *)cp, cAccountName, 10);
+	//	cp += 10;
+
+	//	memcpy((char *)cp, cAccountPassword, 10);
+	//	cp += 10;
+
+	//	ZeroMemory(cTemp, sizeof(cTemp));
+	//	iRet = m_pClientList[iClientH]->m_pXSock->iGetPeerAddress(cTemp);
+	//	memcpy((char *)cp, cTemp, 15);
+	//	cp += 15;
+	//	
+	//	iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 52);
+	//	iSendSize = 52;
+	//	break;
+
+	//case MSGID_REQUEST_SAVEPLAYERDATA_REPLY:
+	//case MSGID_REQUEST_SAVEPLAYERDATA:
+	//case MSGID_REQUEST_SAVEPLAYERDATALOGOUT:
+
+	//	// Sub-log-socket
+	//	if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
+	//	
+	//	if (m_pClientList[iClientH] == NULL) return FALSE;
+	//	
+	//	dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
+	//	*dwp = dwMsg;
+	//	wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
+	//	*wp  = DEF_MSGTYPE_CONFIRM;
+
+	//	cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
+
+	//	memcpy(cCharName, m_pClientList[iClientH]->m_cCharName, 10);
+	//	memcpy(cAccountName, m_pClientList[iClientH]->m_cAccountName, 10);
+	//	memcpy(cAccountPassword, m_pClientList[iClientH]->m_cAccountPassword, 10);
+
+	//	memcpy((char *)cp, cCharName, 10);
+	//	cp += 10;
+
+	//	memcpy((char *)cp, cAccountName, 10);
+	//	cp += 10;
+
+	//	memcpy((char *)cp, cAccountPassword, 10);
+	//	cp += 10;
+
+	//	*cp = (char)bFlag;
+	//	cp++;
+	//	
+	//	iSize = _iComposePlayerDataFileContents(iClientH, cp);
+	//	
+	//	iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 37 + iSize);
+	//	iSendSize = 37 + iSize;
+	//	break;
+
+	//case MSGID_REQUEST_NOSAVELOGOUT:
+
+	//	// Sub-log-socket
+	//	if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
+	//	
+	//	if (m_pClientList[iClientH] == NULL) return FALSE;
+	//	
+	//	dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
+	//	*dwp = MSGID_REQUEST_NOSAVELOGOUT;
+	//	wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
+	//	*wp  = DEF_MSGTYPE_CONFIRM;
+
+	//	cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
+
+	//	memcpy(cCharName, m_pClientList[iClientH]->m_cCharName, 10);
+	//	memcpy(cAccountName, m_pClientList[iClientH]->m_cAccountName, 10);
+	//	memcpy(cAccountPassword, m_pClientList[iClientH]->m_cAccountPassword, 10);
+
+	//	memcpy((char *)cp, cCharName, 10);
+	//	cp += 10;
+
+	//	memcpy((char *)cp, cAccountName, 10);
+	//	cp += 10;
+
+	//	memcpy((char *)cp, cAccountPassword, 10);
+	//	cp += 10;
+	//	
+	//	*cp = (char)bFlag;
+	//	cp++;
+	//	
+	//	iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 37);
+	//	iSendSize = 37;
+	//	break;
+	//
+	//case MSGID_REQUEST_CREATENEWGUILD:
+
+	//	// Sub-log-socket
+	//	if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
+	//	
+	//	if (m_pClientList[iClientH] == NULL) return FALSE;
+	//	
+	//	dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
+	//	*dwp = MSGID_REQUEST_CREATENEWGUILD;
+	//	wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
+	//	*wp  = DEF_MSGTYPE_CONFIRM;
+
+	//	cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
+
+	//	memcpy(cCharName, m_pClientList[iClientH]->m_cCharName, 10);
+	//	memcpy(cAccountName, m_pClientList[iClientH]->m_cAccountName, 10);
+	//	memcpy(cAccountPassword, m_pClientList[iClientH]->m_cAccountPassword, 10);
+	//	memcpy(cGuildName, m_pClientList[iClientH]->m_cGuildName, 20);
+	//	memcpy(cGuildLoc, m_pClientList[iClientH]->m_cLocation, 10);
+
+	//	memcpy((char *)cp, cCharName, 10);
+	//	cp += 10;
+
+	//	memcpy((char *)cp, cAccountName, 10);
+	//	cp += 10;
+
+	//	memcpy((char *)cp, cAccountPassword, 10);
+	//	cp += 10;
+
+	//	memcpy((char *)cp, cGuildName, 20);
+	//	cp += 20;
+	//	memcpy((char *)cp, cGuildLoc, 10);
+	//	cp += 10;
+
+	//	ip = (int *)cp;
+	//	*ip = m_pClientList[iClientH]->m_iGuildGUID;
+	//	cp += 4;
+
+	//	iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 75);
+	//	iSendSize = 75;
+	//	break;
+
+	//case MSGID_REQUEST_DISBANDGUILD:
+	//	// Sub-log-socket
+	//	if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
+	//	
+	//	if (m_pClientList[iClientH] == NULL) return FALSE;
+	//	
+	//	dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
+	//	*dwp = MSGID_REQUEST_DISBANDGUILD;
+	//	wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
+	//	*wp  = DEF_MSGTYPE_CONFIRM;
+
+	//	cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
+
+	//	memcpy(cCharName, m_pClientList[iClientH]->m_cCharName, 10);
+	//	memcpy(cAccountName, m_pClientList[iClientH]->m_cAccountName, 10);
+	//	memcpy(cAccountPassword, m_pClientList[iClientH]->m_cAccountPassword, 10);
+	//	memcpy(cGuildName, m_pClientList[iClientH]->m_cGuildName, 20);
+
+	//	memcpy((char *)cp, cCharName, 10);
+	//	cp += 10;
+
+	//	memcpy((char *)cp, cAccountName, 10);
+	//	cp += 10;
+
+	//	memcpy((char *)cp, cAccountPassword, 10);
+	//	cp += 10;
+
+	//	memcpy((char *)cp, cGuildName, 20);
+	//	cp += 20;
+	//	
+	//	iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 56);
+	//	iSendSize = 56;
+	//	break;
+
+	//case MSGID_REQUEST_HELDENIAN_WINNER:
+	//	if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
+	//	
+	//	dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
+	//	*dwp = MSGID_REQUEST_HELDENIAN_WINNER;
+	//	wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
+	//	*wp  = DEF_MSGTYPE_CONFIRM;
+
+	//	cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
+
+	//	if (m_cHeldenianVictoryType == 1)
+	//		memcpy(cp, "aresden", 7);
+	//	else if (m_cHeldenianVictoryType == 2)
+	//		memcpy(cp, "elvine", 6);
+	//	else 
+	//		memcpy(cp, "draw", 4);
+
+	//	iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 21);
+	//	iSendSize = 21;
+	//	break;
+	//
+	//case MSGID_REQUEST_UPDATEGUILDINFO_NEWGUILDSMAN:
+
+	//	// Sub-log-socket
+	//	if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
+	//	
+	//	if (m_pClientList[iClientH] == NULL) return FALSE;
+	//	
+	//	dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
+	//	*dwp = MSGID_REQUEST_UPDATEGUILDINFO_NEWGUILDSMAN;
+	//	wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
+	//	*wp  = DEF_MSGTYPE_CONFIRM;
+
+	//	cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
+
+	//	memcpy(cCharName, m_pClientList[iClientH]->m_cCharName, 10);
+	//	memcpy(cGuildName, m_pClientList[iClientH]->m_cGuildName, 20);
+
+	//	memcpy((char *)cp, cCharName, 10);
+	//	cp += 10;
+
+	//	memcpy((char *)cp, cGuildName, 20);
+	//	cp += 20;
+
+	//	iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 36);
+	//	iSendSize = 36;
+	//	break;
+
+	//case MSGID_REQUEST_UPDATEGUILDINFO_DELGUILDSMAN:
+
+	//	// Sub-log-socket
+	//	if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
+	//	
+	//	if (m_pClientList[iClientH] == NULL) return FALSE;
+
+	//	dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
+	//	*dwp = MSGID_REQUEST_UPDATEGUILDINFO_DELGUILDSMAN;
+	//	wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
+	//	*wp  = DEF_MSGTYPE_CONFIRM;
+
+	//	cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
+
+	//	memcpy(cCharName, m_pClientList[iClientH]->m_cCharName, 10);
+	//	memcpy(cGuildName, m_pClientList[iClientH]->m_cGuildName, 20);
+
+	//	memcpy((char *)cp, cCharName, 10);
+	//	cp += 10;
+
+	//	memcpy((char *)cp, cGuildName, 20);
+	//	cp += 20;
+
+	//	iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 36);
+	//	iSendSize = 36;
+	//	break;
 	case MSGID_GAMEMASTERLOG:
-		// Sub-log-socket
-		if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
-
-		if (m_pClientList[iClientH] == NULL) return FALSE;
-		if (pData == NULL) return FALSE ;
-
-
-		dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
-		*dwp = MSGID_GAMEMASTERLOG;
-		wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
-		*wp  = DEF_MSGTYPE_CONFIRM;
-
-		cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
-
-		iSize =  strlen(pData) ;
-		memcpy((char *)cp, pData, iSize);
-
-		iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 6 + iSize);
-		iSendSize = 6 + iSize;
+		wsprintf(cFn, "GameLogs\\MasterLog-%d-%d-%d.txt", SysTime.wYear, SysTime.wMonth, SysTime.wDay);
+		pFile = fopen(cFn, "at");
+		if (pFile == NULL) return FALSE;
+		fwrite(pData, 1, strlen(pData), pFile);
+		fclose(pFile);
 		break;
-		// v2.15 
-
 	case MSGID_GAMEITEMLOG:
-		// Sub-log-socket
-		if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
-
-		//		if (m_pClientList[iClientH] == NULL) return FALSE;
-		if (pData == NULL) return FALSE ;
-
-		dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
-		*dwp = MSGID_GAMEITEMLOG;
-		wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
-		*wp  = DEF_MSGTYPE_CONFIRM;
-
-		cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
-
-		iSize =  strlen(pData) ;
-		memcpy((char *)cp, pData, iSize);
-
-		iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 6 + iSize);
-		iSendSize = 6 + iSize;
-		break;
-
-	case MSGID_SENDSERVERSHUTDOWNMSG:
-		if (m_pMainLogSock == NULL) return FALSE;
-
-		dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
-		*dwp = MSGID_SENDSERVERSHUTDOWNMSG;
-		wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
-		*wp  = DEF_MSGTYPE_CONFIRM;
-		
-		iRet = m_pMainLogSock->iSendMsg(G_cData50000, 6);
-		break;
-	
-	case MSGID_GAMESERVERSHUTDOWNED:
-		if (m_pMainLogSock == NULL) return FALSE;
-
-		dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
-		*dwp = MSGID_GAMESERVERSHUTDOWNED;
-		wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
-		*wp  = DEF_MSGTYPE_CONFIRM;
-		
-		iRet = m_pMainLogSock->iSendMsg(G_cData50000, 6);
-		return TRUE;
-
-	case MSGID_REQUEST_SETACCOUNTWAITSTATUS:
-	case MSGID_REQUEST_SETACCOUNTINITSTATUS:
-		// Sub-log-socket
-		if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
-		
-		if (m_pClientList[iClientH] == NULL) return FALSE;
-		dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
-		*dwp = dwMsg;
-		wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
-		*wp  = DEF_MSGTYPE_CONFIRM;
-		
-		cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
-
-		memcpy(cp, m_pClientList[iClientH]->m_cAccountName, 10);
-		cp += 10;
-
-		ip = (int *)cp;
-		*ip = m_pClientList[iClientH]->m_iLevel;
-		cp += 4;
-	
-		iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 20);
-		iSendSize = 16;
-		break;
-
-	case MSGID_ENTERGAMECONFIRM:
-		
-		// Sub-log-socket
-		if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
-		
-		if (m_pClientList[iClientH] == NULL) return FALSE;
-
-		dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
-		*dwp = MSGID_ENTERGAMECONFIRM;
-		wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
-		*wp  = DEF_MSGTYPE_CONFIRM;
-		
-		cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
-
-		memcpy(cp, m_pClientList[iClientH]->m_cAccountName, 10);
-		cp += 10;
-
-		memcpy(cp, m_pClientList[iClientH]->m_cAccountPassword, 10);
-		cp += 10;
-
-		memcpy(cp, m_cServerName, 10);
-		cp += 10;
-
-		ZeroMemory(cTxt, sizeof(cTxt));
-		m_pClientList[iClientH]->m_pXSock->iGetPeerAddress(cTxt);
-		memcpy(cp, cTxt, 16);
-		cp += 16;
-
-		ip = (int *)cp;
-		*ip = m_pClientList[iClientH]->m_iLevel;
-		cp += 4;
-
-		//testcode
-		wsprintf(G_cTxt, "Confirmed. Account: (%s) Name: (%s) Level: (%d)", m_pClientList[iClientH]->m_cAccountName, m_pClientList[iClientH]->m_cCharName, m_pClientList[iClientH]->m_iLevel);
-		PutLogList(G_cTxt);
-
-
-
-		iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 56);
-		iSendSize = 56;
-		if ((m_bIsCrusadeMode == FALSE) && (m_pClientList[iClientH]->m_dwCrusadeGUID == m_dwCrusadeGUID)) {
-		break;
-		}
-		else
-		m_pClientList[iClientH]->m_dwCrusadeGUID = m_dwCrusadeGUID;
-
-
-		break;
-	
-	case MSGID_REQUEST_REGISTERGAMESERVER:
-		if (m_pMainLogSock == NULL) return FALSE;
-				
-		wsprintf(cTxt, "(!) Try to register game server(%s)", m_cServerName);
-		PutLogList(cTxt);
-		
-		dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
-		*dwp = MSGID_REQUEST_REGISTERGAMESERVER;
-		wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
-		*wp  = DEF_MSGTYPE_CONFIRM;
-		
-		cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
-
-		memcpy(cAccountName, m_cServerName, 10);
-		if (m_iGameServerMode == 1)
-		{
-			memcpy(cAddress, m_cGameServerAddrExternal, strlen(m_cGameServerAddrExternal));
-		}
-		if (m_iGameServerMode == 2)
-		{
-			memcpy(cAddress, m_cGameServerAddr, strlen(m_cGameServerAddr));
-		}
-		memcpy(cp, cAccountName, 10);
-		cp += 10;
-
-		memcpy(cp, cAddress, 16);
-		cp += 16;
-
-		wp  = (WORD *)cp;
-		*wp = m_iGameServerPort;
-		cp += 2;
-
-		*cp = m_iTotalMaps;
-		cp++;
-
-		for (i = 0; i < m_iTotalMaps; i++) {
-			memcpy(cp, m_pMapList[i]->m_cName, 11);
-			cp += 11;
-		}
-
-		iRet = m_pMainLogSock->iSendMsg(G_cData50000, 35 + m_iTotalMaps*11); 
-
-		return TRUE;
-
-	case MSGID_REQUEST_PLAYERDATA:
-		
-		// Sub-log-socket
-		if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
-
-		if (m_pClientList[iClientH] == NULL) return FALSE;
-
-		dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
-		*dwp = MSGID_REQUEST_PLAYERDATA;
-		wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
-		*wp  = DEF_MSGTYPE_CONFIRM;
-
-		cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
-
-		//testcode
-		if (strlen(m_pClientList[iClientH]->m_cCharName) == 0) PutLogList("(X) CharName NULL!");
-
-		memcpy(cCharName, m_pClientList[iClientH]->m_cCharName, 10);
-		memcpy(cAccountName, m_pClientList[iClientH]->m_cAccountName, 10);
-		memcpy(cAccountPassword, m_pClientList[iClientH]->m_cAccountPassword, 10);
-
-		memcpy((char *)cp, cCharName, 10);
-		cp += 10;
-
-		memcpy((char *)cp, cAccountName, 10);
-		cp += 10;
-
-		memcpy((char *)cp, cAccountPassword, 10);
-		cp += 10;
-
-		ZeroMemory(cTemp, sizeof(cTemp));
-		iRet = m_pClientList[iClientH]->m_pXSock->iGetPeerAddress(cTemp);
-		memcpy((char *)cp, cTemp, 15);
-		cp += 15;
-		
-		iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 52);
-		iSendSize = 52;
-		break;
-
-	case MSGID_REQUEST_SAVEPLAYERDATA_REPLY:
-	case MSGID_REQUEST_SAVEPLAYERDATA:
-	case MSGID_REQUEST_SAVEPLAYERDATALOGOUT:
-
-		// Sub-log-socket
-		if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
-		
-		if (m_pClientList[iClientH] == NULL) return FALSE;
-		
-		dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
-		*dwp = dwMsg;
-		wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
-		*wp  = DEF_MSGTYPE_CONFIRM;
-
-		cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
-
-		memcpy(cCharName, m_pClientList[iClientH]->m_cCharName, 10);
-		memcpy(cAccountName, m_pClientList[iClientH]->m_cAccountName, 10);
-		memcpy(cAccountPassword, m_pClientList[iClientH]->m_cAccountPassword, 10);
-
-		memcpy((char *)cp, cCharName, 10);
-		cp += 10;
-
-		memcpy((char *)cp, cAccountName, 10);
-		cp += 10;
-
-		memcpy((char *)cp, cAccountPassword, 10);
-		cp += 10;
-
-		*cp = (char)bFlag;
-		cp++;
-		
-		iSize = _iComposePlayerDataFileContents(iClientH, cp);
-		
-		iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 37 + iSize);
-		iSendSize = 37 + iSize;
-		break;
-
-	case MSGID_REQUEST_NOSAVELOGOUT:
-
-		// Sub-log-socket
-		if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
-		
-		if (m_pClientList[iClientH] == NULL) return FALSE;
-		
-		dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
-		*dwp = MSGID_REQUEST_NOSAVELOGOUT;
-		wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
-		*wp  = DEF_MSGTYPE_CONFIRM;
-
-		cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
-
-		memcpy(cCharName, m_pClientList[iClientH]->m_cCharName, 10);
-		memcpy(cAccountName, m_pClientList[iClientH]->m_cAccountName, 10);
-		memcpy(cAccountPassword, m_pClientList[iClientH]->m_cAccountPassword, 10);
-
-		memcpy((char *)cp, cCharName, 10);
-		cp += 10;
-
-		memcpy((char *)cp, cAccountName, 10);
-		cp += 10;
-
-		memcpy((char *)cp, cAccountPassword, 10);
-		cp += 10;
-		
-		*cp = (char)bFlag;
-		cp++;
-		
-		iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 37);
-		iSendSize = 37;
-		break;
-	
-	case MSGID_REQUEST_CREATENEWGUILD:
-
-		// Sub-log-socket
-		if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
-		
-		if (m_pClientList[iClientH] == NULL) return FALSE;
-		
-		dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
-		*dwp = MSGID_REQUEST_CREATENEWGUILD;
-		wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
-		*wp  = DEF_MSGTYPE_CONFIRM;
-
-		cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
-
-		memcpy(cCharName, m_pClientList[iClientH]->m_cCharName, 10);
-		memcpy(cAccountName, m_pClientList[iClientH]->m_cAccountName, 10);
-		memcpy(cAccountPassword, m_pClientList[iClientH]->m_cAccountPassword, 10);
-		memcpy(cGuildName, m_pClientList[iClientH]->m_cGuildName, 20);
-		memcpy(cGuildLoc, m_pClientList[iClientH]->m_cLocation, 10);
-
-		memcpy((char *)cp, cCharName, 10);
-		cp += 10;
-
-		memcpy((char *)cp, cAccountName, 10);
-		cp += 10;
-
-		memcpy((char *)cp, cAccountPassword, 10);
-		cp += 10;
-
-		memcpy((char *)cp, cGuildName, 20);
-		cp += 20;
-		memcpy((char *)cp, cGuildLoc, 10);
-		cp += 10;
-
-		ip = (int *)cp;
-		*ip = m_pClientList[iClientH]->m_iGuildGUID;
-		cp += 4;
-
-		iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 75);
-		iSendSize = 75;
-		break;
-
-	case MSGID_REQUEST_DISBANDGUILD:
-		// Sub-log-socket
-		if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
-		
-		if (m_pClientList[iClientH] == NULL) return FALSE;
-		
-		dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
-		*dwp = MSGID_REQUEST_DISBANDGUILD;
-		wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
-		*wp  = DEF_MSGTYPE_CONFIRM;
-
-		cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
-
-		memcpy(cCharName, m_pClientList[iClientH]->m_cCharName, 10);
-		memcpy(cAccountName, m_pClientList[iClientH]->m_cAccountName, 10);
-		memcpy(cAccountPassword, m_pClientList[iClientH]->m_cAccountPassword, 10);
-		memcpy(cGuildName, m_pClientList[iClientH]->m_cGuildName, 20);
-
-		memcpy((char *)cp, cCharName, 10);
-		cp += 10;
-
-		memcpy((char *)cp, cAccountName, 10);
-		cp += 10;
-
-		memcpy((char *)cp, cAccountPassword, 10);
-		cp += 10;
-
-		memcpy((char *)cp, cGuildName, 20);
-		cp += 20;
-		
-		iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 56);
-		iSendSize = 56;
-		break;
-
-	case MSGID_REQUEST_HELDENIAN_WINNER:
-		if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
-		
-		dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
-		*dwp = MSGID_REQUEST_HELDENIAN_WINNER;
-		wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
-		*wp  = DEF_MSGTYPE_CONFIRM;
-
-		cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
-
-		if (m_cHeldenianVictoryType == 1)
-			memcpy(cp, "aresden", 7);
-		else if (m_cHeldenianVictoryType == 2)
-			memcpy(cp, "elvine", 6);
-		else 
-			memcpy(cp, "draw", 4);
-
-		iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 21);
-		iSendSize = 21;
-		break;
-	
-	case MSGID_REQUEST_UPDATEGUILDINFO_NEWGUILDSMAN:
-
-		// Sub-log-socket
-		if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
-		
-		if (m_pClientList[iClientH] == NULL) return FALSE;
-		
-		dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
-		*dwp = MSGID_REQUEST_UPDATEGUILDINFO_NEWGUILDSMAN;
-		wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
-		*wp  = DEF_MSGTYPE_CONFIRM;
-
-		cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
-
-		memcpy(cCharName, m_pClientList[iClientH]->m_cCharName, 10);
-		memcpy(cGuildName, m_pClientList[iClientH]->m_cGuildName, 20);
-
-		memcpy((char *)cp, cCharName, 10);
-		cp += 10;
-
-		memcpy((char *)cp, cGuildName, 20);
-		cp += 20;
-
-		iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 36);
-		iSendSize = 36;
-		break;
-
-	case MSGID_REQUEST_UPDATEGUILDINFO_DELGUILDSMAN:
-
-		// Sub-log-socket
-		if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
-		
-		if (m_pClientList[iClientH] == NULL) return FALSE;
-
-		dwp  = (DWORD *)(G_cData50000 + DEF_INDEX4_MSGID);
-		*dwp = MSGID_REQUEST_UPDATEGUILDINFO_DELGUILDSMAN;
-		wp   = (WORD *)(G_cData50000 + DEF_INDEX2_MSGTYPE);
-		*wp  = DEF_MSGTYPE_CONFIRM;
-
-		cp = (char *)(G_cData50000 + DEF_INDEX2_MSGTYPE + 2);
-
-		memcpy(cCharName, m_pClientList[iClientH]->m_cCharName, 10);
-		memcpy(cGuildName, m_pClientList[iClientH]->m_cGuildName, 20);
-
-		memcpy((char *)cp, cCharName, 10);
-		cp += 10;
-
-		memcpy((char *)cp, cGuildName, 20);
-		cp += 20;
-
-		iRet = m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, 36);
-		iSendSize = 36;
+		wsprintf(cFn, "GameLogs\\ItemLog-%d-%d-%d.txt", SysTime.wYear, SysTime.wMonth, SysTime.wDay);
+		pFile = fopen(cFn, "at");
+		if (pFile == NULL) return FALSE;
+		fwrite(pData, 1, strlen(pData), pFile);
+		fclose(pFile);
 		break;
 	}
 
-	switch (iRet) {
-	case DEF_XSOCKEVENT_QUENEFULL:
-	case DEF_XSOCKEVENT_SOCKETERROR:
-	case DEF_XSOCKEVENT_CRITICALERROR:
-	case DEF_XSOCKEVENT_SOCKETCLOSED:
-		// Sub-log-socket
-		wsprintf(G_cTxt, "(!!!) Sub-log-socket(%d) send error!", m_iCurSubLogSockIndex);
-		PutLogList(G_cTxt);
-		PutLogFileList(G_cTxt);
+	//switch (iRet) {
+	//case DEF_XSOCKEVENT_QUENEFULL:
+	//case DEF_XSOCKEVENT_SOCKETERROR:
+	//case DEF_XSOCKEVENT_CRITICALERROR:
+	//case DEF_XSOCKEVENT_SOCKETCLOSED:
+	//	// Sub-log-socket
+	//	wsprintf(G_cTxt, "(!!!) Sub-log-socket(%d) send error!", m_iCurSubLogSockIndex);
+	//	PutLogList(G_cTxt);
+	//	PutLogFileList(G_cTxt);
 
-		delete m_pSubLogSock[m_iCurSubLogSockIndex];
-		m_pSubLogSock[m_iCurSubLogSockIndex] = NULL;
-		m_bIsSubLogSockAvailable[m_iCurSubLogSockIndex] = FALSE;
-		m_iSubLogSockActiveCount--;
-				
-		m_pSubLogSock[m_iCurSubLogSockIndex] = new class XSocket(m_hWnd, DEF_SERVERSOCKETBLOCKLIMIT);
-		m_pSubLogSock[m_iCurSubLogSockIndex]->bConnect(m_cLogServerAddr, m_iLogServerPort, (WM_ONLOGSOCKETEVENT + m_iCurSubLogSockIndex + 1));
-		m_pSubLogSock[m_iCurSubLogSockIndex]->bInitBufferSize(DEF_MSGBUFFERSIZE);
+	//	delete m_pSubLogSock[m_iCurSubLogSockIndex];
+	//	m_pSubLogSock[m_iCurSubLogSockIndex] = NULL;
+	//	m_bIsSubLogSockAvailable[m_iCurSubLogSockIndex] = FALSE;
+	//	m_iSubLogSockActiveCount--;
+	//			
+	//	m_pSubLogSock[m_iCurSubLogSockIndex] = new class XSocket(m_hWnd, DEF_SERVERSOCKETBLOCKLIMIT);
+	//	m_pSubLogSock[m_iCurSubLogSockIndex]->bConnect(m_cLogServerAddr, m_iLogServerPort, (WM_ONLOGSOCKETEVENT + m_iCurSubLogSockIndex + 1));
+	//	m_pSubLogSock[m_iCurSubLogSockIndex]->bInitBufferSize(DEF_MSGBUFFERSIZE);
 
-		wsprintf(G_cTxt, "(!) Try to reconnect sub-log-socket(%d)... Addr:%s  Port:%d", m_iCurSubLogSockIndex, m_cLogServerAddr, m_iLogServerPort);
-		PutLogList(G_cTxt);
-		
-		// v1.41 sub-log-socket
-		m_iSubLogSockFailCount++;
+	//	wsprintf(G_cTxt, "(!) Try to reconnect sub-log-socket(%d)... Addr:%s  Port:%d", m_iCurSubLogSockIndex, m_cLogServerAddr, m_iLogServerPort);
+	//	PutLogList(G_cTxt);
+	//	
+	//	// v1.41 sub-log-socket
+	//	m_iSubLogSockFailCount++;
 
-		// v1.41
-		if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
-		m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, iSendSize);
+	//	// v1.41
+	//	if (_bCheckSubLogSocketIndex() == FALSE) return FALSE;
+	//	m_pSubLogSock[m_iCurSubLogSockIndex]->iSendMsg(G_cData50000, iSendSize);
 
-		return FALSE;
-	}
+	//	return FALSE;
+	//}
 
 	return TRUE;
 }
@@ -4529,35 +4673,45 @@ void CGame::ResponsePlayerDataHandler(char * pData, DWORD dwSize)
 
 void CGame::InitPlayerData(int iClientH, char * pData, DWORD dwSize)
 {
-	char  * cp, cName[11], cData[256], cTxt[256], cGuildStatus, cQuestRemain;
+	char  * cp, cName[11], cData[256], cTxt[256], cQuestRemain;
 	DWORD * dwp;
 	WORD  * wp;
 	int     iRet, i, iTotalPoints;
-	BOOL    bRet;
+	BOOL    bRet, bGuildStatus;
 
 	if (m_pClientList[iClientH] == NULL) return;
 	if (m_pClientList[iClientH]->m_bIsInitComplete == TRUE) return; // ÀÌ¹Ì ÃÊ±âÈ­ µÈ Ä³¸¯ÅÍÀÇ µ¥ÀÌÅÍÀÌ´Ù. ÀÌ·±ÀÏÀÌ ÀÖÀ» ¼ö ÀÖÀ»±î?
 
 	// Log Server
-	cp = (char *)(pData + DEF_INDEX2_MSGTYPE + 2);
+	//cp = (char *)(pData + DEF_INDEX2_MSGTYPE + 2);
 
-	ZeroMemory(cName, sizeof(cName));
-	memcpy(cName, cp, 10);
-	cp += 10;
+	//ZeroMemory(cName, sizeof(cName));
+	//memcpy(cName, cp, 10);
+	//cp += 10;
 
-	//m_pClientList[iClientH]->m_cAccountStatus = *cp;
-	cp++;
+	////m_pClientList[iClientH]->m_cAccountStatus = *cp;
+	//cp++;
 
-	cGuildStatus = *cp;
-	cp++;
+	//cGuildStatus = *cp;
+	//cp++;
 
 	m_pClientList[iClientH]->m_iHitRatio     = 0;
 	m_pClientList[iClientH]->m_iDefenseRatio = 0;
 	m_pClientList[iClientH]->m_cSide         = 0;
 
-	SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_HUNGER, m_pClientList[iClientH]->m_iHungerStatus, NULL, NULL, NULL);
+	char cFileName[112] = {};
+	char cDir[112] = {};
+	strcat(cFileName, "Characters");
+	strcat(cFileName, "\\");
+	strcat(cFileName, "\\");
+	wsprintf(cDir, "AscII%d", m_pClientList[iClientH]->m_cCharName[0]);
+	strcat(cFileName, cDir);
+	strcat(cFileName, "\\");
+	strcat(cFileName, "\\");
+	strcat(cFileName, m_pClientList[iClientH]->m_cCharName);
+	strcat(cFileName, ".txt");
 
-	bRet = _bDecodePlayerDatafileContents(iClientH, cp, dwSize - 19);
+	bRet = _bDecodePlayerDatafileContents(iClientH, cFileName, NULL); //_bDecodePlayerDatafileContents(iClientH, cp, dwSize - 19);
 	if (bRet == FALSE) {
 		wsprintf(G_cTxt, "(HACK?) Character(%s) data error!", m_pClientList[iClientH]->m_cCharName);
 		DeleteClient(iClientH, FALSE, TRUE); //!!!
@@ -4615,14 +4769,26 @@ void CGame::InitPlayerData(int iClientH, char * pData, DWORD dwSize)
 	CheckSpecialEvent(iClientH);
 	bCheckMagicInt(iClientH);
 
-	// GuildName
-	if ((cGuildStatus == 0) && (memcmp(m_pClientList[iClientH]->m_cGuildName, "NONE", 4) != 0)) {
-		ZeroMemory(m_pClientList[iClientH]->m_cGuildName, sizeof(m_pClientList[iClientH]->m_cGuildName));
-		strcpy(m_pClientList[iClientH]->m_cGuildName, "NONE");
-		m_pClientList[iClientH]->m_iGuildRank = -1;
-		m_pClientList[iClientH]->m_iGuildGUID = -1;
+	SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_HUNGER, m_pClientList[iClientH]->m_iHungerStatus, NULL, NULL, NULL);
 
-		SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_GUILDDISBANDED, NULL, NULL, NULL, m_pClientList[iClientH]->m_cGuildName);
+	if (strcmp(m_pClientList[iClientH]->m_cGuildName, "NONE") != 0) {
+		char cFn[112] = {};
+		ZeroMemory(cFn, sizeof(cFn));
+		wsprintf(cFn, "Guilds\\AscII%d\\%s.txt", m_pClientList[iClientH]->m_cGuildName[0], m_pClientList[iClientH]->m_cGuildName);
+		HANDLE  hFile = CreateFile(cFn, GENERIC_READ, NULL, NULL, OPEN_EXISTING, NULL, NULL);
+		auto dwFileSize = GetFileSize(hFile, NULL);
+
+		bGuildStatus = !(hFile == INVALID_HANDLE_VALUE);
+		CloseHandle(hFile);
+		// GuildName
+		if ((!bGuildStatus) && (memcmp(m_pClientList[iClientH]->m_cGuildName, "NONE", 4) != 0)) {
+			ZeroMemory(m_pClientList[iClientH]->m_cGuildName, sizeof(m_pClientList[iClientH]->m_cGuildName));
+			strcpy(m_pClientList[iClientH]->m_cGuildName, "NONE");
+			m_pClientList[iClientH]->m_iGuildRank = -1;
+			m_pClientList[iClientH]->m_iGuildGUID = -1;
+
+			SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_GUILDDISBANDED, NULL, NULL, NULL, m_pClientList[iClientH]->m_cGuildName);
+		}
 	}
 
 	if (m_pClientList[iClientH]->m_iQuest != NULL) { 
@@ -4660,9 +4826,9 @@ void CGame::InitPlayerData(int iClientH, char * pData, DWORD dwSize)
 
 	m_pClientList[iClientH]->m_bIsInitComplete = TRUE;
 
-	bSendMsgToLS(MSGID_ENTERGAMECONFIRM, iClientH);
+	//bSendMsgToLS(MSGID_ENTERGAMECONFIRM, iClientH);
 
-	if (m_iTotalClients > DEF_MAXONESERVERUSERS) {
+	/*if (m_iTotalClients > DEF_MAXONESERVERUSERS) {
 		switch (iDice(1,2)) {
 		case 1: 
 			RequestTeleportHandler(iClientH, "2   ", "bisle", -1, -1);
@@ -4675,9 +4841,7 @@ void CGame::InitPlayerData(int iClientH, char * pData, DWORD dwSize)
 				}
 				break;
 		}
-	}
-
-	return;
+	}*/
 }
 
 void CGame::GameProcess()
@@ -4688,7 +4852,7 @@ void CGame::GameProcess()
 	DelayEventProcess();
 }
 
-BOOL CGame::bReadProgramConfigFile(char * cFn)
+BOOL CGame::bReadProgramConfigFile(char * cFn, bool ismaps)
 {
 	FILE * pFile;
 	HANDLE hFile;
@@ -4955,20 +5119,26 @@ BOOL CGame::bReadProgramConfigFile(char * cFn)
 				}
 			}
 			else {
-				if (memcmp(token, "game-server-name", 16) == 0)			cReadMode = 1;
-				if (memcmp(token, "game-server-port", 16) == 0)			cReadMode = 2;
-				if (memcmp(token, "log-server-address", 18) == 0)		cReadMode = 3;
-				if (memcmp(token, "internal-log-server-port", 24) == 0) cReadMode = 4;
-				if (memcmp(token, "game-server-map", 15) == 0)			cReadMode = 5;
-				if (memcmp(token, "gate-server-address", 19) == 0)		cReadMode = 6;
-				if (memcmp(token, "gate-server-port", 16) == 0)			cReadMode = 7;
-				if (memcmp(token, "game-server-internal-address", 28) == 0)			cReadMode = 8;
-				if (memcmp(token, "game-server-external-address", 28) == 0)			cReadMode = 9;
-				if (memcmp(token, "game-server-address", 19) == 0)		cReadMode = 10;
-				if (memcmp(token, "game-server-mode", 16) == 0)			cReadMode = 11;
-				if (memcmp(token, "gate-server-dns", 15) == 0) cReadMode = 12;
-				if (memcmp(token, "log-server-dns", 14) == 0) cReadMode = 13;
+				if (ismaps)
+				{
+					if (memcmp(token, "game-server-map", 15) == 0)			cReadMode = 5;
+				}
+				else
+				{
+					if (memcmp(token, "game-server-name", 16) == 0)			cReadMode = 1;
+					if (memcmp(token, "game-server-port", 16) == 0)			cReadMode = 2;
+					if (memcmp(token, "log-server-address", 18) == 0)		cReadMode = 3;
+					if (memcmp(token, "internal-log-server-port", 24) == 0) cReadMode = 4;
 
+					if (memcmp(token, "gate-server-address", 19) == 0)		cReadMode = 6;
+					if (memcmp(token, "gate-server-port", 16) == 0)			cReadMode = 7;
+					if (memcmp(token, "game-server-internal-address", 28) == 0)			cReadMode = 8;
+					if (memcmp(token, "game-server-external-address", 28) == 0)			cReadMode = 9;
+					if (memcmp(token, "game-server-address", 19) == 0)		cReadMode = 10;
+					if (memcmp(token, "game-server-mode", 16) == 0)			cReadMode = 11;
+					if (memcmp(token, "gate-server-dns", 15) == 0) cReadMode = 12;
+					if (memcmp(token, "log-server-dns", 14) == 0) cReadMode = 13;
+				}
 			}
 			token = pStrTok->pGet();
 			//token = strtok( NULL, seps );
@@ -5428,9 +5598,28 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 	cReadModeA = 0;
 	cReadModeB = 0;
 
-	pContents = new char[dwSize+2];
+	/*pContents = new char[dwSize+2];
 	ZeroMemory(pContents, dwSize+2);
-	memcpy(pContents, pData, dwSize);
+	memcpy(pContents, pData, dwSize);*/
+
+	char cData[30000];
+	DWORD lpNumberOfBytesRead;
+	HANDLE hFile = CreateFile(pData, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
+	DWORD dwFileSize = GetFileSize(hFile, NULL);
+	if (dwFileSize == -1) {
+		wsprintf(G_cTxt, "(X) CRITICAL ERROR! Cannot open character file(%s)!", pData);
+		PutLogList(pData);
+		return false;
+	}
+
+	SetFilePointer(hFile, 0, 0, FILE_BEGIN);
+
+	ReadFile(hFile, cData, dwFileSize, &lpNumberOfBytesRead, NULL);
+	CloseHandle(hFile);
+
+	pContents = new char[dwFileSize + 1];
+	ZeroMemory(pContents, dwFileSize + 1);
+	memcpy(pContents, cData, dwFileSize);
 
 	pOriginContents = pContents;
 
@@ -7912,9 +8101,24 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
  int  iItemConfigListIndex, iTemp;
  class CStrTok * pStrTok;
 
-	pContents = new char[dwMsgSize+1];
-	ZeroMemory(pContents, dwMsgSize+1);
-	memcpy(pContents, pData, dwMsgSize);
+	char cData[50000] = {};
+	DWORD lpNumberOfBytesRead;
+	HANDLE hFile = CreateFile(pData, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
+	DWORD dwFileSize = GetFileSize(hFile, NULL);
+	if (dwFileSize == -1) {
+		wsprintf(G_cTxt, "(X) CRITICAL ERROR! Cannot open configuration file(%s)!", pData);
+		PutLogList(pData);
+		return false;
+	}
+
+	SetFilePointer(hFile, 0, 0, FILE_BEGIN);
+
+	ReadFile(hFile, cData, dwFileSize, &lpNumberOfBytesRead, NULL);
+	CloseHandle(hFile);
+
+	pContents = new char[dwFileSize + 1];
+	ZeroMemory(pContents, dwFileSize + 1);
+	memcpy(pContents, cData, dwFileSize);
 
 	pStrTok = new class CStrTok(pContents, seps);
 	token = pStrTok->pGet();
@@ -8891,7 +9095,7 @@ void CGame::ChatMsgHandler(int iClientH, char * pData, DWORD dwMsgSize)
 	case '@':
 		*cp = 32;
 		
-		if ((strlen(cp) < 90) && (m_pClientList[iClientH]->m_iGuildRank == 0)) {
+		/*if ((strlen(cp) < 90) && (m_pClientList[iClientH]->m_iGuildRank == 0)) {
 			ZeroMemory(cTemp, sizeof(cTemp));
 			cp2 = (char *)cTemp;
 			*cp2 = GSM_CHATMSG;
@@ -8909,7 +9113,7 @@ void CGame::ChatMsgHandler(int iClientH, char * pData, DWORD dwMsgSize)
 			strcpy(cp2, cp);
 			cp2 += strlen(cp);
 			bStockMsgToGateServer(cTemp, strlen(cp) + 18);
-		}
+		}*/
 				
 		if ( (m_pClientList[iClientH]->m_iTimeLeft_ShutUp == 0) && (m_pClientList[iClientH]->m_iLevel > 1) && 
 			 (m_pClientList[iClientH]->m_iSP >= 3) ) {
@@ -8949,7 +9153,7 @@ void CGame::ChatMsgHandler(int iClientH, char * pData, DWORD dwMsgSize)
 	case '^':
 		*cp = 32;
 
-		if ((strlen(cp) < 90) && (m_pClientList[iClientH]->m_iAdminUserLevel > 0)) {
+		/*if ((strlen(cp) < 90) && (m_pClientList[iClientH]->m_iAdminUserLevel > 0)) {
 			ZeroMemory(cTemp, sizeof(cTemp));
 			cp2 = (char *)cTemp;
 			*cp2 = GSM_CHATMSG;
@@ -8967,9 +9171,9 @@ void CGame::ChatMsgHandler(int iClientH, char * pData, DWORD dwMsgSize)
 			strcpy(cp2, cp);
 			cp2 += strlen(cp);
 			bStockMsgToGateServer(cTemp, strlen(cp) + 18);
-		}
+		}*/
 
-		if ((strlen(cp) < 90) && (m_pClientList[iClientH]->m_iGuildRank != -1)) {
+		/*if ((strlen(cp) < 90) && (m_pClientList[iClientH]->m_iGuildRank != -1)) {
 			ZeroMemory(cTemp, sizeof(cTemp));
 			cp2 = (char *)cTemp;
 			*cp2 = GSM_CHATMSG;
@@ -8987,7 +9191,7 @@ void CGame::ChatMsgHandler(int iClientH, char * pData, DWORD dwMsgSize)
 			strcpy(cp2, cp);
 			cp2 += strlen(cp);
 			bStockMsgToGateServer(cTemp, strlen(cp) + 18);
-		}
+		}*/
 
 		if ( (m_pClientList[iClientH]->m_iTimeLeft_ShutUp == 0) && (m_pClientList[iClientH]->m_iLevel > 10) && 
 			(m_pClientList[iClientH]->m_iSP > 5) && m_pClientList[iClientH]->m_iGuildRank != -1) {
@@ -9010,7 +9214,7 @@ void CGame::ChatMsgHandler(int iClientH, char * pData, DWORD dwMsgSize)
 	case '!':
 		*cp = 32;
 		
-		if ((strlen(cp) < 90) && (m_pClientList[iClientH]->m_iAdminUserLevel > 0)) {
+		/*if ((strlen(cp) < 90) && (m_pClientList[iClientH]->m_iAdminUserLevel > 0)) {
 			ZeroMemory(cTemp, sizeof(cTemp));
 			cp2 = (char *)cTemp;
 			*cp2 = GSM_CHATMSG;
@@ -9028,7 +9232,7 @@ void CGame::ChatMsgHandler(int iClientH, char * pData, DWORD dwMsgSize)
 			strcpy(cp2, cp);
 			cp2 += strlen(cp);
 			bStockMsgToGateServer(cTemp, strlen(cp) + 18);
-		}
+		}*/
 
 		if ( (m_pClientList[iClientH]->m_iTimeLeft_ShutUp == 0) && (m_pClientList[iClientH]->m_iLevel > 10) && 
 			 (m_pClientList[iClientH]->m_iSP >= 5) ) {
@@ -9428,7 +9632,7 @@ void CGame::ChatMsgHandler(int iClientH, char * pData, DWORD dwMsgSize)
 			m_bOnExitProcess     = TRUE;
 			m_dwExitProcessTime  = timeGetTime();
 			PutLogList("(!) GAME SERVER SHUTDOWN PROCESS BEGIN(by Admin-Command)!!!");
-			bSendMsgToLS(MSGID_GAMESERVERSHUTDOWNED, NULL);
+			//bSendMsgToLS(MSGID_GAMESERVERSHUTDOWNED, NULL);
 			
 			return;
 		}
@@ -9603,7 +9807,7 @@ void CGame::ChatMsgHandler(int iClientH, char * pData, DWORD dwMsgSize)
 			cp += 2;
 			memcpy(cp, pData, dwMsgSize);
 			cp += dwMsgSize;
-			bStockMsgToGateServer(cBuffer, dwMsgSize+13);
+			//bStockMsgToGateServer(cBuffer, dwMsgSize+13);
 
 			//testcode
 			//wsprintf(G_cTxt, "Sending Whisper Msg: %s %d", m_pClientList[iClientH]->m_cWhisperPlayerName, (13 +dwMsgSize));
@@ -10896,7 +11100,7 @@ void CGame::NpcKilledHandler(short sAttackerH, char cAttackerType, int iNpcH, sh
 						goto NKH_GOTOPOINT1;
 					}
 				
-					ZeroMemory(cData, sizeof(cData));
+					/*ZeroMemory(cData, sizeof(cData));
 					cp = (char *)cData;
 					*cp = GSM_CONSTRUCTIONPOINT;
 					cp++;
@@ -10906,7 +11110,7 @@ void CGame::NpcKilledHandler(short sAttackerH, char cAttackerType, int iNpcH, sh
 					ip = (int*)cp;
 					*ip = iConstructionPoint;
 					cp += 4;
-					bStockMsgToGateServer(cData, 9);
+					bStockMsgToGateServer(cData, 9);*/
 				}
 			}
 			break;
@@ -11085,12 +11289,13 @@ void CGame::MsgProcess()
  WORD   * wpMsgType, * wp;
  int      i, iClientH;
  char   m_msgBuff[1000];
+ DWORD dwTime = timeGetTime();
 	
 	if ((m_bF5pressed == TRUE) && (m_bF1pressed == TRUE)) {
 		PutLogList("(XXX) RELOADING CONFIGS MANUALY...");
 			for (i = 1; i < DEF_MAXCLIENTS; i++)
 				if ((m_pClientList[i] != NULL) && (m_pClientList[i]->m_bIsInitComplete == TRUE)) {
-					bSendMsgToLS(MSGID_REQUEST_SAVEPLAYERDATA, i);
+					g_login->LocalSavePlayerData(i); //bSendMsgToLS(MSGID_REQUEST_SAVEPLAYERDATA, i);
 				}
 				bInit();
 		}
@@ -11100,7 +11305,7 @@ void CGame::MsgProcess()
 		m_bOnExitProcess     = TRUE;
 		m_dwExitProcessTime  = timeGetTime();
 		PutLogList("(!) GAME SERVER SHUTDOWN PROCESS BEGIN(by Local command)!!!");
-		bSendMsgToLS(MSGID_GAMESERVERSHUTDOWNED, NULL);
+		//bSendMsgToLS(MSGID_GAMESERVERSHUTDOWNED, NULL);
 		
 		
 		return;
@@ -11117,98 +11322,98 @@ void CGame::MsgProcess()
 		if (m_iCurMsgs > m_iMaxMsgs) m_iMaxMsgs = m_iCurMsgs;
 
 		switch (cFrom) {
-		case DEF_MSGFROM_GATESERVER:
-			dwpMsgID   = (DWORD *)(pData + DEF_INDEX4_MSGID);
-			wpMsgType  = (WORD *)(pData + DEF_INDEX2_MSGTYPE);
+		//case DEF_MSGFROM_GATESERVER:
+		//	dwpMsgID   = (DWORD *)(pData + DEF_INDEX4_MSGID);
+		//	wpMsgType  = (WORD *)(pData + DEF_INDEX2_MSGTYPE);
 
-			switch (*dwpMsgID) {
-			// New 07/05/2004
-			case MSGID_PARTYOPERATION:
-				PartyOperationResultHandler(pData);
-				break;
+		//	switch (*dwpMsgID) {
+		//	// New 07/05/2004
+		//	case MSGID_PARTYOPERATION:
+		//		PartyOperationResultHandler(pData);
+		//		break;
 
-			case MSGID_SERVERSTOCKMSG:
-				//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_GATESERVER -> MSGID_SERVERSTOCKMSG");
-				ServerStockMsgHandler(pData);
-				break;
-									
-			case MSGID_SENDSERVERSHUTDOWNMSG:
-				//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_GATESERVER -> MSGID_SENDSERVERSHUTDOWNMSG");
-				wp = (WORD *)(pData + DEF_INDEX2_MSGTYPE + 2);
-				switch (*wp) {
-				case 1:
-					PutLogList("(!) Send server shutdown announcement - 1.");
-					for (i = 1; i < DEF_MAXCLIENTS; i++)
-					if ((m_pClientList[i] != NULL) && (m_pClientList[i]->m_bIsInitComplete == TRUE)) {
-						SendNotifyMsg(NULL, i, DEF_NOTIFY_SERVERSHUTDOWN, 1, NULL, NULL, NULL);
-					}
-					break;
-				
-				case 2:
-					PutLogList("(!) Send server shutdown announcement - 2.");
-					for (i = 1; i < DEF_MAXCLIENTS; i++)
-					if ((m_pClientList[i] != NULL) && (m_pClientList[i]->m_bIsInitComplete == TRUE)) {
-						SendNotifyMsg(NULL, i, DEF_NOTIFY_SERVERSHUTDOWN, 2, NULL, NULL, NULL);
-					}
-					break;
-				}
+		//	case MSGID_SERVERSTOCKMSG:
+		//		//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_GATESERVER -> MSGID_SERVERSTOCKMSG");
+		//		ServerStockMsgHandler(pData);
+		//		break;
+		//							
+		//	case MSGID_SENDSERVERSHUTDOWNMSG:
+		//		//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_GATESERVER -> MSGID_SENDSERVERSHUTDOWNMSG");
+		//		wp = (WORD *)(pData + DEF_INDEX2_MSGTYPE + 2);
+		//		switch (*wp) {
+		//		case 1:
+		//			PutLogList("(!) Send server shutdown announcement - 1.");
+		//			for (i = 1; i < DEF_MAXCLIENTS; i++)
+		//			if ((m_pClientList[i] != NULL) && (m_pClientList[i]->m_bIsInitComplete == TRUE)) {
+		//				SendNotifyMsg(NULL, i, DEF_NOTIFY_SERVERSHUTDOWN, 1, NULL, NULL, NULL);
+		//			}
+		//			break;
+		//		
+		//		case 2:
+		//			PutLogList("(!) Send server shutdown announcement - 2.");
+		//			for (i = 1; i < DEF_MAXCLIENTS; i++)
+		//			if ((m_pClientList[i] != NULL) && (m_pClientList[i]->m_bIsInitComplete == TRUE)) {
+		//				SendNotifyMsg(NULL, i, DEF_NOTIFY_SERVERSHUTDOWN, 2, NULL, NULL, NULL);
+		//			}
+		//			break;
+		//		}
 
-				// WLS
-				bSendMsgToLS(MSGID_SENDSERVERSHUTDOWNMSG, NULL, NULL); 
-				break;
-			
-			case MSGID_GAMESERVERSHUTDOWNED:
-				//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_GATESERVER -> MSGID_GAMESERVERSHUTDOWNED");
-				m_cShutDownCode      = 1;
-				m_bOnExitProcess     = TRUE;
-				m_dwExitProcessTime  = timeGetTime();
-				PutLogList("(!) GAME SERVER SHUTDOWN PROCESS BEGIN(by Global command)!!!");
-				bSendMsgToLS(MSGID_GAMESERVERSHUTDOWNED, NULL);
-				
-				break;
-			
-			case MSGID_TOTALGAMESERVERCLIENTS:
-				wp = (WORD *)(pData + DEF_INDEX2_MSGTYPE + 2);
-				m_iTotalGameServerClients = (int)*wp;
-				if (m_iTotalGameServerClients > m_iTotalGameServerMaxClients) 
-					m_iTotalGameServerMaxClients = m_iTotalGameServerClients;
-				break;
-			
-			case MSGID_RESPONSE_REGISTERGAMESERVER:
-				//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_GATESERVER -> MSGID_RESPONSE_REGISTERGAMESERVER");
-				switch (*wpMsgType) {
-				case DEF_MSGTYPE_CONFIRM:
-					//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_GATESERVER -> MSGID_RESPONSE_REGISTERGAMESERVER -> DEF_MSGTYPE_CONFIRM");
-					PutLogList("(!) Game Server registration to Gate Server - Success!");
-					m_bIsGateSockAvailable = TRUE;
-					//50Cent - HG start process fix
-					bSendMsgToLS(MSGID_REQUEST_REGISTERGAMESERVER, 0);
-					break;
+		//		// WLS
+		//		bSendMsgToLS(MSGID_SENDSERVERSHUTDOWNMSG, NULL, NULL); 
+		//		break;
+		//	
+		//	case MSGID_GAMESERVERSHUTDOWNED:
+		//		//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_GATESERVER -> MSGID_GAMESERVERSHUTDOWNED");
+		//		m_cShutDownCode      = 1;
+		//		m_bOnExitProcess     = TRUE;
+		//		m_dwExitProcessTime  = timeGetTime();
+		//		PutLogList("(!) GAME SERVER SHUTDOWN PROCESS BEGIN(by Global command)!!!");
+		//		bSendMsgToLS(MSGID_GAMESERVERSHUTDOWNED, NULL);
+		//		
+		//		break;
+		//	
+		//	case MSGID_TOTALGAMESERVERCLIENTS:
+		//		wp = (WORD *)(pData + DEF_INDEX2_MSGTYPE + 2);
+		//		m_iTotalGameServerClients = (int)*wp;
+		//		if (m_iTotalGameServerClients > m_iTotalGameServerMaxClients) 
+		//			m_iTotalGameServerMaxClients = m_iTotalGameServerClients;
+		//		break;
+		//	
+		//	case MSGID_RESPONSE_REGISTERGAMESERVER:
+		//		//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_GATESERVER -> MSGID_RESPONSE_REGISTERGAMESERVER");
+		//		switch (*wpMsgType) {
+		//		case DEF_MSGTYPE_CONFIRM:
+		//			//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_GATESERVER -> MSGID_RESPONSE_REGISTERGAMESERVER -> DEF_MSGTYPE_CONFIRM");
+		//			PutLogList("(!) Game Server registration to Gate Server - Success!");
+		//			m_bIsGateSockAvailable = TRUE;
+		//			//50Cent - HG start process fix
+		//			bSendMsgToLS(MSGID_REQUEST_REGISTERGAMESERVER, 0);
+		//			break;
 
-				case DEF_MSGTYPE_REJECT:
-					//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_GATESERVER -> MSGID_RESPONSE_REGISTERGAMESERVER -> DEF_MSGTYPE_REJECT");
-					PutLogList("(!) Game Server registration to Gate Server - Fail!");
-					PutLogList(" ");
-					PutLogList("(!!!) STOPPED!");
-					break;
-				}
-				
-				//wsprintf(G_cTxt, "%d %d %d %d %d %d %d", (int)m_bIsGameStarted, (int)m_bIsItemAvailable, m_bIsNpcAvailable, (int)m_bIsGateSockAvailable, (int)m_bIsLogSockAvailable, (int)m_bIsMagicAvailable, (int)m_bIsSkillAvailable);
-				//PutLogList(G_cTxt);
+		//		case DEF_MSGTYPE_REJECT:
+		//			//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_GATESERVER -> MSGID_RESPONSE_REGISTERGAMESERVER -> DEF_MSGTYPE_REJECT");
+		//			PutLogList("(!) Game Server registration to Gate Server - Fail!");
+		//			PutLogList(" ");
+		//			PutLogList("(!!!) STOPPED!");
+		//			break;
+		//		}
+		//		
+		//		//wsprintf(G_cTxt, "%d %d %d %d %d %d %d", (int)m_bIsGameStarted, (int)m_bIsItemAvailable, m_bIsNpcAvailable, (int)m_bIsGateSockAvailable, (int)m_bIsLogSockAvailable, (int)m_bIsMagicAvailable, (int)m_bIsSkillAvailable);
+		//		//PutLogList(G_cTxt);
 
-				/*
-				if ((m_bIsGameStarted == FALSE) && (m_bIsItemAvailable == TRUE) && 
-					(m_bIsNpcAvailable == TRUE) && (m_bIsGateSockAvailable == TRUE) &&
-					(m_bIsLogSockAvailable == TRUE) && (m_bIsMagicAvailable == TRUE) &&
-					(m_bIsSkillAvailable == TRUE) && (m_bIsPortionAvailable == TRUE) &&
-					(m_bIsQuestAvailable == TRUE) ) {
-					SendMessage(m_hWnd, WM_USER_STARTGAMESIGNAL, NULL, NULL); 
-					m_bIsGameStarted = TRUE;
-				}
-				*/
-				break;
-			}
-			break;
+		//		/*
+		//		if ((m_bIsGameStarted == FALSE) && (m_bIsItemAvailable == TRUE) && 
+		//			(m_bIsNpcAvailable == TRUE) && (m_bIsGateSockAvailable == TRUE) &&
+		//			(m_bIsLogSockAvailable == TRUE) && (m_bIsMagicAvailable == TRUE) &&
+		//			(m_bIsSkillAvailable == TRUE) && (m_bIsPortionAvailable == TRUE) &&
+		//			(m_bIsQuestAvailable == TRUE) ) {
+		//			SendMessage(m_hWnd, WM_USER_STARTGAMESIGNAL, NULL, NULL); 
+		//			m_bIsGameStarted = TRUE;
+		//		}
+		//		*/
+		//		break;
+		//	}
+		//	break;
 		
 		case DEF_MSGFROM_CLIENT:
 			/*m_pClientList[iClientH]->m_cConnectionCheck++;
@@ -11287,7 +11492,31 @@ void CGame::MsgProcess()
 				break;
 
 			case MSGID_REQUEST_INITDATA:
-				RequestInitDataHandler(iClientH, pData, cKey);
+				// Anti Bump 
+				if (m_pClientList[iClientH]->m_bIsClientConnected == TRUE) {
+					if (m_pClientList[iClientH] == NULL) break;
+					wsprintf(G_cTxt, "(!!!) Client (%s) connection closed!. Sniffer suspect!.", m_pClientList[iClientH]->m_cCharName);
+					PutLogList(G_cTxt);
+					/*ZeroMemory(cData, sizeof(cData));
+					cp = (char*)cData;
+					*cp = GSM_DISCONNECT;
+					cp++;
+					memcpy(cp, m_pClientList[iClientH]->m_cCharName, 10);
+					cp += 10;
+					bStockMsgToGateServer(cData, 11);*/
+					m_pMapList[m_pClientList[iClientH]->m_cMapIndex]->ClearOwner(2, iClientH, DEF_OWNERTYPE_PLAYER, m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY);
+					bRemoveFromDelayEventList(iClientH, DEF_OWNERTYPE_PLAYER, 0);
+					g_login->LocalSavePlayerData(iClientH); //bSendMsgToLS(MSGID_REQUEST_SAVEPLAYERDATALOGOUT, iClientH, false);
+					if ((dwTime - m_dwGameTime2) > 3000) { // 3 segs
+						m_pClientList[iClientH]->m_bIsClientConnected = FALSE;
+						DeleteClient(iClientH, TRUE, TRUE, TRUE, TRUE);
+					}
+					break;
+				}
+				else {
+					m_pClientList[iClientH]->m_bIsClientConnected = TRUE;
+					RequestInitDataHandler(iClientH, pData, cKey);
+				}
 				break;
 
 			case MSGID_COMMAND_COMMON:
@@ -11341,192 +11570,227 @@ void CGame::MsgProcess()
 			break;
 
 			default:
-				wsprintf(m_msgBuff,"Unknown message received! (0x%.8X) Delete Client",*dwpMsgID);
-				PutLogList(m_msgBuff);
-				DeleteClient(iClientH, TRUE, TRUE); // v1.4
+				if (m_pClientList[iClientH] != NULL)  // Snoopy: Anti-crash check !
+				{
+					wsprintf(G_cTxt, "Unknown message received: (0x%.8X) PC(%s) - (Delayed). \tIP(%s)"
+						, *dwpMsgID
+						, m_pClientList[iClientH]->m_cCharName
+						, m_pClientList[iClientH]->m_cIPaddress);
+					//DelayedDeleteClient(iClientH, true, true, true, true);
+				}
+				else
+				{
+					wsprintf(G_cTxt, "Unknown message received: (0x%.8X) PC(unknown).", *dwpMsgID);
+				}
+				PutLogList(G_cTxt);
+				PutHackLogFileList(G_cTxt);
+				PutHackLogFileList(m_pMsgBuffer);
 				break;
 			}	
 			break;
 
 		case DEF_MSGFROM_LOGSERVER:
 			dwpMsgID   = (DWORD *)(pData + DEF_INDEX4_MSGID);
-			wpMsgType  = (WORD *)(pData + DEF_INDEX2_MSGTYPE);
+			//wpMsgType  = (WORD *)(pData + DEF_INDEX2_MSGTYPE);
 
 			switch (*dwpMsgID) {
-			case MSGID_REQUEST_CHECKACCOUNTPASSWORD:
-				//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_REQUEST_CHECKACCOUNTPASSWORD");
-				RequestCheckAccountPasswordHandler(pData, dwMsgSize);
-				break;
-			
-			case MSGID_REQUEST_FORCEDISCONECTACCOUNT:
-				//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_REQUEST_FORCEDISCONECTACCOUNT");
-				wpMsgType  = (WORD *)(pData + DEF_INDEX2_MSGTYPE);
-				ForceDisconnectAccount((char *)(pData + DEF_INDEX2_MSGTYPE + 2), *wpMsgType);
-				break;
-			
-			case MSGID_RESPONSE_SAVEPLAYERDATA_REPLY:
-				//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_RESPONSE_SAVEPLAYERDATA_REPLY");
-				ResponseSavePlayerDataReplyHandler(pData, dwMsgSize);
-				break;
-			
-			case MSGID_GUILDNOTIFY:
-				//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_GUILDNOTIFY");
-				GuildNotifyHandler(pData, dwMsgSize);
-				break;
-			
-			case MSGID_RESPONSE_DISBANDGUILD:
-				//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_RESPONSE_DISBANDGUILD");
-				ResponseDisbandGuildHandler(pData, dwMsgSize);
-				break;
+			//case MSGID_REQUEST_CHECKACCOUNTPASSWORD:
+			//	//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_REQUEST_CHECKACCOUNTPASSWORD");
+			//	RequestCheckAccountPasswordHandler(pData, dwMsgSize);
+			//	break;
+			//
+			//case MSGID_REQUEST_FORCEDISCONECTACCOUNT:
+			//	//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_REQUEST_FORCEDISCONECTACCOUNT");
+			//	wpMsgType  = (WORD *)(pData + DEF_INDEX2_MSGTYPE);
+			//	ForceDisconnectAccount((char *)(pData + DEF_INDEX2_MSGTYPE + 2), *wpMsgType);
+			//	break;
+			//
+			//case MSGID_RESPONSE_SAVEPLAYERDATA_REPLY:
+			//	//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_RESPONSE_SAVEPLAYERDATA_REPLY");
+			//	ResponseSavePlayerDataReplyHandler(pData, dwMsgSize);
+			//	break;
+			//
+			//case MSGID_GUILDNOTIFY:
+			//	//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_GUILDNOTIFY");
+			//	GuildNotifyHandler(pData, dwMsgSize);
+			//	break;
+			//
+			//case MSGID_RESPONSE_DISBANDGUILD:
+			//	//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_RESPONSE_DISBANDGUILD");
+			//	ResponseDisbandGuildHandler(pData, dwMsgSize);
+			//	break;
 
-			case MSGID_RESPONSE_CREATENEWGUILD:
-				//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_RESPONSE_CREATENEWGUILD");
-				ResponseCreateNewGuildHandler(pData, dwMsgSize);
-				break;
-			
-			case MSGID_RESPONSE_REGISTERGAMESERVER:
-				switch (*wpMsgType) {
-				case DEF_MSGTYPE_CONFIRM:
-					//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_RESPONSE_REGISTERGAMESERVER -> DEF_MSGTYPE_CONFIRM");
-					PutLogList("(!) Game Server registration to Log Server - Success!");
-					m_bIsLogSockAvailable = TRUE;
-					break;
+			//case MSGID_RESPONSE_CREATENEWGUILD:
+			//	//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_RESPONSE_CREATENEWGUILD");
+			//	ResponseCreateNewGuildHandler(pData, dwMsgSize);
+			//	break;
+			//
+			//case MSGID_RESPONSE_REGISTERGAMESERVER:
+			//	switch (*wpMsgType) {
+			//	case DEF_MSGTYPE_CONFIRM:
+			//		//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_RESPONSE_REGISTERGAMESERVER -> DEF_MSGTYPE_CONFIRM");
+			//		PutLogList("(!) Game Server registration to Log Server - Success!");
+			//		m_bIsLogSockAvailable = TRUE;
+			//		break;
 
-				case DEF_MSGTYPE_REJECT:
-					//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_RESPONSE_REGISTERGAMESERVER -> DEF_MSGTYPE_REJECT");
-					PutLogList("(!) Game Server registration to Log Server - Fail!");
-					break;
-				}
+			//	case DEF_MSGTYPE_REJECT:
+			//		//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_RESPONSE_REGISTERGAMESERVER -> DEF_MSGTYPE_REJECT");
+			//		PutLogList("(!) Game Server registration to Log Server - Fail!");
+			//		break;
+			//	}
 		
-				if (m_bIsBuildItemAvailable == FALSE) {
-					PutLogList(" ");
-					PutLogList("(!!!) STOPPED! Build-Item configuration error.");
-				}
-								
-				if (m_bIsItemAvailable == FALSE) {
-					PutLogList(" ");
-					PutLogList("(!!!) STOPPED! Item configuration error.");
-				}
-				
-				if (m_bIsNpcAvailable == FALSE) {
-					PutLogList(" ");
-					PutLogList("(!!!) STOPPED! Npc configuration error.");
-				}
+			//	if (m_bIsBuildItemAvailable == FALSE) {
+			//		PutLogList(" ");
+			//		PutLogList("(!!!) STOPPED! Build-Item configuration error.");
+			//	}
+			//					
+			//	if (m_bIsItemAvailable == FALSE) {
+			//		PutLogList(" ");
+			//		PutLogList("(!!!) STOPPED! Item configuration error.");
+			//	}
+			//	
+			//	if (m_bIsNpcAvailable == FALSE) {
+			//		PutLogList(" ");
+			//		PutLogList("(!!!) STOPPED! Npc configuration error.");
+			//	}
 
-				if (m_bIsMagicAvailable == FALSE) {
-					PutLogList(" ");
-					PutLogList("(!!!) STOPPED! MAGIC configuration error.");
-				}
+			//	if (m_bIsMagicAvailable == FALSE) {
+			//		PutLogList(" ");
+			//		PutLogList("(!!!) STOPPED! MAGIC configuration error.");
+			//	}
 
-				if (m_bIsSkillAvailable == FALSE) {
-					PutLogList(" ");
-					PutLogList("(!!!) STOPPED! SKILL configuration error.");
-				}
+			//	if (m_bIsSkillAvailable == FALSE) {
+			//		PutLogList(" ");
+			//		PutLogList("(!!!) STOPPED! SKILL configuration error.");
+			//	}
 
-				if (m_bIsQuestAvailable == FALSE) {
-					PutLogList(" ");
-					PutLogList("(!!!) STOPPED! QUEST configuration error.");
-				}
+			//	if (m_bIsQuestAvailable == FALSE) {
+			//		PutLogList(" ");
+			//		PutLogList("(!!!) STOPPED! QUEST configuration error.");
+			//	}
 
-				if (m_bIsPortionAvailable == FALSE) {
-					PutLogList(" ");
-					PutLogList("(!!!) STOPPED! PORTION configuration error.");
-				}
+			//	if (m_bIsPortionAvailable == FALSE) {
+			//		PutLogList(" ");
+			//		PutLogList("(!!!) STOPPED! PORTION configuration error.");
+			//	}
 
-				//wsprintf(G_cTxt, "%d %d %d %d %d %d %d", (int)m_bIsGameStarted, (int)m_bIsItemAvailable, m_bIsNpcAvailable, (int)m_bIsGateSockAvailable, (int)m_bIsLogSockAvailable, (int)m_bIsMagicAvailable, (int)m_bIsSkillAvailable);
-				//PutLogList(G_cTxt);
+			//	//wsprintf(G_cTxt, "%d %d %d %d %d %d %d", (int)m_bIsGameStarted, (int)m_bIsItemAvailable, m_bIsNpcAvailable, (int)m_bIsGateSockAvailable, (int)m_bIsLogSockAvailable, (int)m_bIsMagicAvailable, (int)m_bIsSkillAvailable);
+			//	//PutLogList(G_cTxt);
 
-				/*
-				if ((m_bIsGameStarted == FALSE) && (m_bIsItemAvailable == TRUE) && 
-					(m_bIsNpcAvailable == TRUE) && (m_bIsGateSockAvailable == TRUE) &&
-					(m_bIsLogSockAvailable == TRUE) && (m_bIsMagicAvailable == TRUE) &&
-					(m_bIsSkillAvailable == TRUE) && (m_bIsPortionAvailable == TRUE) &&
-					(m_bIsQuestAvailable == TRUE) ) {
-					SendMessage(m_hWnd, WM_USER_STARTGAMESIGNAL, NULL, NULL); 
-					m_bIsGameStarted = TRUE;
-				}
-				*/
+			//	/*
+			//	if ((m_bIsGameStarted == FALSE) && (m_bIsItemAvailable == TRUE) && 
+			//		(m_bIsNpcAvailable == TRUE) && (m_bIsGateSockAvailable == TRUE) &&
+			//		(m_bIsLogSockAvailable == TRUE) && (m_bIsMagicAvailable == TRUE) &&
+			//		(m_bIsSkillAvailable == TRUE) && (m_bIsPortionAvailable == TRUE) &&
+			//		(m_bIsQuestAvailable == TRUE) ) {
+			//		SendMessage(m_hWnd, WM_USER_STARTGAMESIGNAL, NULL, NULL); 
+			//		m_bIsGameStarted = TRUE;
+			//	}
+			//	*/
+			//	break;
+
+			//case MSGID_RESPONSE_PLAYERDATA:
+			//	//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_RESPONSE_PLAYERDATA");
+			//	ResponsePlayerDataHandler(pData, dwMsgSize);
+			//	break;
+
+			//case MSGID_BUILDITEMCONFIGURATIONCONTENTS:
+			//	//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_BUILDITEMCONFIGURATIONCONTENTS");
+			//	// Build Item contents
+			//	PutLogList("(!) BUILD-ITEM configuration contents received. Now decoding...");
+			//	m_bIsBuildItemAvailable = _bDecodeBuildItemConfigFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize);
+			//	break;
+			//
+			//case MSGID_ITEMCONFIGURATIONCONTENTS:
+			//	//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_ITEMCONFIGURATIONCONTENTS");
+			//	PutLogList("(!) ITEM configuration contents received. Now decoding...");
+			//	m_bIsItemAvailable = _bDecodeItemConfigFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize);
+			//	break;
+
+			//case MSGID_NPCCONFIGURATIONCONTENTS:
+			//	//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_NPCCONFIGURATIONCONTENTS");
+			//	PutLogList("(!) NPC configuration contents received. Now decoding...");
+			//	m_bIsNpcAvailable = _bDecodeNpcConfigFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize);
+			//	break;
+			//
+			//case MSGID_MAGICCONFIGURATIONCONTENTS:
+			//	//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_MAGICCONFIGURATIONCONTENTS");
+			//	PutLogList("(!) MAGIC configuration contents received. Now decoding...");
+			//	m_bIsMagicAvailable = _bDecodeMagicConfigFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize);
+			//	break;
+
+			//case MSGID_SKILLCONFIGURATIONCONTENTS:
+			//	//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_SKILLCONFIGURATIONCONTENTS");
+			//	PutLogList("(!) SKILL configuration contents received. Now decoding...");
+			//	m_bIsSkillAvailable = _bDecodeSkillConfigFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize);
+			//	break;
+
+			//case MSGID_QUESTCONFIGURATIONCONTENTS:
+			//	//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_QUESTCONFIGURATIONCONTENTS");
+			//	PutLogList("(!) QUEST configuration contents received. Now decoding...");
+			//	m_bIsQuestAvailable = _bDecodeQuestConfigFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize);
+			//	break;
+
+			//case MSGID_PORTIONCONFIGURATIONCONTENTS:
+			//	//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_PORTIONCONFIGURATIONCONTENTS");
+			//	PutLogList("(!) PORTION configuration contents received. Now decoding...");
+			//	m_bIsPortionAvailable = _bDecodePortionConfigFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize);
+			//	break;
+
+			//// Crusade
+			////case MSGID_ARESDENOCCUPYFLAGSAVEFILECONTENTS:
+			//	//PutLogList("(!) Aresden OccupyFlag save file contents received. Now decoding...");
+			//	//_bDecodeOccupyFlagSaveFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize, 1);
+			//	//break;
+
+			//// Crusade
+			////case MSGID_ELVINEOCCUPYFLAGSAVEFILECONTENTS:
+			//	//PutLogList("(!) Elvine OccupyFlag save file contents received. Now decoding...");
+			//	//_bDecodeOccupyFlagSaveFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize, 2);
+			//	//break;
+
+			//case MSGID_DUPITEMIDFILECONTENTS:
+			//	//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_DUPITEMIDFILECONTENTS");
+			//	PutLogList("(!) DupItemID file contents received. Now decoding...");
+			//	_bDecodeDupItemIDFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize);
+			//	break;
+
+			//case MSGID_NOTICEMENTFILECONTENTS:
+			//	//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_NOTICEMENTFILECONTENTS");
+			//	PutLogList("(!) Noticement file contents received. Now decoding...");
+			//	_bDecodeNoticementFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize);
+			//	break;
+
+			//// v2.17 2002-8-7 // 2002-09-06 #1
+			///*case MSGID_NPCITEMCONFIGCONTENTS:
+			//	PutLogList("(!) NpcItemConfig file contents received. Now decoding...");
+			//	_bDecodeNpcItemConfigFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize);
+			//	break;*/
+
+			case MSGID_REQUEST_CREATENEWACCOUNT:
+				g_login->CreateNewAccount(iClientH, pData);
 				break;
-
-			case MSGID_RESPONSE_PLAYERDATA:
-				//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_RESPONSE_PLAYERDATA");
-				ResponsePlayerDataHandler(pData, dwMsgSize);
+			case MSGID_REQUEST_LOGIN:
+				g_login->RequestLogin(iClientH, pData);
 				break;
-
-			case MSGID_BUILDITEMCONFIGURATIONCONTENTS:
-				//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_BUILDITEMCONFIGURATIONCONTENTS");
-				// Build Item contents
-				PutLogList("(!) BUILD-ITEM configuration contents received. Now decoding...");
-				m_bIsBuildItemAvailable = _bDecodeBuildItemConfigFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize);
+			case MSGID_REQUEST_CREATENEWCHARACTER: //message from client
+				g_login->ResponseCharacter(iClientH, pData);
 				break;
-			
-			case MSGID_ITEMCONFIGURATIONCONTENTS:
-				//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_ITEMCONFIGURATIONCONTENTS");
-				PutLogList("(!) ITEM configuration contents received. Now decoding...");
-				m_bIsItemAvailable = _bDecodeItemConfigFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize);
+			case MSGID_REQUEST_DELETECHARACTER:
+				g_login->DeleteCharacter(iClientH, pData);
 				break;
-
-			case MSGID_NPCCONFIGURATIONCONTENTS:
-				//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_NPCCONFIGURATIONCONTENTS");
-				PutLogList("(!) NPC configuration contents received. Now decoding...");
-				m_bIsNpcAvailable = _bDecodeNpcConfigFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize);
+			case MSGID_REQUEST_CHANGEPASSWORD:
+				g_login->ChangePassword(iClientH, pData);
 				break;
-			
-			case MSGID_MAGICCONFIGURATIONCONTENTS:
-				//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_MAGICCONFIGURATIONCONTENTS");
-				PutLogList("(!) MAGIC configuration contents received. Now decoding...");
-				m_bIsMagicAvailable = _bDecodeMagicConfigFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize);
+			case MSGID_REQUEST_ENTERGAME:
+				g_login->RequestEnterGame(iClientH, pData);
 				break;
-
-			case MSGID_SKILLCONFIGURATIONCONTENTS:
-				//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_SKILLCONFIGURATIONCONTENTS");
-				PutLogList("(!) SKILL configuration contents received. Now decoding...");
-				m_bIsSkillAvailable = _bDecodeSkillConfigFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize);
+			default:
+				wsprintf(G_cTxt, "Unknown login message received! (0x%.8X) Delete Client", *dwpMsgID);
+				PutLogList(G_cTxt);
 				break;
-
-			case MSGID_QUESTCONFIGURATIONCONTENTS:
-				//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_QUESTCONFIGURATIONCONTENTS");
-				PutLogList("(!) QUEST configuration contents received. Now decoding...");
-				m_bIsQuestAvailable = _bDecodeQuestConfigFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize);
-				break;
-
-			case MSGID_PORTIONCONFIGURATIONCONTENTS:
-				//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_PORTIONCONFIGURATIONCONTENTS");
-				PutLogList("(!) PORTION configuration contents received. Now decoding...");
-				m_bIsPortionAvailable = _bDecodePortionConfigFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize);
-				break;
-
-			// Crusade
-			//case MSGID_ARESDENOCCUPYFLAGSAVEFILECONTENTS:
-				//PutLogList("(!) Aresden OccupyFlag save file contents received. Now decoding...");
-				//_bDecodeOccupyFlagSaveFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize, 1);
-				//break;
-
-			// Crusade
-			//case MSGID_ELVINEOCCUPYFLAGSAVEFILECONTENTS:
-				//PutLogList("(!) Elvine OccupyFlag save file contents received. Now decoding...");
-				//_bDecodeOccupyFlagSaveFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize, 2);
-				//break;
-
-			case MSGID_DUPITEMIDFILECONTENTS:
-				//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_DUPITEMIDFILECONTENTS");
-				PutLogList("(!) DupItemID file contents received. Now decoding...");
-				_bDecodeDupItemIDFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize);
-				break;
-
-			case MSGID_NOTICEMENTFILECONTENTS:
-				//DbgWnd->AddEventMsg("RECV -> DEF_MSGFROM_LOGSERVER -> MSGID_NOTICEMENTFILECONTENTS");
-				PutLogList("(!) Noticement file contents received. Now decoding...");
-				_bDecodeNoticementFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize);
-				break;
-
-			// v2.17 2002-8-7 // 2002-09-06 #1
-			/*case MSGID_NPCITEMCONFIGCONTENTS:
-				PutLogList("(!) NpcItemConfig file contents received. Now decoding...");
-				_bDecodeNpcItemConfigFileContents((char *)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize);
-				break;*/
-
 			}
+			DeleteLoginClient(iClientH);
 			break;
 		}
 	}
@@ -12736,7 +13000,7 @@ int CGame::iClientMotion_Stop_Handler(int iClientH, short sX, short sY, char cDi
 	return 1;
 }
 
-void CGame::ResponseCreateNewGuildHandler(char * pData, DWORD dwMsgSize)
+void CGame::ResponseCreateNewGuildHandler(char * pData, int iType)
 {
  register int i;
  WORD  * wp, wResult;
@@ -12746,18 +13010,18 @@ void CGame::ResponseCreateNewGuildHandler(char * pData, DWORD dwMsgSize)
 	
 	// ·Î±× ¼­¹ö·ÎºÎÅÍ ±æµå »ý¼º ¿äÃ»¿¡ ´ëÇÑ ÀÀ´äµ¥ÀÌÅÍ°¡ µµÂøÇß´Ù. 
 	ZeroMemory(cCharName, sizeof(cCharName));
-	cp = (char *)(pData + DEF_INDEX2_MSGTYPE + 2);
-	memcpy(cCharName, cp, 10);
-	cp += 10;
+	//cp = (char *)(pData + DEF_INDEX2_MSGTYPE + 2);
+	memcpy(cCharName, pData, 10);
+	//cp += 10;
 	
 	// ÀÌ¸§ÀÌ ÀÏÄ¡ÇÏ´Â Å¬¶óÀÌ¾ðÆ®¸¦ Ã£´Â´Ù.
 	for (i = 1; i < DEF_MAXCLIENTS; i++) 
 	if ((m_pClientList[i] != NULL) && (memcmp(m_pClientList[i]->m_cCharName, cCharName, 10) == 0) &&
 		(m_pClientList[i]->m_iLevel >= 20) && (m_pClientList[i]->m_iCharisma >= 20)) {
 		
-		wp = (WORD *)(pData + DEF_INDEX2_MSGTYPE);
-		switch (*wp) {
-		case DEF_LOGRESMSGTYPE_CONFIRM:
+		//wp = (WORD *)(pData + DEF_INDEX2_MSGTYPE);
+		switch (iType) {
+		case 1: // DEF_LOGRESMSGTYPE_CONFIRM
 			// Å¬¶óÀÌ¾ðÆ®ÀÇ ±æµå »ý¼º ¿ä±¸°¡ ¼º°øÇÏ¿´´Ù. 
 			wResult = DEF_MSGTYPE_CONFIRM;
 			// ±æµå ÀÌ¸§Àº ÀÌ¹Ì ÀúÀåµÇ¾î ÀÖÀ¸¹Ç·Î ·©Å©¸¦ 0À¸·Î ¹Ù²ã À¯È¿È­ ÇÑ´Ù.
@@ -12766,7 +13030,7 @@ void CGame::ResponseCreateNewGuildHandler(char * pData, DWORD dwMsgSize)
 			PutLogList(cTxt);
 			break;
 
-		case DEF_LOGRESMSGTYPE_REJECT:
+		case 0: // DEF_LOGRESMSGTYPE_REJECT
 			// Å¬¶óÀÌ¾ðÆ®ÀÇ ±æµå »ý¼º ¿ä±¸°¡ ½ÇÆÐÇÏ¿´´Ù.
 			// ÇØ´ç Å¬¶óÀÌ¾ðÆ®ÀÇ ±æµåÀÌ¸§À» ÃÊ±âÈ­ÇÑ´Ù "NONE".
 			wResult = DEF_MSGTYPE_REJECT;
@@ -12867,7 +13131,28 @@ void CGame::RequestCreateNewGuildHandler(int iClientH, char * pData, DWORD dwMsg
 			m_pClientList[iClientH]->m_iGuildGUID = (int)(SysTime.wYear + SysTime.wMonth + SysTime.wDay + SysTime.wHour + SysTime.wMinute + timeGetTime());
 			
 			// ±æµå »ý¼º¿äÃ» ¸Þ½ÃÁö¸¦ ·Î±×¼­¹ö·Î Àü¼ÛÇÑ´Ù.
-			bSendMsgToLS(MSGID_REQUEST_CREATENEWGUILD, iClientH);
+			//bSendMsgToLS(MSGID_REQUEST_CREATENEWGUILD, iClientH);
+
+			char cData[512];
+			ZeroMemory(cData, sizeof(cData));
+			DWORD* dwp;
+
+			cp = (char*)cData;
+
+			memcpy(cp, m_pClientList[iClientH]->m_cCharName, 10);
+			cp += 10;
+
+			memcpy(cp, m_pClientList[iClientH]->m_cGuildName, 20);
+			cp += 20;
+
+			memcpy(cp, m_pClientList[iClientH]->m_cLocation, 10);
+			cp += 10;
+
+			dwp = (DWORD*)cp;
+			*dwp = (DWORD)m_pClientList[iClientH]->m_iGuildGUID;
+			cp += 4;
+
+			RequestCreateNewGuild(iClientH, cData);
 		}
 	}
 }
@@ -12896,11 +13181,24 @@ void CGame::RequestDisbandGuildHandler(int iClientH, char * pData, DWORD dwMsgSi
 	}
 	else {
 		// ±æµå ÇØ»ê ¸Þ½ÃÁö¸¦ ·Î±×¼­¹ö·Î Àü¼ÛÇÑ´Ù.
-		bSendMsgToLS(MSGID_REQUEST_DISBANDGUILD, iClientH);
+		//bSendMsgToLS(MSGID_REQUEST_DISBANDGUILD, iClientH);
+
+		char cData[512];
+
+		ZeroMemory(cData, sizeof(cData));
+		cp = (char*)(cData);
+
+		memcpy((char*)cp, m_pClientList[iClientH]->m_cCharName, 10);
+		cp += 10;
+
+		memcpy((char*)cp, m_pClientList[iClientH]->m_cGuildName, 20);
+		cp += 20;
+
+		RequestDisbandGuild(iClientH, cData);
 	}
 }
 
-void CGame::ResponseDisbandGuildHandler(char * pData, DWORD dwMsgSize)
+void CGame::ResponseDisbandGuildHandler(char * pData, int iType)
 {
  register int i;
  WORD  * wp, wResult;
@@ -12910,17 +13208,17 @@ void CGame::ResponseDisbandGuildHandler(char * pData, DWORD dwMsgSize)
 	
 	// �α� �����κ��� ��� �ػ� ��û�� ���� ���䵥���Ͱ� �����ߴ�. 
 	ZeroMemory(cCharName, sizeof(cCharName));
-	cp = (char *)(pData + DEF_INDEX2_MSGTYPE + 2);
-	memcpy(cCharName, cp, 10);
-	cp += 10;
+	//cp = (char *)(pData + DEF_INDEX2_MSGTYPE + 2);
+	memcpy(cCharName, pData, 10);
+	//cp += 10;
 	
 	// �̸��� ��ġ�ϴ� Ŭ���̾�Ʈ�� ã�´�.
 	for (i = 1; i < DEF_MAXCLIENTS; i++) 
 	if ((m_pClientList[i] != NULL) && (memcmp(m_pClientList[i]->m_cCharName, cCharName, 10) == 0)) {
 		
-		wp = (WORD *)(pData + DEF_INDEX2_MSGTYPE);
-		switch (*wp) {
-		case DEF_LOGRESMSGTYPE_CONFIRM:
+		//wp = (WORD *)(pData + DEF_INDEX2_MSGTYPE);
+		switch (iType) {
+		case 1: // DEF_LOGRESMSGTYPE_CONFIRM
 			// Ŭ���̾�Ʈ�� ��� �ػ� �䱸�� �����Ͽ���. 
 			wResult = DEF_MSGTYPE_CONFIRM;
 			wsprintf(cTxt, "(!) Disband guild(%s) success! : character(%s)", m_pClientList[i]->m_cGuildName, m_pClientList[i]->m_cCharName);
@@ -12936,7 +13234,7 @@ void CGame::ResponseDisbandGuildHandler(char * pData, DWORD dwMsgSize)
 			m_pClientList[i]->m_iGuildGUID = -1;
 			break;
 
-		case DEF_LOGRESMSGTYPE_REJECT:
+		case 0: // DEF_LOGRESMSGTYPE_REJECT
 			// Ŭ���̾�Ʈ�� ��� �ػ� �䱸�� �����Ͽ���.
 			wResult = DEF_MSGTYPE_REJECT;
 			wsprintf(cTxt, "(!) Disband guild(%s) Fail! : character(%s)", m_pClientList[i]->m_cGuildName, m_pClientList[i]->m_cCharName);
@@ -15276,7 +15574,7 @@ void CGame::JoinGuildApproveHandler(int iClientH, char * pName)
 		SendGuildMsg(i, DEF_NOTIFY_NEWGUILDSMAN, NULL, NULL, NULL);
 
 		// ±æµåÁ¤º¸È­ÀÏ¿¡ »õ ±æµå¿øÀÇ ÀÌ¸§À» ±â·ÏÇÑ´Ù.
-		bSendMsgToLS(MSGID_REQUEST_UPDATEGUILDINFO_NEWGUILDSMAN, i);
+		//bSendMsgToLS(MSGID_REQUEST_UPDATEGUILDINFO_NEWGUILDSMAN, i);
 		return;
 	}
 
@@ -15314,7 +15612,7 @@ void CGame::DismissGuildApproveHandler(int iClientH, char * pName)
 	for (i = 1; i < DEF_MAXCLIENTS; i++) 
 	if ((m_pClientList[i] != NULL) && (memcmp(m_pClientList[i]->m_cCharName, pName, 10) == 0)) {
 		
-		bSendMsgToLS(MSGID_REQUEST_UPDATEGUILDINFO_DELGUILDSMAN, i);
+		//bSendMsgToLS(MSGID_REQUEST_UPDATEGUILDINFO_DELGUILDSMAN, i);
 		//_bItemLog(DEF_ITEMLOG_BANGUILD,i,(char *)NULL,NULL) ;
 		SendGuildMsg(i, DEF_NOTIFY_DISMISSGUILDSMAN, NULL, NULL, NULL);
 	
@@ -15450,6 +15748,22 @@ void CGame::ClientKilledHandler(int iClientH, int iAttackerH, char cAttackerType
 	m_pClientList[iClientH]->m_bIsKilled = TRUE;
 	// HP�� 0�̴�.
 	m_pClientList[iClientH]->m_iHP = 0;
+
+	// Snoopy: Remove all magic effects and flags
+	for (i = 0; i < DEF_MAXMAGICEFFECTS; i++)
+		m_pClientList[iClientH]->m_cMagicEffectStatus[i] = 0;
+
+	SetDefenseShieldFlag(iClientH, DEF_OWNERTYPE_PLAYER, false);
+	SetMagicProtectionFlag(iClientH, DEF_OWNERTYPE_PLAYER, false);
+	SetProtectionFromArrowFlag(iClientH, DEF_OWNERTYPE_PLAYER, false);
+	SetIllusionMovementFlag(iClientH, DEF_OWNERTYPE_PLAYER, false);
+	SetIllusionFlag(iClientH, DEF_OWNERTYPE_PLAYER, false);
+	SetInhibitionCastingFlag(iClientH, DEF_OWNERTYPE_PLAYER, false);
+	SetPoisonFlag(iClientH, DEF_OWNERTYPE_PLAYER, false);
+	SetIceFlag(iClientH, DEF_OWNERTYPE_PLAYER, false);
+	SetBerserkFlag(iClientH, DEF_OWNERTYPE_PLAYER, false);
+	SetInvisibilityFlag(iClientH, DEF_OWNERTYPE_PLAYER, false);
+	SetSlateFlag(iClientH, DEF_NOTIFY_SLATECLEAR, false);
 
 	// ���� ��ȯ ����� ��ȯ�� ����Ѵ�.
 	if (m_pClientList[iClientH]->m_bIsExchangeMode == TRUE) {
@@ -15635,6 +15949,17 @@ void CGame::ClientKilledHandler(int iClientH, int iAttackerH, char cAttackerType
 			// Slaughterer 
 			ApplyCombatKilledPenalty(iClientH, 12, bIsSAattacked);
 		}
+		char cTxt[128];
+		ZeroMemory(cTxt, sizeof(cTxt));
+		wsprintf(cTxt, "%s killed %s", m_pClientList[iAttackerH]->m_cCharName, m_pClientList[iClientH]->m_cCharName);
+		for (int Killedi = 0; Killedi < DEF_MAXCLIENTS; Killedi++) {
+			if (m_pClientList[Killedi] != NULL && Killedi != iAttackerH) {
+				SendNotifyMsg(NULL, Killedi, DEF_NOTIFY_NOTICEMSG, NULL, NULL, NULL, cTxt);
+			}
+		}
+		ZeroMemory(cTxt, sizeof(cTxt));
+		wsprintf(cTxt, "%s(%s) killed %s(%s) in %s(%d,%d)", m_pClientList[iAttackerH]->m_cCharName, m_pClientList[iAttackerH]->m_cIPaddress, m_pClientList[iClientH]->m_cCharName, m_pClientList[iClientH]->m_cIPaddress, m_pClientList[iClientH]->m_cMapName, m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY);
+		PutPvPLogFileList(cTxt); // Centu : log pvp
 	}
 	else if (cAttackerType == DEF_OWNERTYPE_NPC) {
 
@@ -15680,7 +16005,7 @@ void CGame::ClientKilledHandler(int iClientH, int iAttackerH, char cAttackerType
 				}
 				
 				// ���� ������ ����. �ٸ� ������ ���ְ����� �˷��� �Ѵ�.
-				ZeroMemory(cData, sizeof(cData));
+				/*ZeroMemory(cData, sizeof(cData));
 				cp = (char *)cData;
 				*cp = GSM_CONSTRUCTIONPOINT;
 				cp++;
@@ -15690,7 +16015,15 @@ void CGame::ClientKilledHandler(int iClientH, int iAttackerH, char cAttackerType
 				ip = (int*)cp;
 				*ip = (m_pClientList[iClientH]->m_iLevel / 2);
 				cp += 4;
-				bStockMsgToGateServer(cData, 9);
+				bStockMsgToGateServer(cData, 9);*/
+			}
+		}
+		char cTxt[128];
+		ZeroMemory(cTxt, sizeof(cTxt));
+		wsprintf(cTxt, "%s killed %s", m_pNpcList[iAttackerH]->m_cNpcName, m_pClientList[iClientH]->m_cCharName);
+		for (int Killedi = 0; Killedi < DEF_MAXCLIENTS; Killedi++) {
+			if (m_pClientList[Killedi] != NULL) {
+				SendNotifyMsg(NULL, Killedi, DEF_NOTIFY_NOTICEMSG, NULL, NULL, NULL, cTxt);
 			}
 		}
 	}
@@ -15702,83 +16035,6 @@ void CGame::ClientKilledHandler(int iClientH, int iAttackerH, char cAttackerType
 
 		// SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_EXP, NULL, NULL, NULL, NULL);
 	}
-	
-	//Player Kill Notice - (C)copyrights to XTra KrazzY 2005+ | All rights reserved.
-	//Hb-Zion Team
-	char cKillMsg[80];
-	ZeroMemory(cKillMsg,sizeof(cKillMsg));
-
-
-	switch (iDice(1,4))
-	{
-	case 1:
-		wsprintf(cKillMsg, "%s whooped %s's ass!", cAttackerName, m_pClientList[iClientH]->m_cCharName);
-	break;
-
-	case 2:
-		wsprintf(cKillMsg, "%s smashed %s's face into the ground!", cAttackerName, m_pClientList[iClientH]->m_cCharName);
-	break;
-
-	case 3:
-		wsprintf(cKillMsg, "%s was sliced to pieces by %s!", m_pClientList[iClientH]->m_cCharName, cAttackerName);
-	break;
-
-	case 4:
-		wsprintf(cKillMsg, "%s was gutted by %s!", m_pClientList[iClientH]->m_cCharName, cAttackerName);
-	break;
-
-	default:
-		wsprintf(cKillMsg, "%s is now sleeping for good thanks to %s", m_pClientList[iClientH]->m_cCharName, cAttackerName);
-	break;
-
-	}
-	wsprintf(G_cTxt, "%s killed %s", m_pClientList[iAttackerH]->m_cCharName, m_pClientList[iClientH]->m_cCharName);
-	PutLogFileList(G_cTxt);
-	
-	for (int iS = 0; iS < DEF_MAXCLIENTS; iS++){
-		if ((m_pClientList[iS] != NULL)) {
-			EKAnnounce(iS,cKillMsg);
-		}
-	}
-}
-
-//Hb-Zion Team
-void CGame::EKAnnounce(int iClientH, char* pMsg)
-{
-	char * cp, cTemp[256];
-	DWORD * dwp, dwMsgSize;
-	WORD * wp;
-	short * sp;
-
-	ZeroMemory(cTemp, sizeof(cTemp));
-
-	dwp = (DWORD *)cTemp;
-	*dwp = MSGID_COMMAND_CHATMSG;
-
-
-	wp  = (WORD *)(cTemp + DEF_INDEX2_MSGTYPE);
-	*wp = NULL;
-
-	cp  = (char *)(cTemp + DEF_INDEX2_MSGTYPE + 2);
-	sp  = (short *)cp;
-	*sp = NULL;
-	cp += 2;
-
-	sp  = (short *)cp;
-	*sp = NULL;
-	cp += 2;
-
-	memcpy(cp, "Announcer", 9);
-	cp += 10;
-
-	*cp = 10;
-	cp++;
-
-	dwMsgSize = strlen(pMsg);
-	memcpy(cp, pMsg, dwMsgSize);
-	cp += dwMsgSize;
-
-	m_pClientList[iClientH]->m_pXSock->iSendMsg(cTemp, dwMsgSize + 22);
 }
 
 void CGame::ReleaseItemHandler(int iClientH, short sItemIndex, BOOL bNotice)
@@ -15955,9 +16211,24 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
  int  iNpcConfigListIndex = 0;
  class CStrTok * pStrTok;
 
-	pContents = new char[dwMsgSize+1];
-	ZeroMemory(pContents, dwMsgSize+1);
-	memcpy(pContents, pData, dwMsgSize);
+ char cData[50000] = {};
+ DWORD lpNumberOfBytesRead;
+ HANDLE hFile = CreateFile(pData, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
+ DWORD dwFileSize = GetFileSize(hFile, NULL);
+ if (dwFileSize == -1) {
+	 wsprintf(G_cTxt, "(X) CRITICAL ERROR! Cannot open configuration file(%s)!", pData);
+	 PutLogList(pData);
+	 return false;
+ }
+
+ SetFilePointer(hFile, 0, 0, FILE_BEGIN);
+
+ ReadFile(hFile, cData, dwFileSize, &lpNumberOfBytesRead, NULL);
+ CloseHandle(hFile);
+
+ pContents = new char[dwFileSize + 1];
+ ZeroMemory(pContents, dwFileSize + 1);
+ memcpy(pContents, cData, dwFileSize);
 
 	pStrTok = new class CStrTok(pContents, seps);
 	token = pStrTok->pGet();
@@ -16738,207 +17009,207 @@ void CGame::ToggleCombatModeHandler(int iClientH)
 
 void CGame::OnGateSocketEvent(UINT message, WPARAM wParam, LPARAM lParam)
 {
- int   iRet;
-	
-	if (m_pGateSock == NULL) return;
+ //int   iRet;
+	//
+	//if (m_pGateSock == NULL) return;
 
-	iRet = m_pGateSock->iOnSocketEvent(wParam, lParam);
+	//iRet = m_pGateSock->iOnSocketEvent(wParam, lParam);
 
-	switch (iRet) {
-	case DEF_XSOCKEVENT_UNSENTDATASENDCOMPLETE:
-		PutLogList("(!!!) Gate-socket connected!");
-		SendMsgToGateServer(MSGID_REQUEST_REGISTERGAMESERVER, NULL);
-		break;
-	case DEF_XSOCKEVENT_CONNECTIONESTABLISH:
-		// °ÔÀÌÆ®¼­¹ö·ÎÀÇ ¿¬°áÀÌ ÀÌ·ç¾î Á³À¸¹Ç·Î °ÔÀÓ¼­¹ö µî·Ï ¸Þ½ÃÁö¸¦ Àü¼ÛÇÑ´Ù.
-		// v1.41 gate-socketÀ» Àç¿¬°áÇÒ ¶§ Ä«¿îÆÃ ÇÏ´Â º¯¼ö. ¼­¹ö ÀÛµ¿ µµÁß gate-socketÀÌ ¼ÒÄÏ¿¡·¯·Î ²÷±â¸é °ð¹Ù·Î ÀçÁ¢¼ÓÀ» 
-		// ½ÃµµÇÏ¸ç ÀÌ °ªÀÌ ÀÏÁ¤Ä¡ ÀÌ»óÀÌ µÇ¸é ¿¬°á ½ÇÆÐ·Î °£ÁÖµÇ¾î ÀÚµ¿ ¼­¹ö ¼Ë´Ù¿î ¸ðµå(4)·Î µé¾î°£´Ù. 
-		m_iGateSockConnRetryTimes = 0;
-		break;
-	
-	case DEF_XSOCKEVENT_READCOMPLETE:
-		// ¸Þ½ÃÁö°¡ ¼ö½ÅµÇ¾ú´Ù.
-		OnGateRead();
-		break;
-	
-	case DEF_XSOCKEVENT_BLOCK:
-		break;
-	
-	case DEF_XSOCKEVENT_CONFIRMCODENOTMATCH:
-		// È®ÀÎÄÚµå°¡ ÀÏÄ¡ÇÏÁö ¾Ê´Â´Ù.
-	case DEF_XSOCKEVENT_MSGSIZETOOLARGE:
-		// ¼ö½ÅÇØ¾ß ÇÒ ¸Þ½ÃÁö Å©±â°¡ ¹öÆÛº¸´Ù Å©´Ù.	Á¾·áÇØ¾ß¸¸ ÇÑ´Ù.
-	case DEF_XSOCKEVENT_SOCKETERROR:
-		// ¼ÒÄÏ¿¡ ¿¡·¯°¡ ³µ´Ù.
-	case DEF_XSOCKEVENT_SOCKETCLOSED:
-		// ¼ÒÄÏÀÌ ´ÝÇû´Ù.
-		delete m_pGateSock;
-		m_pGateSock = NULL;
-		PutLogList("(!!!) Gate-socket connection lost!");
-		m_bIsGateSockAvailable = FALSE;
+	//switch (iRet) {
+	//case DEF_XSOCKEVENT_UNSENTDATASENDCOMPLETE:
+	//	PutLogList("(!!!) Gate-socket connected!");
+	//	SendMsgToGateServer(MSGID_REQUEST_REGISTERGAMESERVER, NULL);
+	//	break;
+	//case DEF_XSOCKEVENT_CONNECTIONESTABLISH:
+	//	// °ÔÀÌÆ®¼­¹ö·ÎÀÇ ¿¬°áÀÌ ÀÌ·ç¾î Á³À¸¹Ç·Î °ÔÀÓ¼­¹ö µî·Ï ¸Þ½ÃÁö¸¦ Àü¼ÛÇÑ´Ù.
+	//	// v1.41 gate-socketÀ» Àç¿¬°áÇÒ ¶§ Ä«¿îÆÃ ÇÏ´Â º¯¼ö. ¼­¹ö ÀÛµ¿ µµÁß gate-socketÀÌ ¼ÒÄÏ¿¡·¯·Î ²÷±â¸é °ð¹Ù·Î ÀçÁ¢¼ÓÀ» 
+	//	// ½ÃµµÇÏ¸ç ÀÌ °ªÀÌ ÀÏÁ¤Ä¡ ÀÌ»óÀÌ µÇ¸é ¿¬°á ½ÇÆÐ·Î °£ÁÖµÇ¾î ÀÚµ¿ ¼­¹ö ¼Ë´Ù¿î ¸ðµå(4)·Î µé¾î°£´Ù. 
+	//	m_iGateSockConnRetryTimes = 0;
+	//	break;
+	//
+	//case DEF_XSOCKEVENT_READCOMPLETE:
+	//	// ¸Þ½ÃÁö°¡ ¼ö½ÅµÇ¾ú´Ù.
+	//	OnGateRead();
+	//	break;
+	//
+	//case DEF_XSOCKEVENT_BLOCK:
+	//	break;
+	//
+	//case DEF_XSOCKEVENT_CONFIRMCODENOTMATCH:
+	//	// È®ÀÎÄÚµå°¡ ÀÏÄ¡ÇÏÁö ¾Ê´Â´Ù.
+	//case DEF_XSOCKEVENT_MSGSIZETOOLARGE:
+	//	// ¼ö½ÅÇØ¾ß ÇÒ ¸Þ½ÃÁö Å©±â°¡ ¹öÆÛº¸´Ù Å©´Ù.	Á¾·áÇØ¾ß¸¸ ÇÑ´Ù.
+	//case DEF_XSOCKEVENT_SOCKETERROR:
+	//	// ¼ÒÄÏ¿¡ ¿¡·¯°¡ ³µ´Ù.
+	//case DEF_XSOCKEVENT_SOCKETCLOSED:
+	//	// ¼ÒÄÏÀÌ ´ÝÇû´Ù.
+	//	delete m_pGateSock;
+	//	m_pGateSock = NULL;
+	//	PutLogList("(!!!) Gate-socket connection lost!");
+	//	m_bIsGateSockAvailable = FALSE;
 
-		// v1.41 Gate Server·ÎÀÇ Àç¿¬°á ½Ãµµ 
-		m_pGateSock = new class XSocket(m_hWnd, DEF_SERVERSOCKETBLOCKLIMIT);
-		m_pGateSock->bConnect(m_cGateServerAddr, m_iGateServerPort, WM_ONGATESOCKETEVENT);
-		m_pGateSock->bInitBufferSize(DEF_MSGBUFFERSIZE);
-		// v1.41 ¿¬°á ½Ã°£ Ã¼Å©¿ë 
-		m_iGateSockConnRetryTimes = 1;
+	//	// v1.41 Gate Server·ÎÀÇ Àç¿¬°á ½Ãµµ 
+	//	m_pGateSock = new class XSocket(m_hWnd, DEF_SERVERSOCKETBLOCKLIMIT);
+	//	m_pGateSock->bConnect(m_cGateServerAddr, m_iGateServerPort, WM_ONGATESOCKETEVENT);
+	//	m_pGateSock->bInitBufferSize(DEF_MSGBUFFERSIZE);
+	//	// v1.41 ¿¬°á ½Ã°£ Ã¼Å©¿ë 
+	//	m_iGateSockConnRetryTimes = 1;
 
-		wsprintf(G_cTxt, "(!!!) Try to reconnect gate-socket... Addr:%s  Port:%d", m_cGateServerAddr, m_iGateServerPort);
-		PutLogList(G_cTxt);
+	//	wsprintf(G_cTxt, "(!!!) Try to reconnect gate-socket... Addr:%s  Port:%d", m_cGateServerAddr, m_iGateServerPort);
+	//	PutLogList(G_cTxt);
 
-		break;
-	}
+	//	break;
+	//}
 }
 
 void CGame::OnGateRead()
 {
- DWORD dwMsgSize;
- char * pData, cKey;
+ //DWORD dwMsgSize;
+ //char * pData, cKey;
 
-	pData = m_pGateSock->pGetRcvDataPointer(&dwMsgSize, &cKey);
+	//pData = m_pGateSock->pGetRcvDataPointer(&dwMsgSize, &cKey);
 
-	if (bPutMsgQuene(DEF_MSGFROM_GATESERVER, pData, dwMsgSize, NULL, cKey) == FALSE) {
-		// ¸Þ½ÃÁö Å¥¿¡ ÀÌ»óÀÌ »ý°å´Ù. Ä¡¸íÀûÀÎ ¿¡·¯.
-		PutLogList("@@@@@@ CRITICAL ERROR in MsgQuene!!! @@@@@@");
-	}	
+	//if (bPutMsgQuene(DEF_MSGFROM_GATESERVER, pData, dwMsgSize, NULL, cKey) == FALSE) {
+	//	// ¸Þ½ÃÁö Å¥¿¡ ÀÌ»óÀÌ »ý°å´Ù. Ä¡¸íÀûÀÎ ¿¡·¯.
+	//	PutLogList("@@@@@@ CRITICAL ERROR in MsgQuene!!! @@@@@@");
+	//}	
 }
 
 void CGame::SendMsgToGateServer(DWORD dwMsg, int iClientH, char * pData)
 {
- DWORD * dwp;
- WORD  * wp;
- int     iRet, i;
- char    cData[1000], cCharName[11], cAccountName[11], cAccountPassword[11], cAddress[16], cGuildName[21], cTxt[120], * cp;
+ //DWORD * dwp;
+ //WORD  * wp;
+ //int     iRet, i;
+ //char    cData[1000], cCharName[11], cAccountName[11], cAccountPassword[11], cAddress[16], cGuildName[21], cTxt[120], * cp;
 
-	if (m_pGateSock == NULL) {
-		PutLogList("(!) SendMsgToGateServer fail - Socket to Gate-Server not available.");
-		return;
-	}
+	//if (m_pGateSock == NULL) {
+	//	PutLogList("(!) SendMsgToGateServer fail - Socket to Gate-Server not available.");
+	//	return;
+	//}
 
-	ZeroMemory(cData, sizeof(cData));
-	ZeroMemory(cCharName, sizeof(cCharName));
-	ZeroMemory(cAccountName, sizeof(cAccountName));
-	ZeroMemory(cAccountPassword, sizeof(cAccountPassword));
-	ZeroMemory(cAddress,  sizeof(cAddress));
-	ZeroMemory(cGuildName, sizeof(cGuildName));
+	//ZeroMemory(cData, sizeof(cData));
+	//ZeroMemory(cCharName, sizeof(cCharName));
+	//ZeroMemory(cAccountName, sizeof(cAccountName));
+	//ZeroMemory(cAccountPassword, sizeof(cAccountPassword));
+	//ZeroMemory(cAddress,  sizeof(cAddress));
+	//ZeroMemory(cGuildName, sizeof(cGuildName));
 
-	switch (dwMsg) {
-	// New 07/05/2004
-	case MSGID_PARTYOPERATION:
-		iRet = m_pGateSock->iSendMsg(pData, 50);
-		break;
+	//switch (dwMsg) {
+	//// New 07/05/2004
+	//case MSGID_PARTYOPERATION:
+	//	iRet = m_pGateSock->iSendMsg(pData, 50);
+	//	break;
 
-	case MSGID_SERVERSTOCKMSG:
-		iRet = m_pGateSock->iSendMsg(pData, m_iIndexGSS+1);
-		break;
-	
-	case MSGID_ITEMLOG:
-		// ¾ÆÀÌÅÛ Àü´Þ ·Î±×´Ù. »ç¿ëÇÏÁö ¾ÊÀ½.
-		dwp  = (DWORD *)(cData + DEF_INDEX4_MSGID);
-		*dwp = MSGID_ITEMLOG;
-		wp   = (WORD *)(cData + DEF_INDEX2_MSGTYPE);
-		*wp  = DEF_MSGTYPE_CONFIRM;
-		
-		cp = (char *)(cData + DEF_INDEX2_MSGTYPE + 2);
-		memcpy(cp, pData, 47);
-		cp += 47;
+	//case MSGID_SERVERSTOCKMSG:
+	//	iRet = m_pGateSock->iSendMsg(pData, m_iIndexGSS+1);
+	//	break;
+	//
+	//case MSGID_ITEMLOG:
+	//	// ¾ÆÀÌÅÛ Àü´Þ ·Î±×´Ù. »ç¿ëÇÏÁö ¾ÊÀ½.
+	//	dwp  = (DWORD *)(cData + DEF_INDEX4_MSGID);
+	//	*dwp = MSGID_ITEMLOG;
+	//	wp   = (WORD *)(cData + DEF_INDEX2_MSGTYPE);
+	//	*wp  = DEF_MSGTYPE_CONFIRM;
+	//	
+	//	cp = (char *)(cData + DEF_INDEX2_MSGTYPE + 2);
+	//	memcpy(cp, pData, 47);
+	//	cp += 47;
 
-		iRet = m_pGateSock->iSendMsg(cData, 53);
-		break;
-	
-	case MSGID_REQUEST_REGISTERGAMESERVER:
-		// °ÔÀÌÆ® ¼­¹ö¿¡°Ô °ÔÀÓ¼­¹ö µî·ÏÀ» ¿äÃ»ÇÑ´Ù.
-		wsprintf(cTxt, "(!) Try to register game server(%s) - GateServer", m_cServerName);
-		PutLogList(cTxt);
-		
-		dwp  = (DWORD *)(cData + DEF_INDEX4_MSGID);
-		*dwp = MSGID_REQUEST_REGISTERGAMESERVER;
-		wp   = (WORD *)(cData + DEF_INDEX2_MSGTYPE);
-		*wp  = DEF_MSGTYPE_CONFIRM;
-		
-		cp = (char *)(cData + DEF_INDEX2_MSGTYPE + 2);
+	//	iRet = m_pGateSock->iSendMsg(cData, 53);
+	//	break;
+	//
+	//case MSGID_REQUEST_REGISTERGAMESERVER:
+	//	// °ÔÀÌÆ® ¼­¹ö¿¡°Ô °ÔÀÓ¼­¹ö µî·ÏÀ» ¿äÃ»ÇÑ´Ù.
+	//	wsprintf(cTxt, "(!) Try to register game server(%s) - GateServer", m_cServerName);
+	//	PutLogList(cTxt);
+	//	
+	//	dwp  = (DWORD *)(cData + DEF_INDEX4_MSGID);
+	//	*dwp = MSGID_REQUEST_REGISTERGAMESERVER;
+	//	wp   = (WORD *)(cData + DEF_INDEX2_MSGTYPE);
+	//	*wp  = DEF_MSGTYPE_CONFIRM;
+	//	
+	//	cp = (char *)(cData + DEF_INDEX2_MSGTYPE + 2);
 
-		memcpy(cAccountName, m_cServerName, 10);
-		if (m_iGameServerMode == 1)
-		{
-			memcpy(cAddress, m_cGameServerAddrInternal, strlen(m_cGameServerAddrInternal));
-		}
-		if (m_iGameServerMode == 2)
-		{
-			memcpy(cAddress, m_cGameServerAddr, strlen(m_cGameServerAddr));
-		}
+	//	memcpy(cAccountName, m_cServerName, 10);
+	//	if (m_iGameServerMode == 1)
+	//	{
+	//		memcpy(cAddress, m_cGameServerAddrInternal, strlen(m_cGameServerAddrInternal));
+	//	}
+	//	if (m_iGameServerMode == 2)
+	//	{
+	//		memcpy(cAddress, m_cGameServerAddr, strlen(m_cGameServerAddr));
+	//	}
 
-		memcpy(cp, cAccountName, 10);
-		cp += 10;
+	//	memcpy(cp, cAccountName, 10);
+	//	cp += 10;
 
-		memcpy(cp, cAddress, 16);
-		cp += 16;
+	//	memcpy(cp, cAddress, 16);
+	//	cp += 16;
 
-		wp  = (WORD *)cp;
-		*wp = m_iGameServerPort;
-		cp += 2;
+	//	wp  = (WORD *)cp;
+	//	*wp = m_iGameServerPort;
+	//	cp += 2;
 
-		*cp = m_iTotalMaps;
-		cp++;
+	//	*cp = m_iTotalMaps;
+	//	cp++;
 
-		for (i = 0; i < m_iTotalMaps; i++) {
-			memcpy(cp, m_pMapList[i]->m_cName, 11);
-			cp += 11;
-		}
-		
-		dwp = (DWORD *)cp;
-		*dwp = (DWORD)GetCurrentProcessId();	 // ÇÁ·Î¼¼½º ÇÚµéÀ» ±â·ÏÇÑ´Ù.
+	//	for (i = 0; i < m_iTotalMaps; i++) {
+	//		memcpy(cp, m_pMapList[i]->m_cName, 11);
+	//		cp += 11;
+	//	}
+	//	
+	//	dwp = (DWORD *)cp;
+	//	*dwp = (DWORD)GetCurrentProcessId();	 // ÇÁ·Î¼¼½º ÇÚµéÀ» ±â·ÏÇÑ´Ù.
 
-		cp += 4;
-		dwp = (DWORD *)cp;
-		*dwp = DEF_BUILDDATE;
+	//	cp += 4;
+	//	dwp = (DWORD *)cp;
+	//	*dwp = DEF_BUILDDATE;
 
-		iRet = m_pGateSock->iSendMsg(cData, 43 + m_iTotalMaps*11);
-		break;
+	//	iRet = m_pGateSock->iSendMsg(cData, 43 + m_iTotalMaps*11);
+	//	break;
 
-	case MSGID_GAMESERVERALIVE:
-		// Á¤±âÀûÀ¸·Î °ÔÀÓ ¼­¹öÀÇ Á¤º¸¸¦ Àü¼Û 
-		// ¸¸¾à ·Î±× ¼­¹ö¿ÍÀÇ ¼ÒÄÏ ¿¬°áÀÌ ²÷¾îÁ³´Ù¸é ¸Þ½ÃÁö¸¦ º¸³»Áö ¾Ê¾Æ ¼­¹ö¿¡ ÀÌ»óÀÌ »ý°åÀ½À» ¾Ë¸®°Ô À¯µµÇÑ´Ù.
-		if (m_bIsLogSockAvailable == FALSE) return;
-		
-		dwp  = (DWORD *)(cData + DEF_INDEX4_MSGID);
-		*dwp = MSGID_GAMESERVERALIVE;
-		wp   = (WORD *)(cData + DEF_INDEX2_MSGTYPE);
-		*wp  = DEF_MSGTYPE_CONFIRM;
+	//case MSGID_GAMESERVERALIVE:
+	//	// Á¤±âÀûÀ¸·Î °ÔÀÓ ¼­¹öÀÇ Á¤º¸¸¦ Àü¼Û 
+	//	// ¸¸¾à ·Î±× ¼­¹ö¿ÍÀÇ ¼ÒÄÏ ¿¬°áÀÌ ²÷¾îÁ³´Ù¸é ¸Þ½ÃÁö¸¦ º¸³»Áö ¾Ê¾Æ ¼­¹ö¿¡ ÀÌ»óÀÌ »ý°åÀ½À» ¾Ë¸®°Ô À¯µµÇÑ´Ù.
+	//	if (m_bIsLogSockAvailable == FALSE) return;
+	//	
+	//	dwp  = (DWORD *)(cData + DEF_INDEX4_MSGID);
+	//	*dwp = MSGID_GAMESERVERALIVE;
+	//	wp   = (WORD *)(cData + DEF_INDEX2_MSGTYPE);
+	//	*wp  = DEF_MSGTYPE_CONFIRM;
 
-		cp  = (char *)(cData + DEF_INDEX2_MSGTYPE + 2);
-		wp  = (WORD *)cp;
-		*wp = m_iTotalClients;
-		cp += 2;
-		
-		iRet = m_pGateSock->iSendMsg(cData, 8);
-		break;
-	}
+	//	cp  = (char *)(cData + DEF_INDEX2_MSGTYPE + 2);
+	//	wp  = (WORD *)cp;
+	//	*wp = m_iTotalClients;
+	//	cp += 2;
+	//	
+	//	iRet = m_pGateSock->iSendMsg(cData, 8);
+	//	break;
+	//}
 
-	switch (iRet) {
-	case DEF_XSOCKEVENT_QUENEFULL:
-	case DEF_XSOCKEVENT_SOCKETERROR:
-	case DEF_XSOCKEVENT_CRITICALERROR:
-	case DEF_XSOCKEVENT_SOCKETCLOSED:
-		// °ÔÀÌÆ® ¼­¹ö·Î ¸Þ½ÃÁö¸¦ º¸³¾¶§ ¿¡·¯°¡ ¹ß»ýÇß´Ù.
-		PutLogList("(***) Socket to Gate-Server crashed! Critical error!");
-		delete m_pGateSock;
-		m_pGateSock = NULL;
-		m_bIsGateSockAvailable = FALSE;
+	//switch (iRet) {
+	//case DEF_XSOCKEVENT_QUENEFULL:
+	//case DEF_XSOCKEVENT_SOCKETERROR:
+	//case DEF_XSOCKEVENT_CRITICALERROR:
+	//case DEF_XSOCKEVENT_SOCKETCLOSED:
+	//	// °ÔÀÌÆ® ¼­¹ö·Î ¸Þ½ÃÁö¸¦ º¸³¾¶§ ¿¡·¯°¡ ¹ß»ýÇß´Ù.
+	//	PutLogList("(***) Socket to Gate-Server crashed! Critical error!");
+	//	delete m_pGateSock;
+	//	m_pGateSock = NULL;
+	//	m_bIsGateSockAvailable = FALSE;
 
-		// v1.41 Gate Server·ÎÀÇ Àç¿¬°á ½Ãµµ: ¼­¹ö¸¦ ¼Ë´Ù¿î ÇÏ´Â °ÍÀÌ ¾Æ´Ï´Ù. 
-		m_pGateSock = new class XSocket(m_hWnd, DEF_SERVERSOCKETBLOCKLIMIT);
-		m_pGateSock->bConnect(m_cGateServerAddr, m_iGateServerPort, WM_ONGATESOCKETEVENT);
-		m_pGateSock->bInitBufferSize(DEF_MSGBUFFERSIZE);
-		// v1.41 ¿¬°á ½Ã°£ Ã¼Å©¿ë 
-		m_iGateSockConnRetryTimes = 1;	
+	//	// v1.41 Gate Server·ÎÀÇ Àç¿¬°á ½Ãµµ: ¼­¹ö¸¦ ¼Ë´Ù¿î ÇÏ´Â °ÍÀÌ ¾Æ´Ï´Ù. 
+	//	m_pGateSock = new class XSocket(m_hWnd, DEF_SERVERSOCKETBLOCKLIMIT);
+	//	m_pGateSock->bConnect(m_cGateServerAddr, m_iGateServerPort, WM_ONGATESOCKETEVENT);
+	//	m_pGateSock->bInitBufferSize(DEF_MSGBUFFERSIZE);
+	//	// v1.41 ¿¬°á ½Ã°£ Ã¼Å©¿ë 
+	//	m_iGateSockConnRetryTimes = 1;	
 
-		wsprintf(G_cTxt, "(!) Try to reconnect gate-socket... Addr:%s  Port:%d", m_cGateServerAddr, m_iGateServerPort);
-		PutLogList(G_cTxt);
+	//	wsprintf(G_cTxt, "(!) Try to reconnect gate-socket... Addr:%s  Port:%d", m_cGateServerAddr, m_iGateServerPort);
+	//	PutLogList(G_cTxt);
 
-		return;
-	}
+	//	return;
+	//}
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -20068,7 +20339,7 @@ void CGame::RequestTeleportHandler(int iClientH, char * pData, char * cMapName, 
 			SetSlateFlag(iClientH, DEF_NOTIFY_SLATECLEAR, FALSE);
 
 			// í”Œë ˆì´ì–´ì˜ ë°ì´í„°ë¥¼ ì €ìž¥í•˜ê³  ì €ìž¥í–ˆë‹¤ëŠ” ì‘ë‹µì´ ì˜¤ë©´ í´ë¼ì´ì–¸íŠ¸ì—ê²Œ ì ‘ì†ì„ ë‹¤ì‹œ í• ê²ƒì„ ì•Œë ¤ì¤€ë‹¤.
-			bSendMsgToLS(MSGID_REQUEST_SAVEPLAYERDATA_REPLY, iClientH, FALSE);  // ! ì¹´ìš´íŒ… í•˜ì§€ ì•ŠëŠ”ë‹¤.
+			//bSendMsgToLS(MSGID_REQUEST_SAVEPLAYERDATA_REPLY, iClientH, FALSE);  // ! ì¹´ìš´íŒ… í•˜ì§€ ì•ŠëŠ”ë‹¤.
 			// !!!!
 			m_pClientList[iClientH]->m_bIsOnServerChange = TRUE;
 			m_pClientList[iClientH]->m_bIsOnWaitingProcess = TRUE;
@@ -20126,7 +20397,7 @@ void CGame::RequestTeleportHandler(int iClientH, char * pData, char * cMapName, 
 				SetSlateFlag(iClientH, DEF_NOTIFY_SLATECLEAR, FALSE);
 
 				// í”Œë ˆì´ì–´ì˜ ë°ì´í„°ë¥¼ ì €ìž¥í•˜ê³  ì‘ë‹µì„ ë°›ì€ í›„ ìž¬ì ‘ì†ì„ ì•Œë ¤ì•¼ í•œë‹¤.
-				bSendMsgToLS(MSGID_REQUEST_SAVEPLAYERDATA_REPLY, iClientH, FALSE); // ! ì¹´ìš´íŒ… í•˜ì§€ ì•ŠëŠ”ë‹¤.
+				//bSendMsgToLS(MSGID_REQUEST_SAVEPLAYERDATA_REPLY, iClientH, FALSE); // ! ì¹´ìš´íŒ… í•˜ì§€ ì•ŠëŠ”ë‹¤.
 
 				m_pClientList[iClientH]->m_bIsOnServerChange = TRUE;
 				m_pClientList[iClientH]->m_bIsOnWaitingProcess = TRUE;
@@ -20188,7 +20459,7 @@ void CGame::RequestTeleportHandler(int iClientH, char * pData, char * cMapName, 
 				SetSlateFlag(iClientH, DEF_NOTIFY_SLATECLEAR, FALSE);
 
 				// í”Œë ˆì´ì–´ì˜ ë°ì´í„°ë¥¼ ì €ìž¥í•˜ê³  ì‘ë‹µì„ ë°›ì€ í›„ ìž¬ì ‘ì†ì„ ì•Œë ¤ì•¼ í•œë‹¤.
-				bSendMsgToLS(MSGID_REQUEST_SAVEPLAYERDATA_REPLY, iClientH, FALSE); // ! ì¹´ìš´íŒ… í•˜ì§€ ì•ŠëŠ”ë‹¤.
+				//bSendMsgToLS(MSGID_REQUEST_SAVEPLAYERDATA_REPLY, iClientH, FALSE); // ! ì¹´ìš´íŒ… í•˜ì§€ ì•ŠëŠ”ë‹¤.
 				// !!!
 				m_pClientList[iClientH]->m_bIsOnServerChange   = TRUE;
 				m_pClientList[iClientH]->m_bIsOnWaitingProcess = TRUE;
@@ -20227,7 +20498,7 @@ void CGame::RequestTeleportHandler(int iClientH, char * pData, char * cMapName, 
 					m_pClientList[iClientH]->m_cMagicEffectStatus[ DEF_MAGICTYPE_CONFUSE ], NULL, NULL);
 				SetSlateFlag(iClientH, DEF_NOTIFY_SLATECLEAR, FALSE);
 
-				bSendMsgToLS(MSGID_REQUEST_SAVEPLAYERDATA_REPLY, iClientH, FALSE); // ! ì¹´ìš´íŒ… í•˜ì§€ ì•ŠëŠ”ë‹¤.
+				//bSendMsgToLS(MSGID_REQUEST_SAVEPLAYERDATA_REPLY, iClientH, FALSE); // ! ì¹´ìš´íŒ… í•˜ì§€ ì•ŠëŠ”ë‹¤.
 				// !!!
 				m_pClientList[iClientH]->m_bIsOnServerChange   = TRUE;
 				m_pClientList[iClientH]->m_bIsOnWaitingProcess = TRUE;
@@ -20592,9 +20863,24 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
  int  iMagicConfigListIndex = 0;
  class CStrTok * pStrTok;
 
-	pContents = new char[dwMsgSize+1];
-	ZeroMemory(pContents, dwMsgSize+1);
-	memcpy(pContents, pData, dwMsgSize);
+ char cData[50000] = {};
+ DWORD lpNumberOfBytesRead;
+ HANDLE hFile = CreateFile(pData, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
+ DWORD dwFileSize = GetFileSize(hFile, NULL);
+ if (dwFileSize == -1) {
+	 wsprintf(G_cTxt, "(X) CRITICAL ERROR! Cannot open configuration file(%s)!", pData);
+	 PutLogList(pData);
+	 return false;
+ }
+
+ SetFilePointer(hFile, 0, 0, FILE_BEGIN);
+
+ ReadFile(hFile, cData, dwFileSize, &lpNumberOfBytesRead, NULL);
+ CloseHandle(hFile);
+
+ pContents = new char[dwFileSize + 1];
+ ZeroMemory(pContents, dwFileSize + 1);
+ memcpy(pContents, cData, dwFileSize);
 
 	pStrTok = new class CStrTok(pContents, seps);
 	token = pStrTok->pGet();
@@ -20906,9 +21192,24 @@ BOOL CGame::_bDecodeSkillConfigFileContents(char * pData, DWORD dwMsgSize)
  int  iSkillConfigListIndex = 0;
  class CStrTok * pStrTok;
 
-	pContents = new char[dwMsgSize+1];
-	ZeroMemory(pContents, dwMsgSize+1);
-	memcpy(pContents, pData, dwMsgSize);
+ char cData[50000] = {};
+ DWORD lpNumberOfBytesRead;
+ HANDLE hFile = CreateFile(pData, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
+ DWORD dwFileSize = GetFileSize(hFile, NULL);
+ if (dwFileSize == -1) {
+	 wsprintf(G_cTxt, "(X) CRITICAL ERROR! Cannot open configuration file(%s)!", pData);
+	 PutLogList(pData);
+	 return false;
+ }
+
+ SetFilePointer(hFile, 0, 0, FILE_BEGIN);
+
+ ReadFile(hFile, cData, dwFileSize, &lpNumberOfBytesRead, NULL);
+ CloseHandle(hFile);
+
+ pContents = new char[dwFileSize + 1];
+ ZeroMemory(pContents, dwFileSize + 1);
+ memcpy(pContents, cData, dwFileSize);
 
 	pStrTok = new class CStrTok(pContents, seps);
 	token = pStrTok->pGet();
@@ -23249,11 +23550,13 @@ void CGame::Quit()
 	G_bIsThread = FALSE;
 	Sleep(300);
 		
-	if (m_pMainLogSock != NULL) delete m_pMainLogSock;
+	/*if (m_pMainLogSock != NULL) delete m_pMainLogSock;
 	if (m_pGateSock != NULL) delete m_pGateSock;
 
 	for (i = 0; i < DEF_MAXSUBLOGSOCK; i++)
-		if (m_pSubLogSock[i] != NULL) delete m_pSubLogSock[i];
+		if (m_pSubLogSock[i] != NULL) delete m_pSubLogSock[i];*/
+
+	if (_lsock != NULL) delete _lsock;
 
 	for (i = 0; i < DEF_MAXCLIENTS; i++)
 	if (m_pClientList[i] != NULL) delete m_pClientList[i];
@@ -31208,7 +31511,7 @@ void CGame::CheckAndNotifyPlayerConnection(int iClientH, char * pMsg, DWORD dwSi
 		return;
 	}
 
-	ZeroMemory(cBuff, sizeof(cBuff));
+	/*ZeroMemory(cBuff, sizeof(cBuff));
 	cp = (char *)cBuff;
 	*cp = GSM_REQUEST_FINDCHARACTER;
 	cp++;
@@ -31227,7 +31530,7 @@ void CGame::CheckAndNotifyPlayerConnection(int iClientH, char * pMsg, DWORD dwSi
 	memcpy(cp, m_pClientList[iClientH]->m_cCharName, 10);
 	cp += 10;
 
-	bStockMsgToGateServer(cBuff, 25);
+	bStockMsgToGateServer(cBuff, 25);*/
 
 	delete pStrTok;
 }
@@ -31285,7 +31588,7 @@ void CGame::ToggleWhisperPlayer(int iClientH, char * pMsg, DWORD dwMsgSize)
 			}
 
 		if (m_pClientList[iClientH]->m_iWhisperPlayerIndex == -1) {
-			ZeroMemory(cBuff, sizeof(cBuff));
+			/*ZeroMemory(cBuff, sizeof(cBuff));
 			cp = (char *)cBuff;
 			*cp = GSM_REQUEST_FINDCHARACTER;
 			cp++;
@@ -31304,7 +31607,7 @@ void CGame::ToggleWhisperPlayer(int iClientH, char * pMsg, DWORD dwMsgSize)
 			memcpy(cp, m_pClientList[iClientH]->m_cCharName, 10);
 			cp += 10;
 
-			bStockMsgToGateServer(cBuff, 25);
+			bStockMsgToGateServer(cBuff, 25);*/
 
 			ZeroMemory(m_pClientList[iClientH]->m_cWhisperPlayerName, sizeof(m_pClientList[iClientH]->m_cWhisperPlayerName));
 			strcpy(m_pClientList[iClientH]->m_cWhisperPlayerName, cName);
@@ -32582,7 +32885,7 @@ void CGame::CheckDayOrNightMode()
  char cPrevMode;
  int  i;
 
-	if (m_bManualTime = TRUE) return;
+	//if (m_bManualTime = TRUE) return;
 
 	// ÇöÀç ½Ã°£¿¡ µû¶ó ³· È¤Àº ¹ãÀ» °áÁ¤ÇÑ´Ù. 
 	// ÁÖ, ¾ß°£ ¸ðµå ¼³Á¤ 
@@ -32660,7 +32963,7 @@ void CGame::ShutUpPlayer(int iClientH, char * pMsg, DWORD dwMsgSize)
 			return;
 		}
 		// ÇöÀç Á¢¼ÓÁßÀÌ ¾Æ´Ï´Ù.
-		ZeroMemory(cBuff, sizeof(cBuff));
+		/*ZeroMemory(cBuff, sizeof(cBuff));
 
 		char *cp;
 		WORD *wp;
@@ -32688,7 +32991,7 @@ void CGame::ShutUpPlayer(int iClientH, char * pMsg, DWORD dwMsgSize)
 		memcpy(cp, m_pClientList[iClientH]->m_cCharName, 10);
 		cp += 10;
 
-		bStockMsgToGateServer(cBuff, 27);
+		bStockMsgToGateServer(cBuff, 27);*/
 	}
 
 	delete pStrTok;
@@ -33450,7 +33753,7 @@ void CGame::UserCommand_BanGuildsman(int iClientH, char * pData, DWORD dwMsgSize
 				delete pStrTok;
 				return;
 			}
-			bSendMsgToLS(MSGID_REQUEST_UPDATEGUILDINFO_DELGUILDSMAN, i);
+			//bSendMsgToLS(MSGID_REQUEST_UPDATEGUILDINFO_DELGUILDSMAN, i);
 		
 			SendGuildMsg(i, DEF_NOTIFY_DISMISSGUILDSMAN, NULL, NULL, NULL);
 	
@@ -33480,6 +33783,187 @@ void CGame::UserCommand_BanGuildsman(int iClientH, char * pData, DWORD dwMsgSize
 void CGame::UserCommand_DissmissGuild(int iClientH, char * pData, DWORD dwMsgSize)
 {
 
+}
+
+void CGame::RequestCreateNewGuild(int iClientH, char* pData)
+{
+	char cFileName[255], cData[512];
+	char cTxt[500];
+	char cTxt2[100];
+	char cGuildMasterName[11], cGuildLocation[11], cDir[255], cGuildName[21];
+	char* cp;
+	DWORD* dwp, dwGuildGUID;
+	WORD* wp;
+	int iRet;
+	SYSTEMTIME SysTime;
+	FILE* pFile;
+
+	if (m_pClientList[iClientH] == NULL) return;
+	ZeroMemory(cFileName, sizeof(cFileName));
+	ZeroMemory(cTxt, sizeof(cTxt));
+	ZeroMemory(cTxt2, sizeof(cTxt2));
+	ZeroMemory(cDir, sizeof(cDir));
+	ZeroMemory(cData, sizeof(cData));
+	ZeroMemory(cGuildMasterName, sizeof(cGuildMasterName));
+	ZeroMemory(cGuildName, sizeof(cGuildName));
+	ZeroMemory(cGuildLocation, sizeof(cGuildLocation));
+
+	cp = (char*)pData;
+
+	memcpy(cGuildMasterName, cp, 10);
+	cp += 10;
+
+	memcpy(cGuildName, cp, 20);
+	cp += 20;
+
+	memcpy(cGuildLocation, cp, 10);
+	cp += 10;
+
+	dwp = (DWORD*)cp;
+	dwGuildGUID = *dwp;
+	cp += 4;
+
+	strcat(cFileName, "Guilds");
+	strcat(cFileName, "\\");
+	wsprintf(cTxt2, "AscII%d", *cGuildName);
+	strcat(cFileName, cTxt2);
+	strcat(cDir, cFileName);
+	strcat(cFileName, "\\");
+	strcat(cFileName, "\\");
+	strcat(cFileName, cGuildName);
+	strcat(cFileName, ".txt");
+
+	_mkdir("Guilds");
+	_mkdir(cDir);
+
+	pFile = fopen(cFileName, "rt");
+	if (pFile != NULL) {
+		wsprintf(cTxt2, "(X) Cannot create new guild - Already existing guild name: Name(%s)", cFileName);
+		PutLogList(cTxt2);
+
+		ResponseCreateNewGuildHandler(cGuildMasterName, 0); //iRet = m_pClientList[iClientH]->m_pXSock->iSendMsg(cData, 16);
+		fclose(pFile);
+	}
+	else {
+		pFile = fopen(cFileName, "wt");
+		if (pFile == NULL) {
+			wsprintf(cTxt2, "(X) Cannot create new guild - cannot create file : Name(%s)", cFileName);
+			PutLogList(cTxt2);
+
+			ResponseCreateNewGuildHandler(cGuildMasterName, 0); //iRet = m_pClientList[iClientH]->m_pXSock->iSendMsg(cData, 16);
+		}
+		else {
+			wsprintf(cTxt2, "(O) New guild created : Name(%s)", cFileName);
+			PutLogList(cTxt2);
+
+			ZeroMemory(cTxt2, sizeof(cTxt2));
+			ZeroMemory(cTxt, sizeof(cTxt));
+			GetLocalTime(&SysTime);
+
+			wsprintf(cTxt, ";Guild file - Updated %4d/%2d/%2d/%2d/%2d", SysTime.wYear, SysTime.wMonth, SysTime.wDay, SysTime.wHour, SysTime.wMinute);
+			strcat(cTxt, "\n");
+			strcat(cTxt, ";Just created\n\n");
+
+			strcat(cTxt, "[GUILD-INFO]\n\n");
+
+			strcat(cTxt, "guildmaster-name     = ");
+			strcat(cTxt, cGuildMasterName);
+			strcat(cTxt, "\n");
+
+			strcat(cTxt, "guild-GUID           = ");
+			wsprintf(cTxt2, "%d", dwGuildGUID);
+			strcat(cTxt, cTxt2);
+			strcat(cTxt, "\n");
+
+			strcat(cTxt, "guild-location       = ");
+			strcat(cTxt, cGuildLocation);
+			strcat(cTxt, "\n\n");
+
+			strcat(cTxt, "[GUILDSMAN]\n\n");
+
+			fwrite(cTxt, 1, strlen(cTxt), pFile);
+
+			ResponseCreateNewGuildHandler(cGuildMasterName, 1); //iRet = m_pClientList[iClientH]->m_pXSock->iSendMsg(cData, 16);
+			fclose(pFile);
+		}
+	}
+	/*switch (iRet) {
+	case DEF_XSOCKEVENT_QUENEFULL:
+	case DEF_XSOCKEVENT_SOCKETERROR:
+	case DEF_XSOCKEVENT_CRITICALERROR:
+	case DEF_XSOCKEVENT_SOCKETCLOSED:
+		DeleteClient(iClientH, 0);
+		delete m_pClientList[iClientH];
+		m_pClientList[iClientH] = NULL;
+		return;
+	}*/
+}
+
+void CGame::RequestDisbandGuild(int iClientH, char* pData)
+{
+	char cTemp[500];
+	DWORD* dwp;
+	WORD* wp;
+	char* cp;
+	char cFileName[255], cTxt[100], cDir[100];
+	char cGuildMasterName[11], cGuildName[21];
+	int iRet;
+	FILE* pFile;
+
+	if (m_pClientList[iClientH] == NULL) return;
+	ZeroMemory(cFileName, sizeof(cFileName));
+	ZeroMemory(cTxt, sizeof(cTxt));
+	ZeroMemory(cDir, sizeof(cDir));
+	ZeroMemory(cTemp, sizeof(cTemp));
+	ZeroMemory(cGuildMasterName, sizeof(cGuildMasterName));
+	ZeroMemory(cGuildName, sizeof(cGuildName));
+
+	cp = (char*)(pData);
+	memcpy(cGuildMasterName, cp, 10);
+	cp += 10;
+
+	memcpy(cGuildName, cp, 20);
+	cp += 20;
+
+	strcat(cFileName, "Guilds");
+	strcat(cFileName, "\\");
+	strcat(cFileName, "\\");
+	wsprintf(cTxt, "AscII%d", *cGuildName);
+	strcat(cFileName, cTxt);
+	strcat(cDir, cFileName);
+	strcat(cFileName, "\\");
+	strcat(cFileName, "\\");
+	strcat(cFileName, cGuildName);
+	strcat(cFileName, ".txt");
+
+	pFile = fopen(cFileName, "rt");
+	if (pFile != NULL) {
+		fclose(pFile);
+		wsprintf(G_cTxt, "(O) Disband Guild - Deleting guild file... : Name(%s)", cFileName);
+		PutLogList(G_cTxt);
+		if (DeleteFile(cFileName) != NULL) {
+			ResponseDisbandGuildHandler(cGuildMasterName, 1); //iRet = m_pClientList[iClientH]->m_pXSock->iSendMsg(cTemp, 16, DEF_USE_ENCRYPTION);
+		}
+		else {
+
+			ResponseDisbandGuildHandler(cGuildMasterName, 0); //iRet = m_pClientList[iClientH]->m_pXSock->iSendMsg(cTemp, 16, DEF_USE_ENCRYPTION);
+		}
+	}
+	else {
+
+		ResponseDisbandGuildHandler(cGuildMasterName, 0); //iRet = m_pClientList[iClientH]->m_pXSock->iSendMsg(cTemp, 16, DEF_USE_ENCRYPTION);
+	}
+
+	/*switch (iRet) {
+	case DEF_XSOCKEVENT_QUENEFULL:
+	case DEF_XSOCKEVENT_SOCKETERROR:
+	case DEF_XSOCKEVENT_CRITICALERROR:
+	case DEF_XSOCKEVENT_SOCKETCLOSED:
+		DeleteClient(iClientH, 0);
+		delete m_pClientList[iClientH];
+		m_pClientList[iClientH] = NULL;
+		return;
+	}*/
 }
 
 
@@ -35299,9 +35783,24 @@ BOOL CGame::_bDecodePortionConfigFileContents(char* pData, DWORD dwMsgSize)
 	int  iCraftingConfigListIndex = 0;
 	class CStrTok* pStrTok;
 
-	pContents = new char[dwMsgSize + 1];
-	ZeroMemory(pContents, dwMsgSize + 1);
-	memcpy(pContents, pData, dwMsgSize);
+	char cData[50000] = {};
+	DWORD lpNumberOfBytesRead;
+	HANDLE hFile = CreateFile(pData, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
+	DWORD dwFileSize = GetFileSize(hFile, NULL);
+	if (dwFileSize == -1) {
+		wsprintf(G_cTxt, "(X) CRITICAL ERROR! Cannot open configuration file(%s)!", pData);
+		PutLogList(pData);
+		return false;
+	}
+
+	SetFilePointer(hFile, 0, 0, FILE_BEGIN);
+
+	ReadFile(hFile, cData, dwFileSize, &lpNumberOfBytesRead, NULL);
+	CloseHandle(hFile);
+
+	pContents = new char[dwFileSize + 1];
+	ZeroMemory(pContents, dwFileSize + 1);
+	memcpy(pContents, cData, dwFileSize);
 	pStrTok = new class CStrTok(pContents, seps);
 	token = pStrTok->pGet();
 	while (token != NULL) {
@@ -38274,9 +38773,24 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
  int  iQuestConfigListIndex = 0;
  class CStrTok * pStrTok;
 
-	pContents = new char[dwMsgSize+1];
-	ZeroMemory(pContents, dwMsgSize+1);
-	memcpy(pContents, pData, dwMsgSize);
+ char cData[50000] = {};
+ DWORD lpNumberOfBytesRead;
+ HANDLE hFile = CreateFile(pData, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
+ DWORD dwFileSize = GetFileSize(hFile, NULL);
+ if (dwFileSize == -1) {
+	 wsprintf(G_cTxt, "(X) CRITICAL ERROR! Cannot open configuration file(%s)!", pData);
+	 PutLogList(pData);
+	 return false;
+ }
+
+ SetFilePointer(hFile, 0, 0, FILE_BEGIN);
+
+ ReadFile(hFile, cData, dwFileSize, &lpNumberOfBytesRead, NULL);
+ CloseHandle(hFile);
+
+ pContents = new char[dwFileSize + 1];
+ ZeroMemory(pContents, dwFileSize + 1);
+ memcpy(pContents, cData, dwFileSize);
 
 	pStrTok = new class CStrTok(pContents, seps);
 	token = pStrTok->pGet();
@@ -39132,38 +39646,51 @@ void CGame::OnSubLogSocketEvent(UINT message, WPARAM wParam, LPARAM lParam)
  UINT iTmp;
  register int iLogSockH, iRet;
 
-	iTmp = (WM_ONLOGSOCKETEVENT + 1);
-	iLogSockH = message - iTmp;
-	
-	if (m_pSubLogSock[iLogSockH] == NULL) return;
+	/*iTmp = (WM_ONLOGSOCKETEVENT + 1);
+	iLogSockH = message - iTmp;*/
 
-	iRet = m_pSubLogSock[iLogSockH]->iOnSocketEvent(wParam, lParam);
+	 iTmp = WM_USER_BOT_ACCEPT;
+	 iLogSockH = message - iTmp - 1;
+	
+	/*if (m_pSubLogSock[iLogSockH] == NULL) return;
+
+	iRet = m_pSubLogSock[iLogSockH]->iOnSocketEvent(wParam, lParam);*/
+
+	 auto p = _lclients[iLogSockH];
+	 if (p == NULL) return;
+
+	 iRet = p->_sock->iOnSocketEvent(wParam, lParam);
 
 	switch (iRet) {
 	case DEF_XSOCKEVENT_UNSENTDATASENDCOMPLETE:
 
-		wsprintf(G_cTxt, "(!!!) Log Socket Connection Established Log#(%d) Address:%s  Port:%d", iLogSockH, m_cLogServerAddr, m_iLogServerPort);
+		/*wsprintf(G_cTxt, "(!!!) Log Socket Connection Established Log#(%d) Address:%s  Port:%d", iLogSockH, m_cLogServerAddr, m_iLogServerPort);
 		PutLogList(G_cTxt);
 
 		m_bIsSubLogSockAvailable[iLogSockH] = TRUE;
-		m_iSubLogSockActiveCount++;
+		m_iSubLogSockActiveCount++;*/
+		break;
 	case DEF_XSOCKEVENT_CONNECTIONESTABLISH:
 		break;
 	
 	case DEF_XSOCKEVENT_READCOMPLETE:
-		OnSubLogRead(iLogSockH);
+		OnClientLoginRead(iLogSockH); //OnSubLogRead(iLogSockH);
 		break;
 	
 	case DEF_XSOCKEVENT_BLOCK:
-		wsprintf(G_cTxt, "(!!!) Sub-log-socket(%d) BLOCKED!", iLogSockH);
-		PutLogList(G_cTxt);
+		/*wsprintf(G_cTxt, "(!!!) Sub-log-socket(%d) BLOCKED!", iLogSockH);
+		PutLogList(G_cTxt);*/
 		break;
 	
 	case DEF_XSOCKEVENT_CONFIRMCODENOTMATCH:
+		wsprintf(G_cTxt, "<%d> Confirmcode Login notmatch!", iLogSockH);
+		PutLogList(G_cTxt);
+		DeleteLoginClient(iLogSockH);
+		break;
 	case DEF_XSOCKEVENT_MSGSIZETOOLARGE:
 	case DEF_XSOCKEVENT_SOCKETERROR:
 	case DEF_XSOCKEVENT_SOCKETCLOSED:
-		delete m_pSubLogSock[iLogSockH];
+		/*delete m_pSubLogSock[iLogSockH];
 		m_pSubLogSock[iLogSockH] = NULL;
 		m_bIsSubLogSockAvailable[iLogSockH] = FALSE;
 		
@@ -39179,27 +39706,58 @@ void CGame::OnSubLogSocketEvent(UINT message, WPARAM wParam, LPARAM lParam)
 		m_pSubLogSock[iLogSockH]->bInitBufferSize(DEF_MSGBUFFERSIZE);
 
 		wsprintf(G_cTxt, "(!!!) Try to reconnect sub-log-socket(%d)... Addr:%s  Port:%d", iLogSockH, m_cLogServerAddr, m_iLogServerPort);
-		PutLogList(G_cTxt);
+		PutLogList(G_cTxt);*/
 		
 		break;
 	}
 }
 
+LoginClient::~LoginClient()
+{
+	if (_sock)
+		delete _sock;
+}
+
+void CGame::OnClientLoginRead(int h)
+{
+	char* pData, cKey;
+	DWORD  dwMsgSize;
+
+	if (_lclients[h] == NULL) return;
+
+	pData = _lclients[h]->_sock->pGetRcvDataPointer(&dwMsgSize, &cKey);
+
+	if (bPutMsgQuene(DEF_MSGFROM_LOGSERVER, pData, dwMsgSize, h, cKey) == false) {
+		PutLogList("@@@@@@ CRITICAL ERROR in MsgQuene!!! @@@@@@");
+	}
+}
+
+void CGame::DeleteLoginClient(int h)
+{
+	if (!_lclients[h])
+		return;
+
+	_lclients[h]->_timeout_tm = timeGetTime();
+	_lclients_disconn.push_back(_lclients[h]);
+	//delete _lclients[h];
+	_lclients[h] = nullptr;
+}
+
 void CGame::OnSubLogRead(int iIndex)
 {
- DWORD dwMsgSize;
+ /*DWORD dwMsgSize;
  char * pData, cKey;
 
 	pData = m_pSubLogSock[iIndex]->pGetRcvDataPointer(&dwMsgSize, &cKey);
 
 	if (bPutMsgQuene(DEF_MSGFROM_LOGSERVER, pData, dwMsgSize, NULL, cKey) == FALSE) {
 		PutLogList("@@@@@@ CRITICAL ERROR in MsgQuene!!! @@@@@@");
-	}	
+	}*/	
 }
 
 void CGame::_CheckGateSockConnection()
 {
-	if (m_bIsServerShutdowned == TRUE) return;
+	/*if (m_bIsServerShutdowned == TRUE) return;
 
 	if (m_iGateSockConnRetryTimes != 0) {
 		wsprintf(G_cTxt, "(!!!) Gate-socket connection counting...%d", m_iGateSockConnRetryTimes); 
@@ -39214,12 +39772,12 @@ void CGame::_CheckGateSockConnection()
 			m_dwExitProcessTime  = timeGetTime();
 			PutLogList("(!) GAME SERVER SHUTDOWN PROCESS BEGIN(by gate-server connection Lost)!!!");
 		}
-	}
+	}*/
 }
 
 BOOL CGame::_bCheckSubLogSocketIndex()
 {
- int  iCnt;
+ /*int  iCnt;
  BOOL bLoopFlag;
 
 	m_iCurSubLogSockIndex++;
@@ -39242,7 +39800,7 @@ BOOL CGame::_bCheckSubLogSocketIndex()
 			}
 			return FALSE;
 		}
-	}
+	}*/
 
 	return TRUE;
 }
@@ -39257,9 +39815,24 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
  class CStrTok * pStrTok;
  class CItem * pItem;
 
-	pContents = new char[dwMsgSize+1];
-	ZeroMemory(pContents, dwMsgSize+1);
-	memcpy(pContents, pData, dwMsgSize);
+ char cData[50000] = {};
+ DWORD lpNumberOfBytesRead;
+ HANDLE hFile = CreateFile(pData, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
+ DWORD dwFileSize = GetFileSize(hFile, NULL);
+ if (dwFileSize == -1) {
+	 wsprintf(G_cTxt, "(X) CRITICAL ERROR! Cannot open configuration file(%s)!", pData);
+	 PutLogList(pData);
+	 return false;
+ }
+
+ SetFilePointer(hFile, 0, 0, FILE_BEGIN);
+
+ ReadFile(hFile, cData, dwFileSize, &lpNumberOfBytesRead, NULL);
+ CloseHandle(hFile);
+
+ pContents = new char[dwFileSize + 1];
+ ZeroMemory(pContents, dwFileSize + 1);
+ memcpy(pContents, cData, dwFileSize);
 
 	pStrTok = new class CStrTok(pContents, seps);
 	token = pStrTok->pGet();
@@ -40195,7 +40768,7 @@ void CGame::AdminOrder_SummonAll(int iClientH, char *pData, DWORD dwMsgSize)
 	   cLocation, cMapName);
 	bSendMsgToLS(MSGID_GAMEMASTERLOG, iClientH, FALSE, G_cTxt);
 
-	ZeroMemory(cBuff, sizeof(cBuff));
+	/*ZeroMemory(cBuff, sizeof(cBuff));
 	cp = (char *)cBuff;
 	*cp = GSM_REQUEST_SUMMONALL;
 	cp++;
@@ -40214,7 +40787,7 @@ void CGame::AdminOrder_SummonAll(int iClientH, char *pData, DWORD dwMsgSize)
 	*wp = m_pClientList[iClientH]->m_sY;
 	cp += 2;
 
-	bStockMsgToGateServer(cBuff, 25);
+	bStockMsgToGateServer(cBuff, 25);*/
 
 	delete pStrTok;
 }
@@ -40273,7 +40846,7 @@ void CGame::AdminOrder_SummonPlayer(int iClientH, char *pData, DWORD dwMsgSize)
 				cName, cMapName);
 	bSendMsgToLS(MSGID_GAMEMASTERLOG, iClientH, FALSE, G_cTxt);
 
-	ZeroMemory(cBuff, sizeof(cBuff));
+	/*ZeroMemory(cBuff, sizeof(cBuff));
 	cp = (char *)cBuff;
 	*cp = GSM_REQUEST_SUMMONPLAYER;
 	cp++;
@@ -40292,7 +40865,7 @@ void CGame::AdminOrder_SummonPlayer(int iClientH, char *pData, DWORD dwMsgSize)
 	*wp = m_pClientList[iClientH]->m_sY;
 	cp += 2;
 
-	bStockMsgToGateServer(cBuff, 25);
+	bStockMsgToGateServer(cBuff, 25);*/
 
 	delete pStrTok;
 }
@@ -40372,9 +40945,24 @@ BOOL CGame::_bDecodeDupItemIDFileContents(char *pData, DWORD dwMsgSize)
  int  iIndex = 0;
  class CStrTok * pStrTok;
 
-	pContents = new char[dwMsgSize+1];
-	ZeroMemory(pContents, dwMsgSize+1);
-	memcpy(pContents, pData, dwMsgSize);
+ char cData[50000] = {};
+ DWORD lpNumberOfBytesRead;
+ HANDLE hFile = CreateFile(pData, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
+ DWORD dwFileSize = GetFileSize(hFile, NULL);
+ if (dwFileSize == -1) {
+	 wsprintf(G_cTxt, "(X) CRITICAL ERROR! Cannot open configuration file(%s)!", pData);
+	 PutLogList(pData);
+	 return false;
+ }
+
+ SetFilePointer(hFile, 0, 0, FILE_BEGIN);
+
+ ReadFile(hFile, cData, dwFileSize, &lpNumberOfBytesRead, NULL);
+ CloseHandle(hFile);
+
+ pContents = new char[dwFileSize + 1];
+ ZeroMemory(pContents, dwFileSize + 1);
+ memcpy(pContents, cData, dwFileSize);
 
 	pStrTok = new class CStrTok(pContents, seps);
 	token = pStrTok->pGet();
@@ -42095,7 +42683,7 @@ void CGame::RequestSetGuildConstructLocHandler(int iClientH, int dX, int dY, int
 	if (m_pClientList[iClientH]->m_bIsOnServerChange == TRUE) return;
 
 	// °ÔÀÌÆ® ¼­¹ö ¸Þ½ÃÁö ÀÛ¼º 
-	ZeroMemory(cData, sizeof(cData));
+	/*ZeroMemory(cData, sizeof(cData));
 	cp = (char *)cData;
 	*cp = GSM_SETGUILDCONSTRUCTLOC;
 	cp++;
@@ -42113,7 +42701,7 @@ void CGame::RequestSetGuildConstructLocHandler(int iClientH, int dX, int dY, int
 	cp += 4;
 	
 	memcpy(cp, pMapName, 10);
-	cp += 10;
+	cp += 10;*/
 	//
 
 	dwTime = timeGetTime();
@@ -42141,7 +42729,7 @@ void CGame::RequestSetGuildConstructLocHandler(int iClientH, int dX, int dY, int
 			m_pGuildTeleportLoc[i].m_dwTime2 = dwTime;
 				
 			//°ÔÀÌÆ® ¼­¹ö¸¦ ÅëÇØ ´Ù¸¥ ¼­¹ö·Î Á¤º¸ Àü¼Û
-			bStockMsgToGateServer(cData, 23);
+			//bStockMsgToGateServer(cData, 23);
 			return;
 		}
 	}
@@ -42160,7 +42748,7 @@ void CGame::RequestSetGuildConstructLocHandler(int iClientH, int dX, int dY, int
 			m_pGuildTeleportLoc[i].m_dwTime2 = dwTime;
 
 			//°ÔÀÌÆ® ¼­¹ö¸¦ ÅëÇØ ´Ù¸¥ ¼­¹ö·Î Á¤º¸ Àü¼Û  
-			bStockMsgToGateServer(cData, 23);
+			//bStockMsgToGateServer(cData, 23);
 			return;
 		}
 		else {
@@ -42186,7 +42774,7 @@ void CGame::RequestSetGuildConstructLocHandler(int iClientH, int dX, int dY, int
 	m_pGuildTeleportLoc[i].m_dwTime2 = dwTime;
 
 	//°ÔÀÌÆ® ¼­¹ö¸¦ ÅëÇØ ´Ù¸¥ ¼­¹ö·Î Á¤º¸ Àü¼Û
-	bStockMsgToGateServer(cData, 23);
+	//bStockMsgToGateServer(cData, 23);
 }
 
 // New 14/05/2004 Changed
@@ -42724,18 +43312,18 @@ void CGame::RequestHelpHandler(int iClientH)
 
 BOOL CGame::bStockMsgToGateServer(char *pData, DWORD dwSize)
 {
- char * cp;
+ //char * cp;
 
-	//testcode
-	//wsprintf(G_cTxt, "StockMsg(%d) Size(%d)", *pData, dwSize);
-	//PutLogList(G_cTxt);
+	////testcode
+	////wsprintf(G_cTxt, "StockMsg(%d) Size(%d)", *pData, dwSize);
+	////PutLogList(G_cTxt);
 
-	if ((m_iIndexGSS + dwSize) >= DEF_MAXGATESERVERSTOCKMSGSIZE-10) return FALSE;
+	//if ((m_iIndexGSS + dwSize) >= DEF_MAXGATESERVERSTOCKMSGSIZE-10) return FALSE;
 
-	cp = (char *)(m_cGateServerStockMsg + m_iIndexGSS);	
-	memcpy(cp, pData, dwSize);
+	//cp = (char *)(m_cGateServerStockMsg + m_iIndexGSS);	
+	//memcpy(cp, pData, dwSize);
 
-	m_iIndexGSS += dwSize;
+	//m_iIndexGSS += dwSize;
 
 	return TRUE;
 }
@@ -42743,523 +43331,523 @@ BOOL CGame::bStockMsgToGateServer(char *pData, DWORD dwSize)
 
 void CGame::SendStockMsgToGateServer()
 {
- DWORD * dwp;
- WORD * wp;
- char * cp;
+ //DWORD * dwp;
+ //WORD * wp;
+ //char * cp;
 
-	// ±×µ¿¾È ¸ð¾Æ³õ¾Ò´ø ¸Þ½ÃÁö¸¦ °ÔÀÌÆ® ¼­¹ö·Î Àü¼Û.
-	if (m_iIndexGSS > 6) {
-		//testcode
-		//wsprintf(G_cTxt, "(!) Sending Gate Server Stock Msg(%d)", m_iIndexGSS);
-		//PutLogList(G_cTxt);
+	//// ±×µ¿¾È ¸ð¾Æ³õ¾Ò´ø ¸Þ½ÃÁö¸¦ °ÔÀÌÆ® ¼­¹ö·Î Àü¼Û.
+	//if (m_iIndexGSS > 6) {
+	//	//testcode
+	//	//wsprintf(G_cTxt, "(!) Sending Gate Server Stock Msg(%d)", m_iIndexGSS);
+	//	//PutLogList(G_cTxt);
 
-		SendMsgToGateServer(MSGID_SERVERSTOCKMSG, NULL, m_cGateServerStockMsg);
-	
-		// ¹öÆÛ Å¬¸®¾î
-		ZeroMemory(m_cGateServerStockMsg, sizeof(m_cGateServerStockMsg));
-		// ¸Ç ¾ÕºÎºÐ¿¡ ¸Þ½ÃÁö »ðÀÔ
-		cp = (char *)m_cGateServerStockMsg;
-		dwp = (DWORD *)cp;
-		*dwp = MSGID_SERVERSTOCKMSG;
-		cp += 4;
-		wp = (WORD *)cp;
-		*wp = DEF_MSGTYPE_CONFIRM;
-		cp += 2;
+	//	SendMsgToGateServer(MSGID_SERVERSTOCKMSG, NULL, m_cGateServerStockMsg);
+	//
+	//	// ¹öÆÛ Å¬¸®¾î
+	//	ZeroMemory(m_cGateServerStockMsg, sizeof(m_cGateServerStockMsg));
+	//	// ¸Ç ¾ÕºÎºÐ¿¡ ¸Þ½ÃÁö »ðÀÔ
+	//	cp = (char *)m_cGateServerStockMsg;
+	//	dwp = (DWORD *)cp;
+	//	*dwp = MSGID_SERVERSTOCKMSG;
+	//	cp += 4;
+	//	wp = (WORD *)cp;
+	//	*wp = DEF_MSGTYPE_CONFIRM;
+	//	cp += 2;
 
-		m_iIndexGSS = 6;
-	}
+	//	m_iIndexGSS = 6;
+	//}
 }
 
 void CGame::ServerStockMsgHandler(char *pData)
 {
- char * cp, * cp2, cTemp[120], cLocation[10], cGuildName[20], cName[11], cTemp2[120], cTemp3[120], cMapName[11], cBuffer[256]; short * sp;
- WORD * wp, wServerID, wClientH, wV1, wV2, wV3, wV4, wV5;
- DWORD * dwp;
- BOOL bFlag = FALSE;
- int * ip, i, iTotal, iV1, iV2, iV3, iRet;
- short sX, sY;
-
-	iTotal = 0;
-	cp = (char *)(pData + 6);
-	while (bFlag == FALSE) {
-		iTotal++;
-		switch (*cp) {
-		
-// SUMMONGUILD Deleted
-		case GSM_REQUEST_SUMMONGUILD:
-			cp++;
-			ZeroMemory(cGuildName, sizeof(cGuildName));
-			memcpy(cGuildName, cp, 20);
-			cp += 20;
-
-			ZeroMemory(cTemp, sizeof(cTemp));
-			memcpy(cTemp, cp, 10);
-			cp += 10;
-
-			cp2 = (char *) cTemp + 10;
-			wp = (WORD *)cp;
-			wV1 = *wp;
-			cp += 2;
-
-			wp = (WORD *)cp;
-			wV2 = *wp;
-			cp += 2;
-
-			for (i = 0; i < DEF_MAXCLIENTS; i++)
-			if ((m_pClientList[i] != NULL) && (strcmp(m_pClientList[i]->m_cGuildName, cGuildName) == 0)) {
-			RequestTeleportHandler(i, "2   ", cTemp, wV1, wV2);
-			}
-			break;
-
-		// v2.14 ¼ºÈÄ´Ï Ãß°¡ À¯Àú ¼ÒÈ¯ 
-		case GSM_REQUEST_SUMMONPLAYER:
-			cp++;
-			ZeroMemory(cName, sizeof(cName));
-			memcpy(cName, cp, 10);
-			cp += 10;
-
-			ZeroMemory(cTemp, sizeof(cTemp));
-			memcpy(cTemp, cp, 10);
-			cp += 10;
-
-			cp2 = (char *) cTemp + 10 ;
-			
-			wp = (WORD *)cp;
-			wV1 = *wp;
-			cp += 2;
-
-			wp = (WORD *)cp;
-			wV2 = *wp;
-			cp += 2;
-			
-			for (i = 1; i < DEF_MAXCLIENTS; i++)
-				if ((m_pClientList[i] != NULL) && (strcmp(m_pClientList[i]->m_cCharName, cName) == 0)) {
-					//wsprintf(G_cTxt, "%s %d %d", cTemp, wV1, wV2);
-					//PutLogFileList(G_cTxt);					
-					RequestTeleportHandler(i, "2   ", cTemp ,wV1, wV2);
-					break;
-				}
-			break;
-		
-		case GSM_REQUEST_SUMMONALL:
-			cp++;
-			ZeroMemory(cLocation, sizeof(cLocation));
-			memcpy(cLocation, cp, 10);
-			cp += 10;
-
-			ZeroMemory(cTemp, sizeof(cTemp));
-			memcpy(cTemp, cp, 10);
-			cp += 10;
-
-			cp2 = (char *) cTemp + 10;
-			
-			wp = (WORD *)cp;
-			wV1 = *wp;
-			cp += 2;
-
-			wp = (WORD *)cp;
-			wV2 = *wp;
-			cp += 2;
-			
-			for (i = 0; i < DEF_MAXCLIENTS; i++)
-			if ((m_pClientList[i] != NULL) && (strcmp(m_pClientList[i]->m_cLocation, cLocation) == 0)) {
-			RequestTeleportHandler(i, "2   ", cTemp, wV1, wV2);
-		}
-		break;
-
-		case GSM_CHATMSG:
-			cp++;
-			ZeroMemory(cTemp, sizeof(cTemp));
-			ZeroMemory(cName, sizeof(cName));
-			iV1 = *cp;
-			cp++;
-			ip = (int *)cp;
-			iV2 = *ip;
-			cp += 4;
-			memcpy(cName, cp, 10);
-			cp += 10;;
-			sp = (short *)cp;
-			wV1 = (WORD)*sp;
-			cp += 2;
-			ChatMsgHandlerGSM(iV1, iV2, cName, cp, wV1);
-			cp += wV1;
-			break;
-		
-		case GSM_CONSTRUCTIONPOINT:
-			cp++;
-			ip = (int *)cp;
-			iV1 = *ip;
-			cp += 4;
-			ip = (int *)cp;
-			iV2 = *ip;
-			cp += 4;
-			GSM_ConstructionPoint(iV1, iV2);
-			break;
-
-		case GSM_SETGUILDTELEPORTLOC:
-			cp++;
-			ip = (int *)cp;
-			iV1 = *ip;
-			cp += 4;
-			ip = (int *)cp;
-			iV2 = *ip;
-			cp += 4;
-			ip = (int *)cp;
-			iV3 = *ip;
-			cp += 4;
-			ZeroMemory(cTemp, sizeof(cTemp));
-			memcpy(cTemp, cp, 10);
-			cp += 10;
-			GSM_SetGuildTeleportLoc(iV1, iV2, iV3, cTemp);
-			break;
-
-		case GSM_SETGUILDCONSTRUCTLOC:
-			cp++;
-			ip = (int *)cp;
-			iV1 = *ip;
-			cp += 4;
-			ip = (int *)cp;
-			iV2 = *ip;
-			cp += 4;
-			ip = (int *)cp;
-			iV3 = *ip;
-			cp += 4;
-			ZeroMemory(cTemp, sizeof(cTemp));
-			memcpy(cTemp, cp, 10);
-			cp += 10;
-			GSM_SetGuildConstructLoc(iV1, iV2, iV3, cTemp);
-			break;
-
-		case GSM_REQUEST_SETFORCERECALLTIME:
-			cp++;
-			wp = (WORD *)cp;
-			m_sForceRecallTime = *wp;
-			cp += 2;
-
-			wsprintf(G_cTxt,"(!) Game Server Force Recall Time (%d)min",m_sForceRecallTime) ;
-			PutLogList(G_cTxt) ;
-			break;
-
-		case GSM_MIDDLEMAPSTATUS:
-			cp++;
-			// ±¸Á¶Ã¼ Å¬¸®¾î
-			for (i = 0; i < DEF_MAXCRUSADESTRUCTURES; i++) {
-				m_stMiddleCrusadeStructureInfo[i].cType = NULL;
-				m_stMiddleCrusadeStructureInfo[i].cSide = NULL;
-				m_stMiddleCrusadeStructureInfo[i].sX    = NULL;
-				m_stMiddleCrusadeStructureInfo[i].sY    = NULL;
-			}
-			sp = (short *)cp;
-			m_iTotalMiddleCrusadeStructures = *sp;
-			cp += 2;
-			// Á¤º¸ ÀÐ¾îµéÀÎ´Ù.
-			for (i = 0; i < m_iTotalMiddleCrusadeStructures; i++) {
-				m_stMiddleCrusadeStructureInfo[i].cType = *cp;
-				cp++;
-				m_stMiddleCrusadeStructureInfo[i].cSide = *cp;
-				cp++;
-				sp = (short *)cp;
-				m_stMiddleCrusadeStructureInfo[i].sX = *sp;
-				cp += 2;
-				sp = (short *)cp;
-				m_stMiddleCrusadeStructureInfo[i].sY = *sp;
-				cp += 2;	
-			}
-			break;
-		
-		case GSM_BEGINCRUSADE:
-			cp++;
-			dwp = (DWORD *)cp;
-			cp += 4;
-			LocalStartCrusadeMode(*dwp);
-			break;
-
-		case GSM_BEGINAPOCALYPSE:
-			cp++;
-			dwp = (DWORD *)cp;
-			cp += 4;
-			LocalStartApocalypse(*dwp);
-			break;
-
-		case GSM_STARTHELDENIAN:
-			cp++;
-			wp  = (WORD *)cp;
-			wV1 = *wp;
-			cp += 2;
-			wp  = (WORD *)cp;
-			wV2 = *wp;
-			cp += 2;
-			dwp = (DWORD *)cp;
-			cp += 4;
-			LocalStartHeldenianMode(wV1, wV2, *dwp);
-			break;
-
-		case GSM_ENDHELDENIAN:
-			cp++;
-			LocalEndHeldenianMode();
-			break;
-			
-			/*case GSM_BEGINHELDENIEN:
-			cp++;
-			dwp = (DWORD *)cp;
-			cp += 4;
-			LocalStartHeldenian(*dwp);
-			break;
-		
-		case GSM_ENDHeldenian:
-			cp++;
-			LocalEndHeldenian(*dwp)//sub_4ABCD0(*dwp);
-			break;*/
-
-		case GSM_UPDATECONFIGS:
-			cp++;
-			LocalUpdateConfigs(*cp);
-			cp += 16;
-			break;
-
-		case GSM_ENDAPOCALYPSE:
-			cp++;
-			LocalEndApocalypse();
-			break;
-
-		case GSM_ENDCRUSADE:
-			cp++;
-			LocalEndCrusadeMode(*cp);
-			cp += 16;
-			break;
-
-		case GSM_COLLECTEDMANA:
-			cp++;
-			wp  = (WORD *)cp;
-			wV1 = *wp;
-			cp += 2;
-
-			wp  = (WORD *)cp;
-			wV2 = *wp;
-			cp += 2;
-			CollectedManaHandler(wV1, wV2);
-			break;
-
-		case GSM_GRANDMAGICLAUNCH:
-			cp++;
-			wp  = (WORD *)cp;
-			wV1 = *wp;
-			cp += 2;
-
-			wp  = (WORD *)cp;
-			wV2 = *wp;
-			cp += 2;
-
-			switch (wV1) {
-			case 1: // ¸ÞÅ×¿À ½ºÆ®¶óÀÌÅ© 
-				MeteorStrikeMsgHandler((char)wV2);
-				break;
-			}
-			break;
-		
-		case  GSM_GRANDMAGICRESULT:
-			cp++;
-			ZeroMemory(cTemp, sizeof(cTemp));
-			memcpy(cTemp, cp, 10);
-			cp += 10;
-			wp  = (WORD *)cp;
-			wV1 = *wp;
-			cp += 2;
-			wp  = (WORD *)cp;
-			wV2 = *wp;
-			cp += 2;
-			wp  = (WORD *)cp;
-			wV3 = *wp;
-			cp += 2;
-			wp  = (WORD *)cp;
-			wV4 = *wp;
-			cp += 2;
-
-			wp  = (WORD *)cp;
-			wV5 = *wp;
-
-			GrandMagicResultHandler(cTemp, wV1, wV2, wV3, wV4, wV5, cp);
-			break;
-		
-			// v2.15 2002-5-21
-		case GSM_REQUEST_SHUTUPPLAYER:
-			cp++;
-			wp = (WORD *)cp;
-			wServerID = *wp;
-			cp += 2;
-			wp = (WORD *)cp;
-			wClientH = *wp;
-			cp += 2;
-
-			ZeroMemory(cName, sizeof(cName));
-			memcpy(cName, cp, 10);
-			cp += 10;
-
-			wp  = (WORD *)cp;
-			wV1 = *wp;
-			cp += 2;
-
-			ZeroMemory(cTemp, sizeof(cTemp));
-			memcpy(cTemp, cp, 10);
-			cp += 10;
-
-			GSM_RequestShutupPlayer(cTemp,wServerID,wClientH, wV1, cName);
-			break ;
-
-		case GSM_RESPONSE_SHUTUPPLAYER:
-			cp++;
-			wp = (WORD *)cp;
-			wServerID = *wp;
-			cp += 2;
-			wp = (WORD *)cp;
-			wClientH = *wp;
-			cp += 2;
-
-			ZeroMemory(cName, sizeof(cName));
-			memcpy(cName, cp, 10);
-			cp += 10;
-
-			wp  = (WORD *)cp;
-			wV1 = *wp;
-			cp += 2;
-
-			ZeroMemory(cTemp, sizeof(cTemp));
-			memcpy(cTemp, cp, 10);
-			cp += 10;
-
-
-			if (wServerID == m_wServerID_GSS) {
-				if ((m_pClientList[wClientH] != NULL)&& (strcmp(m_pClientList[wClientH]->m_cCharName, cName) == 0)&&(m_pClientList[wClientH]->m_iAdminUserLevel > 0)) {
-					SendNotifyMsg(NULL, wClientH, DEF_NOTIFY_PLAYERSHUTUP, wV1, NULL, NULL, cTemp);
-
-				}
-			}
-			break;
-
-		// New 16/05/2004
-		case GSM_WHISFERMSG:
-			ZeroMemory(cName, sizeof(cName));
-			ZeroMemory(cBuffer, sizeof(cBuffer));
-			cp++;
-			memcpy(cName, cp, 10);
-			cp += 10;
-			wp = (WORD *)cp;
-			wV1 = *wp;
-			cp += 2;
-
-			memcpy(cBuffer, cp, wV1);
-			cp += wV1;
-
-			for (i = 1; i < DEF_MAXCLIENTS; i++)
-				if ((m_pClientList[i] != NULL) && (strcmp(m_pClientList[i]->m_cCharName, cName) == 0)) {
-					iRet = m_pClientList[i]->m_pXSock->iSendMsg(cBuffer, wV1);
-					if(	m_pClientList[i]->m_iAdminUserLevel > 0) {
-						char cTxt[200],cTmpName[12] ;
-						ZeroMemory(cTxt,sizeof(cTxt)) ;
-						ZeroMemory(cTmpName,sizeof(cTmpName)) ;
-
-						memcpy(cTmpName,cBuffer+10,10) ;
-						wsprintf(cTxt,"PC Chat(%s):\"%s\"\tto GM(%s)",cTmpName,cBuffer+21,m_pClientList[i]->m_cCharName) ;
-						bSendMsgToLS(MSGID_GAMEMASTERLOG, i, NULL, cTxt);
-					}
-					break;
-				}
-		break;
-
-		// New 16/05/2004 Changed
-		case GSM_REQUEST_FINDCHARACTER:
-			cp++;
-
-			wp = (WORD *)cp;
-			wServerID = *wp;
-			cp += 2;
-
-			wp = (WORD *)cp;
-			wClientH = *wp;
-			cp += 2;
-
-			ZeroMemory(cTemp, sizeof(cTemp));
-			memcpy(cTemp, cp, 10);
-			cp += 10;
-
-			ZeroMemory(cTemp2, sizeof(cTemp2));
-			memcpy(cTemp2, cp, 10);
-			cp += 10;
-
-			GSM_RequestFindCharacter(wServerID, wClientH, cTemp, cTemp2);
-			break;
-
-		case GSM_RESPONSE_FINDCHARACTER:
-			sX = -1;
-			sY = -1;
-			cp++;
-			wp = (WORD *)cp;
-			wServerID = *wp;
-			cp += 2;
-			wp = (WORD *)cp;
-			wClientH = *wp;
-			cp += 2;
-			ZeroMemory(cTemp, sizeof(cTemp));
-			memcpy(cTemp, cp, 10);
-			cp += 10;
-
-			ZeroMemory(cTemp2, sizeof(cTemp2));
-			memcpy(cTemp2, cp, 10);
-			cp += 10;
-
-			ZeroMemory(cTemp3, sizeof(cTemp3));
-			memcpy(cTemp3, cp, 14);
-
-			if ((wServerID == m_wServerID_GSS) && m_pClientList[wClientH] != NULL) {
-				if (m_pClientList[wClientH]->m_bIsAdminOrderGoto == TRUE) {
-					m_pClientList[wClientH]->m_bIsAdminOrderGoto = FALSE;
-					ZeroMemory(cMapName, sizeof(cMapName));
-					memcpy(cMapName, cp, 10);
-					cp += 10;
-
-					wp = (WORD *)cp;
-					sX = *wp;
-					cp += 2;
-
-					wp = (WORD *)cp;
-					sY = *wp;
-					cp += 2;
-
-					if (m_pClientList[wClientH]->m_iAdminUserLevel > 0) {
-						if(sX == -1 && sY == -1){
-							wsprintf(G_cTxt,"GM Order(%s): GoTo MapName(%s)",m_pClientList[wClientH]->m_cCharName, cMapName);
-						}
-						else{
-							wsprintf(G_cTxt,"GM Order(%s): GoTo MapName(%s)(%d %d)",m_pClientList[wClientH]->m_cCharName,
-								cMapName, sX, sY);
-						}
-						bSendMsgToLS(MSGID_GAMEMASTERLOG, wClientH, FALSE, G_cTxt);
-						RequestTeleportHandler(wClientH,"2   ", cMapName, sX, sY);
-					}
-				}
-				else{
-					if ((m_pClientList[wClientH]->m_bIsCheckingWhisperPlayer == TRUE) && (strcmp(m_pClientList[wClientH]->m_cWhisperPlayerName, cTemp) == 0)) {
-						m_pClientList[wClientH]->m_iWhisperPlayerIndex = 10000;
-						SendNotifyMsg(NULL, wClientH, DEF_NOTIFY_WHISPERMODEON, NULL, NULL, NULL, m_pClientList[wClientH]->m_cWhisperPlayerName);
-					}
-					else{
-						if (m_pClientList[wClientH]->m_iAdminUserLevel == 0) {
-							ZeroMemory(cTemp3, sizeof(cTemp3));
-						}
-						if (strcmp(m_pClientList[wClientH]->m_cCharName, cTemp2) == 0) {
-							SendNotifyMsg(NULL, wClientH, DEF_NOTIFY_PLAYERONGAME, NULL, NULL, NULL, cTemp,
-								NULL, NULL, NULL, NULL, NULL, NULL, cTemp3);
-						}
-					}
-				}
-			}
-			break;
-
-		default:
-			bFlag = TRUE;
-			break;
-		}
-	}
+// char * cp, * cp2, cTemp[120], cLocation[10], cGuildName[20], cName[11], cTemp2[120], cTemp3[120], cMapName[11], cBuffer[256]; short * sp;
+// WORD * wp, wServerID, wClientH, wV1, wV2, wV3, wV4, wV5;
+// DWORD * dwp;
+// BOOL bFlag = FALSE;
+// int * ip, i, iTotal, iV1, iV2, iV3, iRet;
+// short sX, sY;
+//
+//	iTotal = 0;
+//	cp = (char *)(pData + 6);
+//	while (bFlag == FALSE) {
+//		iTotal++;
+//		switch (*cp) {
+//		
+//// SUMMONGUILD Deleted
+//		case GSM_REQUEST_SUMMONGUILD:
+//			cp++;
+//			ZeroMemory(cGuildName, sizeof(cGuildName));
+//			memcpy(cGuildName, cp, 20);
+//			cp += 20;
+//
+//			ZeroMemory(cTemp, sizeof(cTemp));
+//			memcpy(cTemp, cp, 10);
+//			cp += 10;
+//
+//			cp2 = (char *) cTemp + 10;
+//			wp = (WORD *)cp;
+//			wV1 = *wp;
+//			cp += 2;
+//
+//			wp = (WORD *)cp;
+//			wV2 = *wp;
+//			cp += 2;
+//
+//			for (i = 0; i < DEF_MAXCLIENTS; i++)
+//			if ((m_pClientList[i] != NULL) && (strcmp(m_pClientList[i]->m_cGuildName, cGuildName) == 0)) {
+//			RequestTeleportHandler(i, "2   ", cTemp, wV1, wV2);
+//			}
+//			break;
+//
+//		// v2.14 ¼ºÈÄ´Ï Ãß°¡ À¯Àú ¼ÒÈ¯ 
+//		case GSM_REQUEST_SUMMONPLAYER:
+//			cp++;
+//			ZeroMemory(cName, sizeof(cName));
+//			memcpy(cName, cp, 10);
+//			cp += 10;
+//
+//			ZeroMemory(cTemp, sizeof(cTemp));
+//			memcpy(cTemp, cp, 10);
+//			cp += 10;
+//
+//			cp2 = (char *) cTemp + 10 ;
+//			
+//			wp = (WORD *)cp;
+//			wV1 = *wp;
+//			cp += 2;
+//
+//			wp = (WORD *)cp;
+//			wV2 = *wp;
+//			cp += 2;
+//			
+//			for (i = 1; i < DEF_MAXCLIENTS; i++)
+//				if ((m_pClientList[i] != NULL) && (strcmp(m_pClientList[i]->m_cCharName, cName) == 0)) {
+//					//wsprintf(G_cTxt, "%s %d %d", cTemp, wV1, wV2);
+//					//PutLogFileList(G_cTxt);					
+//					RequestTeleportHandler(i, "2   ", cTemp ,wV1, wV2);
+//					break;
+//				}
+//			break;
+//		
+//		case GSM_REQUEST_SUMMONALL:
+//			cp++;
+//			ZeroMemory(cLocation, sizeof(cLocation));
+//			memcpy(cLocation, cp, 10);
+//			cp += 10;
+//
+//			ZeroMemory(cTemp, sizeof(cTemp));
+//			memcpy(cTemp, cp, 10);
+//			cp += 10;
+//
+//			cp2 = (char *) cTemp + 10;
+//			
+//			wp = (WORD *)cp;
+//			wV1 = *wp;
+//			cp += 2;
+//
+//			wp = (WORD *)cp;
+//			wV2 = *wp;
+//			cp += 2;
+//			
+//			for (i = 0; i < DEF_MAXCLIENTS; i++)
+//			if ((m_pClientList[i] != NULL) && (strcmp(m_pClientList[i]->m_cLocation, cLocation) == 0)) {
+//			RequestTeleportHandler(i, "2   ", cTemp, wV1, wV2);
+//		}
+//		break;
+//
+//		case GSM_CHATMSG:
+//			cp++;
+//			ZeroMemory(cTemp, sizeof(cTemp));
+//			ZeroMemory(cName, sizeof(cName));
+//			iV1 = *cp;
+//			cp++;
+//			ip = (int *)cp;
+//			iV2 = *ip;
+//			cp += 4;
+//			memcpy(cName, cp, 10);
+//			cp += 10;;
+//			sp = (short *)cp;
+//			wV1 = (WORD)*sp;
+//			cp += 2;
+//			ChatMsgHandlerGSM(iV1, iV2, cName, cp, wV1);
+//			cp += wV1;
+//			break;
+//		
+//		case GSM_CONSTRUCTIONPOINT:
+//			cp++;
+//			ip = (int *)cp;
+//			iV1 = *ip;
+//			cp += 4;
+//			ip = (int *)cp;
+//			iV2 = *ip;
+//			cp += 4;
+//			GSM_ConstructionPoint(iV1, iV2);
+//			break;
+//
+//		case GSM_SETGUILDTELEPORTLOC:
+//			cp++;
+//			ip = (int *)cp;
+//			iV1 = *ip;
+//			cp += 4;
+//			ip = (int *)cp;
+//			iV2 = *ip;
+//			cp += 4;
+//			ip = (int *)cp;
+//			iV3 = *ip;
+//			cp += 4;
+//			ZeroMemory(cTemp, sizeof(cTemp));
+//			memcpy(cTemp, cp, 10);
+//			cp += 10;
+//			GSM_SetGuildTeleportLoc(iV1, iV2, iV3, cTemp);
+//			break;
+//
+//		case GSM_SETGUILDCONSTRUCTLOC:
+//			cp++;
+//			ip = (int *)cp;
+//			iV1 = *ip;
+//			cp += 4;
+//			ip = (int *)cp;
+//			iV2 = *ip;
+//			cp += 4;
+//			ip = (int *)cp;
+//			iV3 = *ip;
+//			cp += 4;
+//			ZeroMemory(cTemp, sizeof(cTemp));
+//			memcpy(cTemp, cp, 10);
+//			cp += 10;
+//			GSM_SetGuildConstructLoc(iV1, iV2, iV3, cTemp);
+//			break;
+//
+//		case GSM_REQUEST_SETFORCERECALLTIME:
+//			cp++;
+//			wp = (WORD *)cp;
+//			m_sForceRecallTime = *wp;
+//			cp += 2;
+//
+//			wsprintf(G_cTxt,"(!) Game Server Force Recall Time (%d)min",m_sForceRecallTime) ;
+//			PutLogList(G_cTxt) ;
+//			break;
+//
+//		case GSM_MIDDLEMAPSTATUS:
+//			cp++;
+//			// ±¸Á¶Ã¼ Å¬¸®¾î
+//			for (i = 0; i < DEF_MAXCRUSADESTRUCTURES; i++) {
+//				m_stMiddleCrusadeStructureInfo[i].cType = NULL;
+//				m_stMiddleCrusadeStructureInfo[i].cSide = NULL;
+//				m_stMiddleCrusadeStructureInfo[i].sX    = NULL;
+//				m_stMiddleCrusadeStructureInfo[i].sY    = NULL;
+//			}
+//			sp = (short *)cp;
+//			m_iTotalMiddleCrusadeStructures = *sp;
+//			cp += 2;
+//			// Á¤º¸ ÀÐ¾îµéÀÎ´Ù.
+//			for (i = 0; i < m_iTotalMiddleCrusadeStructures; i++) {
+//				m_stMiddleCrusadeStructureInfo[i].cType = *cp;
+//				cp++;
+//				m_stMiddleCrusadeStructureInfo[i].cSide = *cp;
+//				cp++;
+//				sp = (short *)cp;
+//				m_stMiddleCrusadeStructureInfo[i].sX = *sp;
+//				cp += 2;
+//				sp = (short *)cp;
+//				m_stMiddleCrusadeStructureInfo[i].sY = *sp;
+//				cp += 2;	
+//			}
+//			break;
+//		
+//		case GSM_BEGINCRUSADE:
+//			cp++;
+//			dwp = (DWORD *)cp;
+//			cp += 4;
+//			LocalStartCrusadeMode(*dwp);
+//			break;
+//
+//		case GSM_BEGINAPOCALYPSE:
+//			cp++;
+//			dwp = (DWORD *)cp;
+//			cp += 4;
+//			LocalStartApocalypse(*dwp);
+//			break;
+//
+//		case GSM_STARTHELDENIAN:
+//			cp++;
+//			wp  = (WORD *)cp;
+//			wV1 = *wp;
+//			cp += 2;
+//			wp  = (WORD *)cp;
+//			wV2 = *wp;
+//			cp += 2;
+//			dwp = (DWORD *)cp;
+//			cp += 4;
+//			LocalStartHeldenianMode(wV1, wV2, *dwp);
+//			break;
+//
+//		case GSM_ENDHELDENIAN:
+//			cp++;
+//			LocalEndHeldenianMode();
+//			break;
+//			
+//			/*case GSM_BEGINHELDENIEN:
+//			cp++;
+//			dwp = (DWORD *)cp;
+//			cp += 4;
+//			LocalStartHeldenian(*dwp);
+//			break;
+//		
+//		case GSM_ENDHeldenian:
+//			cp++;
+//			LocalEndHeldenian(*dwp)//sub_4ABCD0(*dwp);
+//			break;*/
+//
+//		case GSM_UPDATECONFIGS:
+//			cp++;
+//			LocalUpdateConfigs(*cp);
+//			cp += 16;
+//			break;
+//
+//		case GSM_ENDAPOCALYPSE:
+//			cp++;
+//			LocalEndApocalypse();
+//			break;
+//
+//		case GSM_ENDCRUSADE:
+//			cp++;
+//			LocalEndCrusadeMode(*cp);
+//			cp += 16;
+//			break;
+//
+//		case GSM_COLLECTEDMANA:
+//			cp++;
+//			wp  = (WORD *)cp;
+//			wV1 = *wp;
+//			cp += 2;
+//
+//			wp  = (WORD *)cp;
+//			wV2 = *wp;
+//			cp += 2;
+//			CollectedManaHandler(wV1, wV2);
+//			break;
+//
+//		case GSM_GRANDMAGICLAUNCH:
+//			cp++;
+//			wp  = (WORD *)cp;
+//			wV1 = *wp;
+//			cp += 2;
+//
+//			wp  = (WORD *)cp;
+//			wV2 = *wp;
+//			cp += 2;
+//
+//			switch (wV1) {
+//			case 1: // ¸ÞÅ×¿À ½ºÆ®¶óÀÌÅ© 
+//				MeteorStrikeMsgHandler((char)wV2);
+//				break;
+//			}
+//			break;
+//		
+//		case  GSM_GRANDMAGICRESULT:
+//			cp++;
+//			ZeroMemory(cTemp, sizeof(cTemp));
+//			memcpy(cTemp, cp, 10);
+//			cp += 10;
+//			wp  = (WORD *)cp;
+//			wV1 = *wp;
+//			cp += 2;
+//			wp  = (WORD *)cp;
+//			wV2 = *wp;
+//			cp += 2;
+//			wp  = (WORD *)cp;
+//			wV3 = *wp;
+//			cp += 2;
+//			wp  = (WORD *)cp;
+//			wV4 = *wp;
+//			cp += 2;
+//
+//			wp  = (WORD *)cp;
+//			wV5 = *wp;
+//
+//			GrandMagicResultHandler(cTemp, wV1, wV2, wV3, wV4, wV5, cp);
+//			break;
+//		
+//			// v2.15 2002-5-21
+//		case GSM_REQUEST_SHUTUPPLAYER:
+//			cp++;
+//			wp = (WORD *)cp;
+//			wServerID = *wp;
+//			cp += 2;
+//			wp = (WORD *)cp;
+//			wClientH = *wp;
+//			cp += 2;
+//
+//			ZeroMemory(cName, sizeof(cName));
+//			memcpy(cName, cp, 10);
+//			cp += 10;
+//
+//			wp  = (WORD *)cp;
+//			wV1 = *wp;
+//			cp += 2;
+//
+//			ZeroMemory(cTemp, sizeof(cTemp));
+//			memcpy(cTemp, cp, 10);
+//			cp += 10;
+//
+//			GSM_RequestShutupPlayer(cTemp,wServerID,wClientH, wV1, cName);
+//			break ;
+//
+//		case GSM_RESPONSE_SHUTUPPLAYER:
+//			cp++;
+//			wp = (WORD *)cp;
+//			wServerID = *wp;
+//			cp += 2;
+//			wp = (WORD *)cp;
+//			wClientH = *wp;
+//			cp += 2;
+//
+//			ZeroMemory(cName, sizeof(cName));
+//			memcpy(cName, cp, 10);
+//			cp += 10;
+//
+//			wp  = (WORD *)cp;
+//			wV1 = *wp;
+//			cp += 2;
+//
+//			ZeroMemory(cTemp, sizeof(cTemp));
+//			memcpy(cTemp, cp, 10);
+//			cp += 10;
+//
+//
+//			if (wServerID == m_wServerID_GSS) {
+//				if ((m_pClientList[wClientH] != NULL)&& (strcmp(m_pClientList[wClientH]->m_cCharName, cName) == 0)&&(m_pClientList[wClientH]->m_iAdminUserLevel > 0)) {
+//					SendNotifyMsg(NULL, wClientH, DEF_NOTIFY_PLAYERSHUTUP, wV1, NULL, NULL, cTemp);
+//
+//				}
+//			}
+//			break;
+//
+//		// New 16/05/2004
+//		case GSM_WHISFERMSG:
+//			ZeroMemory(cName, sizeof(cName));
+//			ZeroMemory(cBuffer, sizeof(cBuffer));
+//			cp++;
+//			memcpy(cName, cp, 10);
+//			cp += 10;
+//			wp = (WORD *)cp;
+//			wV1 = *wp;
+//			cp += 2;
+//
+//			memcpy(cBuffer, cp, wV1);
+//			cp += wV1;
+//
+//			for (i = 1; i < DEF_MAXCLIENTS; i++)
+//				if ((m_pClientList[i] != NULL) && (strcmp(m_pClientList[i]->m_cCharName, cName) == 0)) {
+//					iRet = m_pClientList[i]->m_pXSock->iSendMsg(cBuffer, wV1);
+//					if(	m_pClientList[i]->m_iAdminUserLevel > 0) {
+//						char cTxt[200],cTmpName[12] ;
+//						ZeroMemory(cTxt,sizeof(cTxt)) ;
+//						ZeroMemory(cTmpName,sizeof(cTmpName)) ;
+//
+//						memcpy(cTmpName,cBuffer+10,10) ;
+//						wsprintf(cTxt,"PC Chat(%s):\"%s\"\tto GM(%s)",cTmpName,cBuffer+21,m_pClientList[i]->m_cCharName) ;
+//						bSendMsgToLS(MSGID_GAMEMASTERLOG, i, NULL, cTxt);
+//					}
+//					break;
+//				}
+//		break;
+//
+//		// New 16/05/2004 Changed
+//		case GSM_REQUEST_FINDCHARACTER:
+//			cp++;
+//
+//			wp = (WORD *)cp;
+//			wServerID = *wp;
+//			cp += 2;
+//
+//			wp = (WORD *)cp;
+//			wClientH = *wp;
+//			cp += 2;
+//
+//			ZeroMemory(cTemp, sizeof(cTemp));
+//			memcpy(cTemp, cp, 10);
+//			cp += 10;
+//
+//			ZeroMemory(cTemp2, sizeof(cTemp2));
+//			memcpy(cTemp2, cp, 10);
+//			cp += 10;
+//
+//			GSM_RequestFindCharacter(wServerID, wClientH, cTemp, cTemp2);
+//			break;
+//
+//		case GSM_RESPONSE_FINDCHARACTER:
+//			sX = -1;
+//			sY = -1;
+//			cp++;
+//			wp = (WORD *)cp;
+//			wServerID = *wp;
+//			cp += 2;
+//			wp = (WORD *)cp;
+//			wClientH = *wp;
+//			cp += 2;
+//			ZeroMemory(cTemp, sizeof(cTemp));
+//			memcpy(cTemp, cp, 10);
+//			cp += 10;
+//
+//			ZeroMemory(cTemp2, sizeof(cTemp2));
+//			memcpy(cTemp2, cp, 10);
+//			cp += 10;
+//
+//			ZeroMemory(cTemp3, sizeof(cTemp3));
+//			memcpy(cTemp3, cp, 14);
+//
+//			if ((wServerID == m_wServerID_GSS) && m_pClientList[wClientH] != NULL) {
+//				if (m_pClientList[wClientH]->m_bIsAdminOrderGoto == TRUE) {
+//					m_pClientList[wClientH]->m_bIsAdminOrderGoto = FALSE;
+//					ZeroMemory(cMapName, sizeof(cMapName));
+//					memcpy(cMapName, cp, 10);
+//					cp += 10;
+//
+//					wp = (WORD *)cp;
+//					sX = *wp;
+//					cp += 2;
+//
+//					wp = (WORD *)cp;
+//					sY = *wp;
+//					cp += 2;
+//
+//					if (m_pClientList[wClientH]->m_iAdminUserLevel > 0) {
+//						if(sX == -1 && sY == -1){
+//							wsprintf(G_cTxt,"GM Order(%s): GoTo MapName(%s)",m_pClientList[wClientH]->m_cCharName, cMapName);
+//						}
+//						else{
+//							wsprintf(G_cTxt,"GM Order(%s): GoTo MapName(%s)(%d %d)",m_pClientList[wClientH]->m_cCharName,
+//								cMapName, sX, sY);
+//						}
+//						bSendMsgToLS(MSGID_GAMEMASTERLOG, wClientH, FALSE, G_cTxt);
+//						RequestTeleportHandler(wClientH,"2   ", cMapName, sX, sY);
+//					}
+//				}
+//				else{
+//					if ((m_pClientList[wClientH]->m_bIsCheckingWhisperPlayer == TRUE) && (strcmp(m_pClientList[wClientH]->m_cWhisperPlayerName, cTemp) == 0)) {
+//						m_pClientList[wClientH]->m_iWhisperPlayerIndex = 10000;
+//						SendNotifyMsg(NULL, wClientH, DEF_NOTIFY_WHISPERMODEON, NULL, NULL, NULL, m_pClientList[wClientH]->m_cWhisperPlayerName);
+//					}
+//					else{
+//						if (m_pClientList[wClientH]->m_iAdminUserLevel == 0) {
+//							ZeroMemory(cTemp3, sizeof(cTemp3));
+//						}
+//						if (strcmp(m_pClientList[wClientH]->m_cCharName, cTemp2) == 0) {
+//							SendNotifyMsg(NULL, wClientH, DEF_NOTIFY_PLAYERONGAME, NULL, NULL, NULL, cTemp,
+//								NULL, NULL, NULL, NULL, NULL, NULL, cTemp3);
+//						}
+//					}
+//				}
+//			}
+//			break;
+//
+//		default:
+//			bFlag = TRUE;
+//			break;
+//		}
+//	}
 
 	//testcode
 	//wsprintf(G_cTxt, "(!) Total %d GSM Messages.", iTotal-1);
@@ -43268,46 +43856,46 @@ void CGame::ServerStockMsgHandler(char *pData)
 
 void CGame::GSM_RequestFindCharacter(WORD wReqServerID, WORD wReqClientH, char *pName, char * pFinder)
 {
- char * cp, cTemp[120];
- WORD * wp;
- register int i;
+ //char * cp, cTemp[120];
+ //WORD * wp;
+ //register int i;
 
-	for (i = 1; i < DEF_MAXCLIENTS; i++)
-	if ((m_pClientList[i] != NULL)  && (strcmp(m_pClientList[i]->m_cCharName, pName) == 0)) {
-		// Ã£¾Ò´Ù.
-		ZeroMemory(cTemp, sizeof(cTemp));
-		cp = (char *)(cTemp);
-		*cp = GSM_RESPONSE_FINDCHARACTER;
-		cp++;
+	//for (i = 1; i < DEF_MAXCLIENTS; i++)
+	//if ((m_pClientList[i] != NULL)  && (strcmp(m_pClientList[i]->m_cCharName, pName) == 0)) {
+	//	// Ã£¾Ò´Ù.
+	//	ZeroMemory(cTemp, sizeof(cTemp));
+	//	cp = (char *)(cTemp);
+	//	*cp = GSM_RESPONSE_FINDCHARACTER;
+	//	cp++;
 
-		wp = (WORD *)cp;
-		*wp = wReqServerID;
-		cp += 2;
+	//	wp = (WORD *)cp;
+	//	*wp = wReqServerID;
+	//	cp += 2;
 
-		wp = (WORD *)cp;
-		*wp = wReqClientH;
-		cp += 2;
-		
-		memcpy(cp, pName, 10);
-		cp += 10;
+	//	wp = (WORD *)cp;
+	//	*wp = wReqClientH;
+	//	cp += 2;
+	//	
+	//	memcpy(cp, pName, 10);
+	//	cp += 10;
 
-		memcpy(cp, pFinder, 10);
-		cp += 10;
+	//	memcpy(cp, pFinder, 10);
+	//	cp += 10;
 
-		memcpy(cp, m_pClientList[i]->m_cMapName, 10);
-		cp += 10;
+	//	memcpy(cp, m_pClientList[i]->m_cMapName, 10);
+	//	cp += 10;
 
-		wp = (WORD *)cp;
-		*wp = m_pClientList[i]->m_sX;
-		cp += 2;
+	//	wp = (WORD *)cp;
+	//	*wp = m_pClientList[i]->m_sX;
+	//	cp += 2;
 
-		wp = (WORD *)cp;
-		*wp = m_pClientList[i]->m_sY;
-		cp += 2;
+	//	wp = (WORD *)cp;
+	//	*wp = m_pClientList[i]->m_sY;
+	//	cp += 2;
 
-		bStockMsgToGateServer(cTemp, 39);
-		return;	
-	}
+	//	bStockMsgToGateServer(cTemp, 39);
+	//	return;	
+	//}
 }
 
 // New 11/05/2004 Changed
@@ -43387,14 +43975,14 @@ void CGame::SyncMiddlelandMapInfo()
 		}
 		// ����ü ���� �� ���� �޽��� �ۼ� 
 		m_iTotalMiddleCrusadeStructures = m_pMapList[m_iMiddlelandMapIndex]->m_iTotalCrusadeStructures;
-		ZeroMemory(G_cData50000, sizeof(G_cData50000));
+		/*ZeroMemory(G_cData50000, sizeof(G_cData50000));
 		cp = (char *)G_cData50000;
 		*cp = GSM_MIDDLEMAPSTATUS;
 		cp++;
 
 		sp = (short *)cp;
 		*sp = (short)m_iTotalMiddleCrusadeStructures;
-		cp += 2;
+		cp += 2;*/
 				
 		for (i = 0; i < m_iTotalMiddleCrusadeStructures; i++) {
 			m_stMiddleCrusadeStructureInfo[i].cType = m_pMapList[m_iMiddlelandMapIndex]->m_stCrusadeStructureInfo[i].cType;
@@ -43402,7 +43990,7 @@ void CGame::SyncMiddlelandMapInfo()
 			m_stMiddleCrusadeStructureInfo[i].sX    = m_pMapList[m_iMiddlelandMapIndex]->m_stCrusadeStructureInfo[i].sX;
 			m_stMiddleCrusadeStructureInfo[i].sY    = m_pMapList[m_iMiddlelandMapIndex]->m_stCrusadeStructureInfo[i].sY;
 			
-			*cp = m_stMiddleCrusadeStructureInfo[i].cType;
+			/**cp = m_stMiddleCrusadeStructureInfo[i].cType;
 			cp++;
 			*cp = m_stMiddleCrusadeStructureInfo[i].cSide;
 			cp++;
@@ -43411,7 +43999,7 @@ void CGame::SyncMiddlelandMapInfo()
 			cp += 2;
 			sp = (short *)cp;
 			*sp = (short)m_stMiddleCrusadeStructureInfo[i].sY;
-			cp += 2;
+			cp += 2;*/
 		}
 		
 		// �޽��� ����.
@@ -43419,7 +44007,7 @@ void CGame::SyncMiddlelandMapInfo()
 			//testcode
 			//wsprintf(G_cTxt, "m_iTotalMiddleCrusadeStructures: %d", m_iTotalMiddleCrusadeStructures);
 			//PutLogList(G_cTxt);
-			bStockMsgToGateServer(G_cData50000, 3 + m_iTotalMiddleCrusadeStructures*6);
+			//bStockMsgToGateServer(G_cData50000, 3 + m_iTotalMiddleCrusadeStructures*6);
 		}
 	}
 }
@@ -43525,7 +44113,7 @@ void CGame::CheckCommanderConstructionPoint(int iClientH)
 		}
 
 		// ´Ù¸¥ ¼­¹öÀÇ ÁöÈÖ°ü¿¡°Ô ¾Ë·Á¾ß ÇÑ´Ù.
-		ZeroMemory(cData, sizeof(cData));
+		/*ZeroMemory(cData, sizeof(cData));
 		cp = (char *)cData;
 		*cp = GSM_CONSTRUCTIONPOINT;
 		cp++;
@@ -43535,7 +44123,7 @@ void CGame::CheckCommanderConstructionPoint(int iClientH)
 		ip = (int*)cp;
 		*ip = m_pClientList[iClientH]->m_iConstructionPoint;
 		cp += 4;
-		bStockMsgToGateServer(cData, 9);
+		bStockMsgToGateServer(cData, 9);*/
 
 		m_pClientList[iClientH]->m_iConstructionPoint = 0; // °ª ÃÊ±âÈ­ 
 		break;
@@ -43728,7 +44316,7 @@ void CGame::ManualEndCrusadeMode(int iWinnerSide)
 	LocalEndCrusadeMode(iWinnerSide);
 
 	// ´Ù¸¥ ¼­¹ö¿¡ Å©·ç¼¼ÀÌµå Á¾·á¸¦ ¾Ë¸².
-	ZeroMemory(cData, sizeof(cData));
+	/*ZeroMemory(cData, sizeof(cData));
 	cp = (char *)(cData);
 	*cp =  GSM_ENDCRUSADE;
 	cp++;
@@ -43750,7 +44338,7 @@ void CGame::ManualEndCrusadeMode(int iWinnerSide)
 		
 	cp += 10;
 
-	bStockMsgToGateServer(cData, 18);
+	bStockMsgToGateServer(cData, 18);*/
 }
 
 int CGame::iGetMapLocationSide(char *pMapName)
@@ -44183,6 +44771,8 @@ void CGame::RequestChangePlayMode(int iClientH)
 			SendNotifyMsg(NULL,iClientH,DEF_NOTIFY_CHANGEPLAYMODE,NULL,NULL,NULL,m_pClientList[iClientH]->m_cLocation);
 			SendEventToNearClient_TypeA(iClientH,DEF_OWNERTYPE_PLAYER,MSGID_EVENT_MOTION,100,NULL,NULL,NULL);
 		}
+
+	g_login->LocalSavePlayerData(iClientH);
 }
 
 void CGame::AdminOrder_SetStatus(int iClientH, char *pData, DWORD dwMsgSize)
@@ -45158,7 +45748,7 @@ void CGame::AdminOrder_GoTo(int iClientH, char* pData, DWORD dwMsgSize)
 	}
 	m_pClientList[iClientH]->m_bIsAdminOrderGoto = TRUE;
 
-	ZeroMemory(cBuff,sizeof(cBuff));
+	/*ZeroMemory(cBuff,sizeof(cBuff));
 	
 	cp = (char *)cBuff;
 	*cp = GSM_REQUEST_FINDCHARACTER;
@@ -45178,7 +45768,7 @@ void CGame::AdminOrder_GoTo(int iClientH, char* pData, DWORD dwMsgSize)
 	memcpy(cp,m_pClientList[iClientH]->m_cCharName,10);
 	cp += 10;
 
-	bStockMsgToGateServer(cBuff,25);
+	bStockMsgToGateServer(cBuff,25);*/
 
 	delete pStrTok;
 }
@@ -45235,7 +45825,7 @@ void CGame::AdminOrder_SetForceRecallTime(int iClientH, char *pData, DWORD dwMsg
 	 	
 		m_sForceRecallTime = iTime ;
 
-		ZeroMemory(cBuff, sizeof(cBuff));
+		/*ZeroMemory(cBuff, sizeof(cBuff));
 		cp = (char *)cBuff;
 		*cp = GSM_REQUEST_SETFORCERECALLTIME;
 		cp++;
@@ -45244,7 +45834,7 @@ void CGame::AdminOrder_SetForceRecallTime(int iClientH, char *pData, DWORD dwMsg
 		*wp = iTime ;
 		cp += 2;
 
-		bStockMsgToGateServer(cBuff, 3);
+		bStockMsgToGateServer(cBuff, 3);*/
 
 		wsprintf(G_cTxt,"(!) Game Server Force Recall Time (%d)min",m_sForceRecallTime) ;
 		PutLogList(G_cTxt) ;
@@ -45814,44 +46404,44 @@ void CGame::ShowVersion(int iClientH)
 // v2.15 2002-5-21
 void CGame::GSM_RequestShutupPlayer(char * pGMName,WORD wReqServerID, WORD wReqClientH, WORD wTime,char * pPlayer )
 {
-	char * cp, cTemp[120];
-	WORD * wp;
-	register int i;
+	//char * cp, cTemp[120];
+	//WORD * wp;
+	//register int i;
 
-	for (i = 1; i < DEF_MAXCLIENTS; i++)
-		if ((m_pClientList[i] != NULL) && (strcmp(m_pClientList[i]->m_cCharName, pPlayer) == 0)) {
-			// Ã£¾Ò´Ù.
-			ZeroMemory(cTemp, sizeof(cTemp));
-			cp = (char *)(cTemp);
-			*cp = GSM_RESPONSE_SHUTUPPLAYER;
-			cp++;
+	//for (i = 1; i < DEF_MAXCLIENTS; i++)
+	//	if ((m_pClientList[i] != NULL) && (strcmp(m_pClientList[i]->m_cCharName, pPlayer) == 0)) {
+	//		// Ã£¾Ò´Ù.
+	//		ZeroMemory(cTemp, sizeof(cTemp));
+	//		cp = (char *)(cTemp);
+	//		*cp = GSM_RESPONSE_SHUTUPPLAYER;
+	//		cp++;
 
-			wp = (WORD *)cp;
-			*wp = wReqServerID;
-			cp += 2;
+	//		wp = (WORD *)cp;
+	//		*wp = wReqServerID;
+	//		cp += 2;
 
-			wp = (WORD *)cp;
-			*wp = wReqClientH;
-			cp += 2;
+	//		wp = (WORD *)cp;
+	//		*wp = wReqClientH;
+	//		cp += 2;
 
-			memcpy(cp, pGMName, 10);
-			cp += 10;
+	//		memcpy(cp, pGMName, 10);
+	//		cp += 10;
 
-			wp = (WORD *)cp;
-			*wp = (WORD) wTime;
-			cp += 2;
+	//		wp = (WORD *)cp;
+	//		*wp = (WORD) wTime;
+	//		cp += 2;
 
-			memcpy(cp, pPlayer, 10);
-			cp += 10;
+	//		memcpy(cp, pPlayer, 10);
+	//		cp += 10;
 
-			// v2.14 ¼Ë¾÷½Ã°£À» ºÐÀ¸·Î ¼öÁ¤
-			m_pClientList[i]->m_iTimeLeft_ShutUp = wTime*20; // 1ÀÌ 3ÃÊ´Ù. 20ÀÌ¸é 1ºÐ 
+	//		// v2.14 ¼Ë¾÷½Ã°£À» ºÐÀ¸·Î ¼öÁ¤
+	//		m_pClientList[i]->m_iTimeLeft_ShutUp = wTime*20; // 1ÀÌ 3ÃÊ´Ù. 20ÀÌ¸é 1ºÐ 
 
-			SendNotifyMsg(NULL, i, DEF_NOTIFY_PLAYERSHUTUP, wTime, NULL, NULL, pPlayer);
+	//		SendNotifyMsg(NULL, i, DEF_NOTIFY_PLAYERSHUTUP, wTime, NULL, NULL, pPlayer);
 
-			bStockMsgToGateServer(cTemp, 27);
-			return;	
-		}
+	//		bStockMsgToGateServer(cTemp, 27);
+	//		return;	
+	//	}
 }
 
 // v2.14 05/22/2004 - Hypnotoad - adds pk log
@@ -46105,21 +46695,16 @@ GameProcess();
 
 if ((dwTime - m_dwGameTime2) > 1000) {
  CheckClientResponseTime();
- SendMsgToGateServer(MSGID_GAMESERVERALIVE, NULL);
+ //SendMsgToGateServer(MSGID_GAMESERVERALIVE, NULL);
  CheckDayOrNightMode();
  // ȭ�� ���� 
  InvalidateRect(G_hWnd, NULL, TRUE);
  m_dwGameTime2 = dwTime;
  // v1.41 
- _CheckGateSockConnection();
+ //_CheckGateSockConnection();
  
  // v1.41
- if ((m_bIsGameStarted == FALSE)     && (m_bIsItemAvailable == TRUE)      && 
-  (m_bIsNpcAvailable == TRUE)     && (m_bIsGateSockAvailable == TRUE)  &&
-  (m_bIsLogSockAvailable == TRUE) && (m_bIsMagicAvailable == TRUE)     &&
-  (m_bIsSkillAvailable == TRUE)   && (m_bIsPortionAvailable == TRUE)   &&
-  (m_bIsQuestAvailable == TRUE)   && (m_bIsBuildItemAvailable == TRUE) && 
-  (m_iSubLogSockActiveCount == DEF_MAXSUBLOGSOCK)) {
+ if (m_bIsGameStarted == FALSE) {
   // ������ ������ �غ� �Ǿ���. �޽����� ������.
   PutLogList("Sending start message...");
   SendMessage(m_hWnd, WM_USER_STARTGAMESIGNAL, NULL, NULL);
@@ -46128,7 +46713,7 @@ if ((dwTime - m_dwGameTime2) > 1000) {
 }
 	if ((dwTime - m_dwGameTime6) > 1000) {
 		DelayEventProcessor();
-		SendStockMsgToGateServer();
+		//SendStockMsgToGateServer();
 		m_dwGameTime6 = dwTime;
 
 		// v2.05
@@ -46159,14 +46744,14 @@ if ((dwTime - m_dwGameTime2) > 1000) {
 	 MobGenerator();
 
 	 // v1.432-3 Sub-Log-Socket�� �Ѳ����� ����� ���� �ƴ϶� ������ �����.
-	 if (m_iSubLogSockInitIndex < DEF_MAXSUBLOGSOCK) {
+	 /*if (m_iSubLogSockInitIndex < DEF_MAXSUBLOGSOCK) {
 	  m_pSubLogSock[m_iSubLogSockInitIndex] = new class XSocket(m_hWnd, DEF_SERVERSOCKETBLOCKLIMIT);
 	  m_pSubLogSock[m_iSubLogSockInitIndex]->bConnect(m_cLogServerAddr, m_iLogServerPort, (WM_ONLOGSOCKETEVENT + m_iSubLogSockInitIndex + 1));
 	  m_pSubLogSock[m_iSubLogSockInitIndex]->bInitBufferSize(DEF_MSGBUFFERSIZE);
 	  wsprintf(G_cTxt, "(!) Try to connect sub-log-socket(%d)... Addr:%s  Port:%d", m_iSubLogSockInitIndex, m_cLogServerAddr, m_iLogServerPort);
 	  PutLogList(G_cTxt);
 	  m_iSubLogSockInitIndex++;
-	 }
+	 }*/
 
 	 m_dwGameTime4 = dwTime;
 	}
@@ -46449,7 +47034,7 @@ void CGame::GlobalStartCrusadeMode()
 
 	dwCrusadeGUID = timeGetTime();
 
-	ZeroMemory(cData, sizeof(cData));
+	/*ZeroMemory(cData, sizeof(cData));
 	cp = (char *)cData;
 	*cp = GSM_BEGINCRUSADE;
 	cp++;
@@ -46457,7 +47042,7 @@ void CGame::GlobalStartCrusadeMode()
 	*dwp = dwCrusadeGUID;
 	cp += 4;
 
-	bStockMsgToGateServer(cData, 5);
+	bStockMsgToGateServer(cData, 5);*/
 
 	LocalStartCrusadeMode(dwCrusadeGUID);
 }
@@ -46671,7 +47256,7 @@ void CGame::RequestSetGuildTeleportLocHandler(int iClientH, int dX, int dY, int 
 	if (dY > 600) dY = 600;
 
 	// ����Ʈ ���� �޽��� �ۼ� 
-	ZeroMemory(cData, sizeof(cData));
+	/*ZeroMemory(cData, sizeof(cData));
 	cp = (char *)cData;
 	*cp = GSM_SETGUILDTELEPORTLOC;
 	cp++;
@@ -46689,7 +47274,7 @@ void CGame::RequestSetGuildTeleportLocHandler(int iClientH, int dX, int dY, int 
 	cp += 4;
 	
 	memcpy(cp, pMapName, 10);
-	cp += 10;
+	cp += 10;*/
 	//
 
 	dwTime = timeGetTime();
@@ -46716,7 +47301,7 @@ void CGame::RequestSetGuildTeleportLocHandler(int iClientH, int dX, int dY, int 
 			m_pGuildTeleportLoc[i].m_dwTime = dwTime;
 				
 			//����Ʈ ������ ���� �ٸ� ������ ���� ����
-			bStockMsgToGateServer(cData, 23);
+			//bStockMsgToGateServer(cData, 23);
 			return;
 		}
 	}
@@ -46735,7 +47320,7 @@ void CGame::RequestSetGuildTeleportLocHandler(int iClientH, int dX, int dY, int 
 			m_pGuildTeleportLoc[i].m_dwTime = dwTime;
 
 			//����Ʈ ������ ���� �ٸ� ������ ���� ����  
-			bStockMsgToGateServer(cData, 23);
+			//bStockMsgToGateServer(cData, 23);
 			return;
 		}
 		else {
@@ -46761,7 +47346,7 @@ void CGame::RequestSetGuildTeleportLocHandler(int iClientH, int dX, int dY, int 
 	m_pGuildTeleportLoc[i].m_dwTime = dwTime;
 
 	//����Ʈ ������ ���� �ٸ� ������ ���� ����
-	bStockMsgToGateServer(cData, 23);
+	//bStockMsgToGateServer(cData, 23);
 }
 
 // New 12/05/2004 Changed
@@ -49069,7 +49654,7 @@ void CGame::SendCollectedMana()
 	wsprintf(G_cTxt, "Sending Collected Mana: %d %d", m_iCollectedMana[1], m_iCollectedMana[2]);
 	PutLogList(G_cTxt);
 
-	ZeroMemory(cData, sizeof(cData));
+	/*ZeroMemory(cData, sizeof(cData));
 	cp = (char *)(cData);
 	*cp = GSM_COLLECTEDMANA;
 	cp++;
@@ -49080,11 +49665,11 @@ void CGame::SendCollectedMana()
 
 	wp = (WORD *)cp;
 	*wp = (WORD)m_iCollectedMana[2];
-	cp += 2;
+	cp += 2;*/
 
 	CollectedManaHandler(m_iCollectedMana[1], m_iCollectedMana[2]);
 
-	bStockMsgToGateServer(cData, 5);
+	//bStockMsgToGateServer(cData, 5);
 	
 	// �׵��� ���� ������ ������ Ŭ����.
 	m_iCollectedMana[0] = 0;
@@ -49158,7 +49743,7 @@ void CGame::CalcMeteorStrikeEffectHandler(int iMapIndex)
 		}
 		
 		// �ٸ� ������ ũ�缼�̵� ���Ḧ �˸�.
-		ZeroMemory(cData, sizeof(cData));
+		/*ZeroMemory(cData, sizeof(cData));
 		cp = (char *)(cData);
 		*cp =  GSM_ENDCRUSADE;
 		cp++;
@@ -49181,12 +49766,12 @@ void CGame::CalcMeteorStrikeEffectHandler(int iMapIndex)
 		memcpy(cp, m_pMapList[iMapIndex]->m_cName, 10);
 		cp += 10;
 
-		bStockMsgToGateServer(cData, 18);
+		bStockMsgToGateServer(cData, 18);*/
 
 	}
 	else {
 		// ���� ��Ȳ�� ��� ������ ����Ʈ.
-		ZeroMemory(cData, sizeof(cData));
+		/*ZeroMemory(cData, sizeof(cData));
 		cp = (char *)(cData);
 		*cp =  GSM_GRANDMAGICRESULT;
 		cp++;
@@ -49208,7 +49793,7 @@ void CGame::CalcMeteorStrikeEffectHandler(int iMapIndex)
 
 		wp  = (WORD *)cp;
 		*wp = (WORD) iActiveStructure;
-		cp += 2;
+		cp += 2;*/
 
 		//v2.15 �߰�  ��Ż �ǹ��� ���� 
 		ZeroMemory(cTempData, sizeof(cTempData));
@@ -49224,10 +49809,10 @@ void CGame::CalcMeteorStrikeEffectHandler(int iMapIndex)
 			cp2 += 2;
 		}
 
-		memcpy(cp,cTempData,2*(m_pMapList[iMapIndex]->m_iTotalStrikePoints+1) ) ;
+		//memcpy(cp,cTempData,2*(m_pMapList[iMapIndex]->m_iTotalStrikePoints+1) ) ;
 
 		// v2.15 
-		bStockMsgToGateServer(cData, 18 + (m_pMapList[iMapIndex]->m_iTotalStrikePoints+1)*2 );
+		//bStockMsgToGateServer(cData, 18 + (m_pMapList[iMapIndex]->m_iTotalStrikePoints+1)*2 );
 		
 		// ���� �������� ���� �޽����� ���� �����Ƿ� ���� �����Ѵ�.
 		// v2.15 �ǹ��� ������ HP�� ������.
@@ -49285,8 +49870,7 @@ BOOL CGame::_bRegisterMap(char * pName)
 		wsprintf(cTxt, "(*) Add map (%s)   - Loading map info files...", pName);
 		PutLogList(cTxt);
 		if (m_pMapList[i]->bInit(pName) == FALSE) {
-			wsprintf(cTxt, "(!!!) Data file loading fail!", pName);
-			PutLogList(cTxt);
+			PutLogList("(!!!) Data file loading fail!");
 			return FALSE;	
 		};
 		
@@ -49737,7 +50321,7 @@ void CGame::Command_YellowBall(int iClientH, char* pData, DWORD dwMsgSize)
 		}
 		m_pClientList[iClientH]->m_bIsAdminOrderGoto = TRUE;
 
-		ZeroMemory(cBuff,sizeof(cBuff));
+		/*ZeroMemory(cBuff,sizeof(cBuff));
 		
 		cp = (char *)cBuff;
 		*cp = GSM_REQUEST_FINDCHARACTER;
@@ -49757,7 +50341,7 @@ void CGame::Command_YellowBall(int iClientH, char* pData, DWORD dwMsgSize)
 		memcpy(cp,m_pClientList[iClientH]->m_cCharName,10);
 		cp += 10;
 
-		bStockMsgToGateServer(cBuff,25);
+		bStockMsgToGateServer(cBuff,25);*/
 
 		delete pStrTok;
 	}
@@ -49976,23 +50560,23 @@ delete client and log him, if the true switch
 
 void CGame::GlobalEndApocalypseMode()
 {
- char * cp, cData[120];
+ //char * cp, cData[120];
 
 	if (m_bIsApocalypseMode == FALSE) return;
 
-	ZeroMemory(cData, sizeof(cData));
+	/*ZeroMemory(cData, sizeof(cData));
 	cp = (char *)cData;
 	*cp = GSM_ENDAPOCALYPSE;
-	cp++;
+	cp++;*/
 	
 	LocalEndApocalypse();
 
-	bStockMsgToGateServer(cData, 5);
+	//bStockMsgToGateServer(cData, 5);
 }
 
 void CGame::GlobalUpdateConfigs(char cConfigType)
 {
- char * cp, cData[120];
+ /*char * cp, cData[120];
 
 	ZeroMemory(cData, sizeof(cData));
 	cp = (char *)cData;
@@ -50000,29 +50584,29 @@ void CGame::GlobalUpdateConfigs(char cConfigType)
 	cp++;
 
 	*cp = (char)cConfigType;
-	cp++;			
+	cp++;*/			
 
 	LocalUpdateConfigs(cConfigType);
 
-	bStockMsgToGateServer(cData, 5);
+	//bStockMsgToGateServer(cData, 5);
 }
 
 void CGame::LocalUpdateConfigs(char cConfigType)
 {
 	if (cConfigType == 1) {
-		bReadSettingsConfigFile("..\\GameConfigs\\Settings.cfg");
+		bReadSettingsConfigFile("GameConfigs\\Settings.cfg");
 		PutLogList("(!!!) Settings.cfg updated successfully!");
 	}
 	if (cConfigType == 2) {
-		bReadAdminListConfigFile("..\\GameConfigs\\AdminList.cfg");
+		bReadAdminListConfigFile("GameConfigs\\AdminList.cfg");
 		PutLogList("(!!!) AdminList.cfg updated successfully!");
 	}
 	if (cConfigType == 3) {
-		bReadBannedListConfigFile("..\\GameConfigs\\BannedList.cfg");
+		bReadBannedListConfigFile("GameConfigs\\BannedList.cfg");
 		PutLogList("(!!!) BannedList.cfg updated successfully!");
 	}
 	if (cConfigType == 4) {
-		bReadAdminSetConfigFile("..\\GameConfigs\\AdminSettings.cfg");
+		bReadAdminSetConfigFile("GameConfigs\\AdminSettings.cfg");
 		PutLogList("(!!!) AdminSettings.cfg updated successfully!");
 	}
 }
@@ -50283,9 +50867,9 @@ void CGame::RequestCreatePartyHandler(int iClientH)
 	ZeroMemory(cData, sizeof(cData));
 	cp = (char *)cData;
 
-	dwp = (DWORD *)cp;
+	/*dwp = (DWORD *)cp;
 	*dwp = MSGID_PARTYOPERATION;
-	cp += 4;
+	cp += 4;*/
 	wp = (WORD*)cp;
 	*wp = 1; // 1, request
 	cp += 2;
@@ -50297,7 +50881,7 @@ void CGame::RequestCreatePartyHandler(int iClientH)
 	memcpy(cp, m_pClientList[iClientH]->m_cCharName, 10);
 	cp += 10;
 
-	SendMsgToGateServer(MSGID_PARTYOPERATION, iClientH, cData);
+	PartyOperation(cData); //SendMsgToGateServer(MSGID_PARTYOPERATION, iClientH, cData);
 
 	//testcode
 	wsprintf(G_cTxt, "Request Create Party: %d", iClientH);
@@ -50311,7 +50895,7 @@ void CGame::PartyOperationResultHandler(char *pData)
 	WORD * wp;
 	int i, iClientH, iPartyID, iTotal;
 
-	cp = (char *)(pData + 4);
+	cp = (char *)(pData);
 	wp = (WORD *)cp;
 	cp += 2;
 
@@ -50499,9 +51083,9 @@ PORC_LOOPBREAK1:;
 			if ((m_pClientList[iClientH]->m_iReqJoinPartyClientH != NULL) && (strlen(m_pClientList[iClientH]->m_cReqJoinPartyName) != NULL)) {
 				ZeroMemory(cData, sizeof(cData));
 				cp = (char *)cData;
-				dwp = (DWORD *)cp;
+				/*dwp = (DWORD *)cp;
 				*dwp = MSGID_PARTYOPERATION;
-				cp += 4;
+				cp += 4;*/
 				wp = (WORD*)cp;
 				*wp = 3; // ÆÄÆ¼ ¸â¹ö Ãß°¡ ¿äÃ»
 				cp += 2;
@@ -50513,7 +51097,7 @@ PORC_LOOPBREAK1:;
 				wp = (WORD *)cp;
 				*wp = m_pClientList[iClientH]->m_iPartyID;
 				cp += 2;
-				SendMsgToGateServer(MSGID_PARTYOPERATION, iClientH, cData);
+				PartyOperation(cData); //SendMsgToGateServer(MSGID_PARTYOPERATION, iClientH, cData);
 				// ¸Þ½ÃÁö¸¦ º¸³ÂÀ¸´Ï Å¬¸®¾î
 				m_pClientList[iClientH]->m_iReqJoinPartyClientH = NULL;
 				ZeroMemory(m_pClientList[iClientH]->m_cReqJoinPartyName, sizeof(m_pClientList[iClientH]->m_cReqJoinPartyName));
@@ -50723,9 +51307,9 @@ void CGame::RequestJoinPartyHandler(int iClientH, char *pData, DWORD dwMsgSize)
 			ZeroMemory(cData, sizeof(cData));
 			
 			cp = (char *)cData;
-			dwp = (DWORD *)cp;
+			/*dwp = (DWORD *)cp;
 			*dwp = MSGID_PARTYOPERATION;
-			cp += 4;
+			cp += 4;*/
 			wp = (WORD*)cp;
 			*wp = 3; // ÆÄÆ¼ ¸â¹ö Ãß°¡ ¿äÃ»
 			cp += 2;
@@ -50737,7 +51321,7 @@ void CGame::RequestJoinPartyHandler(int iClientH, char *pData, DWORD dwMsgSize)
 			wp = (WORD *)cp;
 			*wp = m_pClientList[i]->m_iPartyID;
 			cp += 2;
-			SendMsgToGateServer(MSGID_PARTYOPERATION, iClientH, cData);
+			PartyOperation(cData); //SendMsgToGateServer(MSGID_PARTYOPERATION, iClientH, cData);
 			return;
 		}
 
@@ -50758,9 +51342,9 @@ void CGame::RequestDismissPartyHandler(int iClientH)
 
 	ZeroMemory(cData, sizeof(cData));
 	cp = (char *)cData;
-	dwp = (DWORD *)cp;
+	/*dwp = (DWORD *)cp;
 	*dwp = MSGID_PARTYOPERATION;
-	cp += 4;
+	cp += 4;*/
 	wp = (WORD*)cp;
 	*wp = 4; // ¸â¹ö Á¦°Å ¿äÃ»
 	cp += 2;
@@ -50772,7 +51356,7 @@ void CGame::RequestDismissPartyHandler(int iClientH)
 	wp = (WORD *)cp;
 	*wp = m_pClientList[iClientH]->m_iPartyID;
 	cp += 2;
-	SendMsgToGateServer(MSGID_PARTYOPERATION, iClientH, cData);
+	PartyOperation(cData); //SendMsgToGateServer(MSGID_PARTYOPERATION, iClientH, cData);
 
 	m_pClientList[iClientH]->m_iPartyStatus = DEF_PARTYSTATUS_PROCESSING;
 }
@@ -50789,9 +51373,9 @@ void CGame::GetPartyInfoHandler(int iClientH)
 
 	ZeroMemory(cData, sizeof(cData));
 	cp = (char *)cData;
-	dwp = (DWORD *)cp;
+	/*dwp = (DWORD *)cp;
 	*dwp = MSGID_PARTYOPERATION;
-	cp += 4;
+	cp += 4;*/
 	wp = (WORD*)cp;
 	*wp = 5; // ÆÄÆ¼ Á¤º¸ ¿äÃ»
 	cp += 2;
@@ -50803,7 +51387,7 @@ void CGame::GetPartyInfoHandler(int iClientH)
 	wp = (WORD *)cp;
 	*wp = m_pClientList[iClientH]->m_iPartyID;
 	cp += 2;
-	SendMsgToGateServer(MSGID_PARTYOPERATION, iClientH, cData);
+	PartyOperation(cData); //SendMsgToGateServer(MSGID_PARTYOPERATION, iClientH, cData);
 }
 
 
@@ -50826,9 +51410,9 @@ void CGame::RequestDeletePartyHandler(int iClientH)
 	if (m_pClientList[iClientH]->m_iPartyID != NULL) {
 		ZeroMemory(cData, sizeof(cData));
 		cp = (char *)cData;
-		dwp = (DWORD *)cp;
+		/*dwp = (DWORD *)cp;
 		*dwp = MSGID_PARTYOPERATION;
-		cp += 4;
+		cp += 4;*/
 		wp = (WORD*)cp;
 		*wp = 4; // ¸â¹ö Á¦°Å ¿äÃ»
 		cp += 2;
@@ -50840,7 +51424,7 @@ void CGame::RequestDeletePartyHandler(int iClientH)
 		wp = (WORD *)cp;
 		*wp = m_pClientList[iClientH]->m_iPartyID;
 		cp += 2;
-		SendMsgToGateServer(MSGID_PARTYOPERATION, iClientH, cData);
+		PartyOperation(cData); //SendMsgToGateServer(MSGID_PARTYOPERATION, iClientH, cData);
 		// »óÅÂ º¯È¯
 		m_pClientList[iClientH]->m_iPartyStatus = DEF_PARTYSTATUS_PROCESSING;
 	}
@@ -50912,9 +51496,9 @@ void CGame::RequestAcceptJoinPartyHandler(int iClientH, int iResult)
 			// °¡ÀÔ Ã³¸® ÇÑ´Ù.
 			ZeroMemory(cData, sizeof(cData));
 			cp = (char *)cData;
-			dwp = (DWORD *)cp;
+			/*dwp = (DWORD *)cp;
 			*dwp = MSGID_PARTYOPERATION;
-			cp += 4;
+			cp += 4;*/
 			wp = (WORD*)cp;
 			*wp = 3; // ÆÄÆ¼ ¸â¹ö Ãß°¡ ¿äÃ»
 			cp += 2;
@@ -50926,7 +51510,7 @@ void CGame::RequestAcceptJoinPartyHandler(int iClientH, int iResult)
 			wp = (WORD *)cp;
 			*wp = m_pClientList[iClientH]->m_iPartyID;
 			cp += 2;
-			SendMsgToGateServer(MSGID_PARTYOPERATION, iClientH, cData);
+			PartyOperation(cData); //SendMsgToGateServer(MSGID_PARTYOPERATION, iClientH, cData);
 		}
 		else {
 			iH = m_pClientList[iClientH]->m_iReqJoinPartyClientH;
@@ -50980,6 +51564,117 @@ void CGame::RequestAcceptJoinPartyHandler(int iClientH, int iResult)
 				m_pClientList[iClientH]->m_iReqJoinPartyClientH = NULL;
 				ZeroMemory(m_pClientList[iClientH]->m_cReqJoinPartyName, sizeof(m_pClientList[iClientH]->m_cReqJoinPartyName));
 		}
+		break;
+	}
+}
+
+void CGame::PartyOperation(char* pData)
+{
+	char* cp, cName[12], cData[120];
+	WORD* wp, wRequestType;
+	int iGSCH, iPartyID;
+	bool bRet;
+
+	cp = (char*)pData;
+
+	wp = (WORD*)cp;
+	wRequestType = *wp;
+	cp += 2;
+
+	wp = (WORD*)cp;
+	iGSCH = (WORD)*wp;
+	cp += 2;
+
+	ZeroMemory(cName, sizeof(cName));
+	memcpy(cName, cp, 10);
+	cp += 10;
+
+	wp = (WORD*)cp;
+	iPartyID = (WORD)*wp;
+	cp += 2;
+
+	//testcode
+	wsprintf(G_cTxt, "Party Operation Type: %d Name: %s PartyID:%d", wRequestType, cName, iPartyID);
+	PutLogList(G_cTxt);
+
+	ZeroMemory(cData, sizeof(cData));
+	cp = (char*)cData;
+	wp = (WORD*)cp;
+
+	switch (wRequestType) {
+	case 1: // ��Ƽ ���� ��û 
+		iPartyID = m_pPartyManager->iCreateNewParty(cName);
+
+		// ��Ƽ ���� ����! 
+		*wp = 1; // ��Ƽ ���� ���� ��û�� ���� �����̴�.
+		cp += 2;
+		*cp = (int)!(iPartyID == 0); // ���� ���� 
+		cp++;
+		wp = (WORD*)cp;
+		*wp = iGSCH;
+		cp += 2;
+		memcpy(cp, cName, 10);
+		cp += 10;
+		wp = (WORD*)cp;
+		*wp = (WORD)iPartyID;
+		cp += 2;
+
+		PartyOperationResultHandler(cData);
+		break;
+
+	case 2: // ��Ƽ �ػ� ��û 
+		break;
+
+	case 3: // ��� �߰� ��û
+		bRet = m_pPartyManager->bAddMember(iPartyID, cName);
+
+		// ��� �߰� ����
+		*wp = 4; // ��� �߰��� ���� �����̴�.
+		cp += 2;
+		*cp = (int)bRet; // �߰� ���� 
+		cp++;
+		wp = (WORD*)cp;
+		*wp = iGSCH;
+		cp += 2;
+		memcpy(cp, cName, 10);
+		cp += 10;
+		wp = (WORD*)cp;
+		*wp = (WORD)iPartyID;
+		cp += 2;
+
+		PartyOperationResultHandler(cData);
+		break;
+
+	case 4: // ��� ���� ��û
+		bRet = m_pPartyManager->bRemoveMember(iPartyID, cName);
+
+		// ��� ���� ����
+		*wp = 6; // ��� ���ſ� ���� �����̴�.
+		cp += 2;
+		*cp = (int)bRet; // ���� ���� 
+		cp++;
+		wp = (WORD*)cp;
+		*wp = iGSCH;
+		cp += 2;
+		memcpy(cp, cName, 10);
+		cp += 10;
+		wp = (WORD*)cp;
+		*wp = (WORD)iPartyID;
+		cp += 2;
+
+		PartyOperationResultHandler(cData);
+		break;
+
+	case 5: // ��Ƽ ��� Ȯ�� ��û. ���� �̵� ���¸� Ŭ�����Ѵ�.
+		m_pPartyManager->bCheckPartyMember(iGSCH, iPartyID, cName);
+		break;
+
+	case 6: // ��Ƽ ���� ���� ��û. ��Ƽ�� �� ������ ���� �̸��� �˷��ش�.
+		m_pPartyManager->bGetPartyInfo(iGSCH, cName, iPartyID);
+		break;
+
+	case 7: // ����� ���� �̵� ���� ��ȯ: �̰� ���õ� ���� ���� �ð� ���� Ȯ���� �ȵǸ� ��Ƽ���� �����Ѵ�.
+		m_pPartyManager->SetServerChangeStatus(cName, iPartyID);
 		break;
 	}
 }
@@ -53651,7 +54346,7 @@ CAE_SKIPDAMAGEMOVE2:;
 // October 19, 2004 - 3.51 translated
 void CGame::_GrandMagicLaunchMsgSend(int iType, char cAttackerSide)
 {
- char * cp, cBuff[120];
+ /*char * cp, cBuff[120];
  WORD * wp;
 
 	ZeroMemory(cBuff, sizeof(cBuff));
@@ -53667,7 +54362,7 @@ void CGame::_GrandMagicLaunchMsgSend(int iType, char cAttackerSide)
 	*wp = (WORD)cAttackerSide;
 	cp += 2;
 	
-	bStockMsgToGateServer(cBuff, 5);
+	bStockMsgToGateServer(cBuff, 5);*/
 }
 
 // October 19, 2004 - 3.51 translated
@@ -54369,16 +55064,16 @@ BOOL CGame::_bCheckCharacterData(int iClientH)
 
 void CGame::GlobalEndHeldenianMode()
 {
- char * cp, cData[32];
+ //char * cp, cData[32];
 
 	if (m_bIsHeldenianMode == FALSE) return;
 
-	ZeroMemory(cData, sizeof(cData));
-	cp = (char *)cData;
-	*cp = GSM_ENDHELDENIAN; // 22
-	cp++;
-	
-	bStockMsgToGateServer(cData, 1);
+	//ZeroMemory(cData, sizeof(cData));
+	//cp = (char *)cData;
+	//*cp = GSM_ENDHELDENIAN; // 22
+	//cp++;
+	//
+	//bStockMsgToGateServer(cData, 1);
 	LocalEndHeldenianMode();
 
 }
@@ -54757,25 +55452,25 @@ void CGame::GlobalStartHeldenianMode()
  WORD * wp;
 
 	dwTime = timeGetTime();
-	ZeroMemory(cData,sizeof(cData));
+	//ZeroMemory(cData,sizeof(cData));
 
-	cp = (char *)cData;
-	*cp = GSM_STARTHELDENIAN; // 21
-	cp++;
-	
-	wp  = (WORD *)cp;
-	*wp = m_cHeldenianModeType;
-	cp += 2;
+	//cp = (char *)cData;
+	//*cp = GSM_STARTHELDENIAN; // 21
+	//cp++;
+	//
+	//wp  = (WORD *)cp;
+	//*wp = m_cHeldenianModeType;
+	//cp += 2;
 
-	wp  = (WORD *)cp;
-	*wp = m_sLastHeldenianWinner;
-	cp += 2;
+	//wp  = (WORD *)cp;
+	//*wp = m_sLastHeldenianWinner;
+	//cp += 2;
 
-	dwp = (DWORD *)cp;
-	*dwp = dwTime;
-	cp += 4;
+	//dwp = (DWORD *)cp;
+	//*dwp = dwTime;
+	//cp += 4;
 
-	bStockMsgToGateServer(cData, 9);
+	//bStockMsgToGateServer(cData, 9);
 	LocalStartHeldenianMode(m_cHeldenianModeType, m_sLastHeldenianWinner, dwTime);
 
 }

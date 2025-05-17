@@ -30,6 +30,7 @@ CClient::CClient(HWND hWnd)
 	m_iGuildGUID = -1;
 
 	m_bIsInitComplete = FALSE;
+	m_bIsClientConnected = FALSE;
 
 	m_iAngelicStr = m_iAngelicInt = m_iAngelicDex = m_iAngelicMag = 0;
 

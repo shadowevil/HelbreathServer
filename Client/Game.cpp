@@ -13100,9 +13100,10 @@ void CGame::LogResponseHandler(char * pData)
 	case DEF_LOGRESMSGTYPE_CHARACTERDELETED:
 		cp = (pData + DEF_INDEX2_MSGTYPE + 2);
 		//m_iAccountStatus = (int)*cp;
-		cp++;
+		/*cp++;
 		m_iTotalChar = (int)*cp;
-		cp++;
+		cp++;*/
+		Pop(cp, m_iTotalChar);
 		for (i = 0; i < 4; i++)
 		if (m_pCharList[i] != NULL)
 		{	delete m_pCharList[i];
@@ -13113,11 +13114,11 @@ void CGame::LogResponseHandler(char * pData)
 			m_pCharList[i] = new class CCharInfo;
 			memcpy(m_pCharList[i]->m_cName, cp, 10);
 			cp += 10;
-			if (*cp == 0)
-			{	m_pCharList[i]->m_sSex = NULL; // Sex
-				cp += 40;
-			}else
-			{	cp++;
+			//if (*cp == 0)
+			//{	m_pCharList[i]->m_sSex = NULL; // Sex
+			//	cp += 40;
+			//}else
+			//{	cp++;
 				wp = (WORD *)cp;
 				m_pCharList[i]->m_sAppr1 = *wp;
 				cp += 2;
@@ -13142,46 +13143,47 @@ void CGame::LogResponseHandler(char * pData)
 				dwp = (DWORD *)cp;
 				m_pCharList[i]->m_iExp = *dwp;
 				cp += 4;
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_sStr = *wp;
-				cp += 2;
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_sVit = *wp;
-				cp += 2;
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_sDex = *wp;
-				cp += 2;
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_sInt = *wp;
-				cp += 2;
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_sMag = *wp;
-				cp += 2;
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_sChr = *wp;
-				cp += 2;
-				ip = (int *)cp; // v1.4
-				m_pCharList[i]->m_iApprColor = *ip;
-				cp += 4;
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_iYear = (int)*wp;
-				cp += 2;
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_iMonth = (int)*wp;
-				cp += 2;
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_iDay = (int)*wp;
-				cp += 2;
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_iHour = (int)*wp;
-				cp += 2;
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_iMinute = (int)*wp;
-				cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_sStr = *wp;
+				//cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_sVit = *wp;
+				//cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_sDex = *wp;
+				//cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_sInt = *wp;
+				//cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_sMag = *wp;
+				//cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_sChr = *wp;
+				//cp += 2;
+				//ip = (int *)cp; // v1.4
+				//m_pCharList[i]->m_iApprColor = *ip;
+				//cp += 4;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_iYear = (int)*wp;
+				//cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_iMonth = (int)*wp;
+				//cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_iDay = (int)*wp;
+				//cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_iHour = (int)*wp;
+				//cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_iMinute = (int)*wp;
+				//cp += 2;
+				Pop(cp, m_pCharList[i]->m_iApprColor);
 				ZeroMemory(m_pCharList[i]->m_cMapName, sizeof(m_pCharList[i]->m_cMapName));
 				memcpy(m_pCharList[i]->m_cMapName, cp, 10);
 				cp += 10;
-		}	}
+		}	//}
 		ChangeGameMode(DEF_GAMEMODE_ONLOGRESMSG);
 		ZeroMemory(m_cMsg, sizeof(m_cMsg));
 		strcpy(m_cMsg, "3A");
@@ -13189,34 +13191,41 @@ void CGame::LogResponseHandler(char * pData)
 
 	case DEF_LOGRESMSGTYPE_CONFIRM:
 		cp = (pData + DEF_INDEX2_MSGTYPE + 2);
-		wp = (WORD *)cp;
-		wServerUpperVersion = *wp;
-		cp += 2;
-		wp = (WORD *)cp;
-		wServerLowerVersion = *wp;
-		cp += 2;
-//		m_iAccountStatus = (int)*cp;
-		cp++;
-		wp = (WORD *)cp;
-		m_iAccntYear = *wp;
-		cp += 2;
-		wp = (WORD *)cp;
-		m_iAccntMonth = *wp;
-		cp += 2;
-		wp = (WORD *)cp;
-		m_iAccntDay = *wp;
-		cp += 2;
-		wp = (WORD *)cp;
-		m_iIpYear = *wp;
-		cp += 2;
-		wp = (WORD *)cp;
-		m_iIpMonth = *wp;
-		cp += 2;
-		wp = (WORD *)cp;
-		m_iIpDay = *wp;
-		cp += 2;
-		m_iTotalChar = (int)*cp;
-		cp++;
+//		wp = (WORD *)cp;
+//		wServerUpperVersion = *wp;
+//		cp += 2;
+//		wp = (WORD *)cp;
+//		wServerLowerVersion = *wp;
+//		cp += 2;
+////		m_iAccountStatus = (int)*cp;
+//		cp++;
+//		wp = (WORD *)cp;
+//		m_iAccntYear = *wp;
+//		cp += 2;
+//		wp = (WORD *)cp;
+//		m_iAccntMonth = *wp;
+//		cp += 2;
+//		wp = (WORD *)cp;
+//		m_iAccntDay = *wp;
+//		cp += 2;
+//		wp = (WORD *)cp;
+//		m_iIpYear = *wp;
+//		cp += 2;
+//		wp = (WORD *)cp;
+//		m_iIpMonth = *wp;
+//		cp += 2;
+//		wp = (WORD *)cp;
+//		m_iIpDay = *wp;
+//		cp += 2;
+//		m_iTotalChar = (int)*cp;
+//		cp++;
+		m_iAccntYear = 0;
+		m_iAccntMonth = 0;
+		m_iAccntDay = 0;
+		m_iIpYear = 0;
+		m_iIpMonth = 0;
+		m_iIpDay = 0;
+		Pop(cp, m_iTotalChar);
 		for (i = 0; i < 4; i++)
 		if (m_pCharList[i] != NULL)
 		{	delete m_pCharList[i];
@@ -13227,11 +13236,11 @@ void CGame::LogResponseHandler(char * pData)
 		{	m_pCharList[i] = new class CCharInfo;
 			memcpy(m_pCharList[i]->m_cName, cp, 10);
 			cp += 10;
-			if (*cp == 0)
+			/*if (*cp == 0)
 			{	m_pCharList[i]->m_sSex = NULL;
 				cp += 40;
 			}else
-			{	cp++;
+			{	cp++;*/
 				wp = (WORD *)cp;
 				m_pCharList[i]->m_sAppr1 = *wp;
 				cp += 2;
@@ -13256,58 +13265,59 @@ void CGame::LogResponseHandler(char * pData)
 				dwp = (DWORD *)cp;
 				m_pCharList[i]->m_iExp = *dwp;
 				cp += 4;
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_sStr = *wp;
-				cp += 2;
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_sVit = *wp;
-				cp += 2;
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_sDex = *wp;
-				cp += 2;
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_sInt = *wp;
-				cp += 2;
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_sMag = *wp;
-				cp += 2;
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_sChr = *wp;
-				cp += 2;
-				ip = (int *)cp;
-				m_pCharList[i]->m_iApprColor = *ip; // v1.4
-				cp += 4;
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_iYear = (int)*wp;
-				cp += 2;
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_iMonth = (int)*wp;
-				cp += 2;
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_iDay = (int)*wp;
-				cp += 2;
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_iHour = (int)*wp;
-				cp += 2;
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_iMinute = (int)*wp;
-				cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_sStr = *wp;
+				//cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_sVit = *wp;
+				//cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_sDex = *wp;
+				//cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_sInt = *wp;
+				//cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_sMag = *wp;
+				//cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_sChr = *wp;
+				//cp += 2;
+				//ip = (int *)cp;
+				//m_pCharList[i]->m_iApprColor = *ip; // v1.4
+				//cp += 4;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_iYear = (int)*wp;
+				//cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_iMonth = (int)*wp;
+				//cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_iDay = (int)*wp;
+				//cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_iHour = (int)*wp;
+				//cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_iMinute = (int)*wp;
+				//cp += 2;
+				Pop(cp, m_pCharList[i]->m_iApprColor);
 				ZeroMemory(m_pCharList[i]->m_cMapName, sizeof(m_pCharList[i]->m_cMapName));
 				memcpy(m_pCharList[i]->m_cMapName, cp, 10);
 				cp += 10;
-		}	}
-		ip = (int *)cp;
+		}	//}
+		/*ip = (int *)cp;
 		m_iTimeLeftSecAccount = *ip;
 		cp += 4;
 		ip = (int *)cp;
 		m_iTimeLeftSecIP = *ip;
-		cp += 4;
+		cp += 4;*/
 		ChangeGameMode(DEF_GAMEMODE_ONSELECTCHARACTER);
 		ClearContents_OnSelectCharacter();
 
 #ifndef _DEBUG
-		if ( (wServerUpperVersion!=DEF_UPPERVERSION) || (wServerLowerVersion!=DEF_LOWERVERSION) )
-			ChangeGameMode(DEF_GAMEMODE_ONVERSIONNOTMATCH);
+		//if ( (wServerUpperVersion!=DEF_UPPERVERSION) || (wServerLowerVersion!=DEF_LOWERVERSION) )
+			//ChangeGameMode(DEF_GAMEMODE_ONVERSIONNOTMATCH);
 #endif
 		break;
 
@@ -13401,8 +13411,10 @@ void CGame::LogResponseHandler(char * pData)
 		memcpy(cCharName, cp, 10);
 		cp += 10;
 
-		m_iTotalChar = (int)*cp;
-		cp++;
+		/*m_iTotalChar = (int)*cp;
+		cp++;*/
+
+		Pop(cp, m_iTotalChar);
 
 		for (i = 0; i < 4; i++)
 		if (m_pCharList[i] != NULL) delete m_pCharList[i];
@@ -13411,12 +13423,12 @@ void CGame::LogResponseHandler(char * pData)
 			m_pCharList[i] = new class CCharInfo;
 			memcpy(m_pCharList[i]->m_cName, cp, 10);
 			cp += 10;
-			if (*cp == 0) {
-				m_pCharList[i]->m_sSex = NULL; // Sex
-				cp += 40;
-			}
-			else {
-				cp++;
+			//if (*cp == 0) {
+			//	m_pCharList[i]->m_sSex = NULL; // Sex
+			//	cp += 40;
+			//}
+			//else {
+			//	cp++;
 
 				wp = (WORD *)cp;
 				m_pCharList[i]->m_sAppr1 = *wp;
@@ -13450,58 +13462,60 @@ void CGame::LogResponseHandler(char * pData)
 				m_pCharList[i]->m_iExp = *dwp;
 				cp += 4;
 
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_sStr = *wp;
-				cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_sStr = *wp;
+				//cp += 2;
 
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_sVit = *wp;
-				cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_sVit = *wp;
+				//cp += 2;
 
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_sDex = *wp;
-				cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_sDex = *wp;
+				//cp += 2;
 
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_sInt = *wp;
-				cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_sInt = *wp;
+				//cp += 2;
 
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_sMag = *wp;
-				cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_sMag = *wp;
+				//cp += 2;
 
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_sChr = *wp;
-				cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_sChr = *wp;
+				//cp += 2;
 
-				ip = (int *)cp; // v1.4
-				m_pCharList[i]->m_iApprColor = *ip;
-				cp += 4;
+				//ip = (int *)cp; // v1.4
+				//m_pCharList[i]->m_iApprColor = *ip;
+				//cp += 4;
 
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_iYear = (int)*wp;
-				cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_iYear = (int)*wp;
+				//cp += 2;
 
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_iMonth = (int)*wp;
-				cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_iMonth = (int)*wp;
+				//cp += 2;
 
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_iDay = (int)*wp;
-				cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_iDay = (int)*wp;
+				//cp += 2;
 
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_iHour = (int)*wp;
-				cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_iHour = (int)*wp;
+				//cp += 2;
 
-				wp = (WORD *)cp;
-				m_pCharList[i]->m_iMinute = (int)*wp;
-				cp += 2;
+				//wp = (WORD *)cp;
+				//m_pCharList[i]->m_iMinute = (int)*wp;
+				//cp += 2;
+
+				Pop(cp, m_pCharList[i]->m_iApprColor);
 
 				ZeroMemory(m_pCharList[i]->m_cMapName, sizeof(m_pCharList[i]->m_cMapName));
 				memcpy(m_pCharList[i]->m_cMapName, cp, 10);
 				cp += 10;
-			}
+			//}
 		}
 		ChangeGameMode(DEF_GAMEMODE_ONLOGRESMSG);
 		ZeroMemory(m_cMsg, sizeof(m_cMsg));
@@ -13538,11 +13552,7 @@ void CGame::LogResponseHandler(char * pData)
 			memcpy(m_cGameServerName, cp, 20);
 			cp += 20;
 			m_pGSock = new class XSocket(m_hWnd, DEF_SOCKETBLOCKLIMIT);
-			if (m_iGameServerMode == 1)
-			{	m_pGSock->bConnect(m_cLogServerAddr, iGameServerPort, WM_USER_GAMESOCKETEVENT);
-			}else
-			{	m_pGSock->bConnect(cGameServerAddr, iGameServerPort, WM_USER_GAMESOCKETEVENT);
-			}
+			m_pGSock->bConnect(m_cLogServerAddr, m_iGameServerPort, WM_USER_GAMESOCKETEVENT);
 			m_pGSock->bInitBufferSize(30000);
 		}
 		break;
@@ -13676,6 +13686,7 @@ BOOL CGame::bReadIp()
 {	ZeroMemory(m_cLogServerAddr, sizeof(m_cLogServerAddr));
 	strcpy(m_cLogServerAddr, DEF_SERVER_IP);
 	m_iLogServerPort = DEF_SERVER_PORT;
+	m_iGameServerPort = DEF_GSERVER_PORT;
 	return TRUE;
 }
 
@@ -13728,11 +13739,16 @@ BOOL CGame::bReadLoginConfigFile(char * cFn)
 				}
 				cReadMode = 0;
 				break;
+			case 4: // log-server-port
+				m_iGameServerPort = atoi(token);
+				cReadMode = 0;
+				break;
 			}
 		}else
 		{	if (memcmp(token, "log-server-address",18) == 0) cReadMode = 1;
 			if (memcmp(token, "log-server-port",15) == 0)    cReadMode = 2;
 			if (memcmp(token, "game-server-mode",16) == 0)   cReadMode = 3;
+			if (memcmp(token, "game-server-port", 16) == 0)   cReadMode = 3;
 		}
 		token = strtok( NULL, seps );
 	}
@@ -13743,6 +13759,7 @@ DEFAULT_IP:
 	ZeroMemory(m_cLogServerAddr, sizeof(m_cLogServerAddr));
 	strcpy(m_cLogServerAddr, DEF_SERVER_IP);
 	m_iLogServerPort = DEF_SERVER_PORT;
+	m_iGameServerPort = DEF_GSERVER_PORT;
 	return TRUE;
 }
 
@@ -23172,7 +23189,7 @@ void CGame::UpdateScreen_OnCreateNewCharacter()
 			ZeroMemory(m_cPlayerName, sizeof(m_cPlayerName));
 			strcpy(m_cPlayerName, cName);
 			m_pLSock = new class XSocket(m_hWnd, DEF_SOCKETBLOCKLIMIT);
-			m_pLSock->bConnect(m_cLogServerAddr, m_iLogServerPort, WM_USER_LOGSOCKETEVENT);
+			m_pLSock->bConnect(m_cLogServerAddr, m_iLogServerPort + (rand() % 1), WM_USER_LOGSOCKETEVENT);
 			m_pLSock->bInitBufferSize(30000);
 			ChangeGameMode(DEF_GAMEMODE_ONCONNECTING);
 			m_dwConnectMode = MSGID_REQUEST_CREATENEWCHARACTER;
@@ -23841,7 +23858,7 @@ void CGame::UpdateScreen_OnCreateNewAccount()
 				return;
 			}
 			m_pLSock = new class XSocket(m_hWnd, DEF_SOCKETBLOCKLIMIT);
-			m_pLSock->bConnect(m_cLogServerAddr, m_iLogServerPort, WM_USER_LOGSOCKETEVENT);
+			m_pLSock->bConnect(m_cLogServerAddr, m_iLogServerPort + (rand() % 1), WM_USER_LOGSOCKETEVENT);
 			m_pLSock->bInitBufferSize(30000);
 
 			ChangeGameMode(DEF_GAMEMODE_ONCONNECTING);
@@ -23911,7 +23928,7 @@ void CGame::UpdateScreen_OnCreateNewAccount()
 			}
 
 			m_pLSock = new class XSocket(m_hWnd, DEF_SOCKETBLOCKLIMIT);
-			m_pLSock->bConnect(m_cLogServerAddr, m_iLogServerPort, WM_USER_LOGSOCKETEVENT);
+			m_pLSock->bConnect(m_cLogServerAddr, m_iLogServerPort + (rand() % 1), WM_USER_LOGSOCKETEVENT);
 			m_pLSock->bInitBufferSize(30000);
 			ChangeGameMode(DEF_GAMEMODE_ONCONNECTING);
 			m_dwConnectMode = MSGID_REQUEST_CREATENEWACCOUNT;
@@ -24953,7 +24970,7 @@ void CGame::UpdateScreen_OnQueryForceLogin()
 		switch (iMIbuttonNum) {
 		case 1:
 			m_pLSock = new class XSocket(m_hWnd, DEF_SOCKETBLOCKLIMIT);
-			m_pLSock->bConnect(m_cLogServerAddr, m_iLogServerPort, WM_USER_LOGSOCKETEVENT);
+			m_pLSock->bConnect(m_cLogServerAddr, m_iLogServerPort + (rand() % 1), WM_USER_LOGSOCKETEVENT);
 			m_pLSock->bInitBufferSize(30000);
 			ChangeGameMode(DEF_GAMEMODE_ONCONNECTING);
 			m_dwConnectMode  = MSGID_REQUEST_ENTERGAME;
@@ -25338,7 +25355,7 @@ void CGame::UpdateScreen_OnQueryDeleteCharacter()
 		switch (iMIbuttonNum) {
 		case 1:
 			m_pLSock = new class XSocket(m_hWnd, DEF_SOCKETBLOCKLIMIT);
-			m_pLSock->bConnect(m_cLogServerAddr, m_iLogServerPort, WM_USER_LOGSOCKETEVENT);
+			m_pLSock->bConnect(m_cLogServerAddr, m_iLogServerPort + (rand() % 1), WM_USER_LOGSOCKETEVENT);
 			m_pLSock->bInitBufferSize(30000);
 			ChangeGameMode(DEF_GAMEMODE_ONCONNECTING);
 			m_dwConnectMode  = MSGID_REQUEST_DELETECHARACTER;
@@ -28026,7 +28043,7 @@ void CGame::UpdateScreen_OnChangePassword()
 			strcpy(m_cNewPassword, cNewPassword);
 			strcpy(m_cNewPassConfirm, cNewPassConfirm);
 			m_pLSock = new class XSocket(m_hWnd, DEF_SOCKETBLOCKLIMIT);
-			m_pLSock->bConnect(m_cLogServerAddr, m_iLogServerPort, WM_USER_LOGSOCKETEVENT);
+			m_pLSock->bConnect(m_cLogServerAddr, m_iLogServerPort + (rand() % 1), WM_USER_LOGSOCKETEVENT);
 			m_pLSock->bInitBufferSize(30000);
 			ChangeGameMode(DEF_GAMEMODE_ONCONNECTING);
 			m_dwConnectMode = MSGID_REQUEST_CHANGEPASSWORD;
@@ -28159,7 +28176,7 @@ void CGame::UpdateScreen_OnChangePassword()
 			strcpy(m_cNewPassword, cNewPassword);
 			strcpy(m_cNewPassConfirm, cNewPassConfirm);
 						m_pLSock = new class XSocket(m_hWnd, DEF_SOCKETBLOCKLIMIT);
-			m_pLSock->bConnect(m_cLogServerAddr, m_iLogServerPort, WM_USER_LOGSOCKETEVENT);
+			m_pLSock->bConnect(m_cLogServerAddr, m_iLogServerPort + (rand() % 1), WM_USER_LOGSOCKETEVENT);
 			m_pLSock->bInitBufferSize(30000);
 			ChangeGameMode(DEF_GAMEMODE_ONCONNECTING);
 			m_dwConnectMode = MSGID_REQUEST_CHANGEPASSWORD;

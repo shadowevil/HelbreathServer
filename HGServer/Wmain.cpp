@@ -46,6 +46,8 @@ MMRESULT        G_mmTimer = NULL;
 class XSocket * G_pListenSock = NULL;
 class XSocket * G_pLogSock    = NULL;
 class CGame *   G_pGame       = NULL;
+class XSocket* G_pLoginSock = NULL;
+class LoginServer* g_login;
 
 int             G_iQuitProgramCount = 0;
 BOOL			G_bIsThread = TRUE;
@@ -113,6 +115,10 @@ LRESULT CALLBACK WndProc( HWND hWnd,UINT message,WPARAM wParam,LPARAM lParam )
 		OnAccept();
 		break;
 
+	case WM_USER_ACCEPT_LOGIN:
+		OnAcceptLogin();
+		break;
+
 	//case WM_KEYUP:
 	//	OnKeyUp(wParam, lParam);
 	//	break;
@@ -142,7 +148,10 @@ LRESULT CALLBACK WndProc( HWND hWnd,UINT message,WPARAM wParam,LPARAM lParam )
 		break;
 	
 	default: 
-		if ((message >= WM_ONLOGSOCKETEVENT + 1) && (message <= WM_ONLOGSOCKETEVENT + DEF_MAXSUBLOGSOCK))
+		/*if ((message >= WM_ONLOGSOCKETEVENT + 1) && (message <= WM_ONLOGSOCKETEVENT + DEF_MAXSUBLOGSOCK))
+			G_pGame->OnSubLogSocketEvent(message, wParam, lParam);*/
+
+		if ((message >= WM_USER_BOT_ACCEPT + 1) && (message <= WM_USER_BOT_ACCEPT + DEF_MAXCLIENTLOGINSOCK))
 			G_pGame->OnSubLogSocketEvent(message, wParam, lParam);
 		
 		if ((message >= WM_ONCLIENTSOCKETEVENT) && (message < WM_ONCLIENTSOCKETEVENT + DEF_MAXCLIENTS)) 
@@ -549,10 +558,22 @@ void Initialize()
 	{
 		G_pListenSock->bListen(G_pGame->m_cGameServerAddrInternal, G_pGame->m_iGameServerPort, WM_USER_ACCEPT);
 	}
-	if (G_pGame->m_iGameServerMode == 2)
+	else if (G_pGame->m_iGameServerMode == 2)
 	{
 		G_pListenSock->bListen(G_pGame->m_cGameServerAddr, G_pGame->m_iGameServerPort, WM_USER_ACCEPT);
 	}
+
+	G_pLoginSock = new class XSocket(G_hWnd, DEF_SERVERSOCKETBLOCKLIMIT);
+	
+	if (G_pGame->m_iGameServerMode == 1)
+	{
+		G_pLoginSock->bListen(G_pGame->m_cGameServerAddrInternal, G_pGame->m_iLogServerPort, WM_USER_ACCEPT_LOGIN);
+	}
+	else if (G_pGame->m_iGameServerMode == 2)
+	{
+		G_pLoginSock->bListen(G_pGame->m_cGameServerAddr, G_pGame->m_iLogServerPort, WM_USER_ACCEPT_LOGIN);
+	}
+
 	pLogFile = NULL;
 	//pLogFile = fopen("test.log","wt+");
 }
@@ -561,10 +582,17 @@ void OnDestroy()
 {
 	if (G_pListenSock != NULL) delete G_pListenSock;
 	if (G_pLogSock != NULL) delete G_pLogSock;
+	if (G_pLoginSock) delete G_pLoginSock;
 
 	if (G_pGame != NULL) {
 		G_pGame->Quit();
 		delete G_pGame;
+	}
+
+	if (g_login)
+	{
+		delete g_login;
+		g_login = NULL;
 	}
 
 	if (G_mmTimer != NULL) _StopTimer(G_mmTimer);
@@ -573,6 +601,11 @@ void OnDestroy()
 	if (pLogFile != NULL) fclose(pLogFile);
 
 	PostQuitMessage(0);
+}
+
+void OnAcceptLogin()
+{
+	G_pGame->bAcceptLogin(G_pLoginSock);
 }
 
 

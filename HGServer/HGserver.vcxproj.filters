@@ -105,6 +105,8 @@
     <ClInclude Include="DebugDialog.h" />
     <ClInclude Include="GlobalDef.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="LoginServer.h" />
+    <ClInclude Include="PartyManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BuildItem.cpp">
@@ -180,6 +182,8 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="DebugDialog.cpp" />
+    <ClCompile Include="LoginServer.cpp" />
+    <ClCompile Include="PartyManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="Winmm.lib">

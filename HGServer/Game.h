@@ -47,6 +47,7 @@
 #include "TeleportLoc.h"
 #include "GlobalDef.h"
 #include "TempNpcItem.h"
+#include "PartyManager.h"
 
 #define DEF_MAXADMINS				50
 #define DEF_MAXMAPS					100
@@ -57,6 +58,7 @@
 #define DEF_MAXBANNED				500
 #define DEF_MAXNPCITEMS				1000
 #define DEF_MAXCLIENTS				2000
+#define DEF_MAXCLIENTLOGINSOCK		2000
 #define DEF_MAXNPCS					5000
 #define DEF_MAXITEMTYPES			5000
 #define DEF_CLIENTTIMEOUT			10000
@@ -84,7 +86,7 @@
 
 #define DEF_MAXNOTIFYMSGS		300			// 최대 공지사항 메시지 
 #define DEF_MAXSKILLPOINTS		700			// 스킬 포인트의 총합 
-#define DEF_NIGHTTIME			40
+#define DEF_NIGHTTIME			30
 
 #define DEF_CHARPOINTLIMIT		1000		// 각각의 특성치의 최대값 
 #define DEF_RAGPROTECTIONTIME	7000		// 몇 초 이상 지나면 랙으로 부터 보호를 받는지 
@@ -200,9 +202,91 @@
 
 #define NO_MSGSPEEDCHECK
 
+
+using namespace std;
+typedef unsigned long long u64;
+typedef signed long long i64;
+typedef unsigned long u32;
+typedef signed long i32;
+typedef unsigned short u16;
+typedef signed short i16;
+typedef unsigned char u8;
+typedef signed char i8;
+
+
+template <typename T, class = typename enable_if<!is_pointer<T>::value>::type >
+static void Push(char*& cp, T value) {
+	auto p = (T*)cp;
+	*p = (T)value;
+	cp += sizeof(T);
+}
+
+template <typename T, class = typename enable_if<!is_pointer<T>::value>::type >
+static void Pop(char*& cp, T& v) {
+	T* p = (T*)cp;
+	v = *p;
+	cp += sizeof(T);
+}
+
+static void Push(char*& dest, const char* src, u32 len) {
+	memcpy(dest, src, len);
+	dest += len;
+}
+
+static void Push(char*& dest, const char* src) {
+
+	strcpy(dest, src);
+	dest += strlen(src) + 1;
+}
+
+static void Push(char*& dest, const string& str) {
+	strcpy(dest, str.c_str());
+	dest += str.length() + 1;
+}
+
+static void Pop(char*& src, char* dest, u32 len) {
+	memcpy(dest, src, len);
+	src += len;
+}
+static void Pop(char*& src, char* dest) {
+
+	u32 len = strlen(src) + 1;
+	memcpy(dest, src, len);
+	src += len;
+}
+
+static void Pop(char*& src, string& str) {
+	str = src;
+	src += str.length() + 1;
+}
+
+
+struct LoginClient
+{
+	LoginClient(HWND hWnd)
+	{
+		_sock = NULL;
+		_sock = new class XSocket(hWnd, DEF_CLIENTSOCKETBLOCKLIMIT);
+		_sock->bInitBufferSize(DEF_MSGBUFFERSIZE);
+		_timeout_tm = 0;
+	}
+
+	u32 _timeout_tm;
+	~LoginClient();
+	XSocket* _sock;
+	char _ip[21];
+};
+
+
 class CGame  
 {
 public:
+
+	LoginClient* _lclients[DEF_MAXCLIENTLOGINSOCK];
+
+	bool bAcceptLogin(XSocket* sock);
+
+	void PartyOperation(char* pData);
 
 	void SetHeldenianMode();
 	void AdminOrder_GetFightzoneTicket(int iClientH);
@@ -627,11 +711,14 @@ public:
 	void SendNotifyMsg(int iFromH, int iToH, WORD wMsgType, DWORD sV1, DWORD sV2, DWORD sV3, char * pString, DWORD sV4 = NULL, DWORD sV5 = NULL, DWORD sV6 = NULL, DWORD sV7 = NULL, DWORD sV8 = NULL, DWORD sV9 = NULL, char * pString2 = NULL);
 	void GiveItemHandler(int iClientH, short sItemIndex, int iAmount, short dX, short dY, WORD wObjectID, char * pItemName);
 	void RequestPurchaseItemHandler(int iClientH, char * pItemName, int iNum);
-	void ResponseDisbandGuildHandler(char * pData, DWORD dwMsgSize);
+	void ResponseDisbandGuildHandler(char * pData, int iType);
 	void RequestDisbandGuildHandler(int iClientH, char * pData, DWORD dwMsgSize);
 	void RequestCreateNewGuildHandler(int iClientH, char * pData, DWORD dwMsgSize);
-	void ResponseCreateNewGuildHandler(char * pData, DWORD dwMsgSize);
+	void ResponseCreateNewGuildHandler(char * pData, int iType);
 	int  iClientMotion_Stop_Handler(int iClientH, short sX, short sY, char cDir);
+
+	void RequestCreateNewGuild(int iClientH, char* pData);
+	void RequestDisbandGuild(int iClientH, char* pData);
 	
 	BOOL bEquipItemHandler(int iClientH, short sItemIndex, BOOL bNotify = TRUE);
 	BOOL _bAddClientItemList(int iClientH, class CItem * pItem, int * pDelReq);
@@ -662,7 +749,7 @@ public:
 	
 	BOOL _bGetIsStringIsNumber(char * pStr);
 	BOOL _bInitItemAttr(class CItem * pItem, char * pItemName);
-	BOOL bReadProgramConfigFile(char * cFn);
+	BOOL bReadProgramConfigFile(char * cFn, bool ismaps);
 	void GameProcess();
 	void InitPlayerData(int iClientH, char * pData, DWORD dwSize);
 	void ResponsePlayerDataHandler(char * pData, DWORD dwSize);
@@ -775,11 +862,11 @@ public:
 	class CMsg    * m_pMsgQuene[DEF_MSGQUENESIZE];
 	int             m_iQueneHead, m_iQueneTail;
 	int             m_iTotalMaps;
-	class XSocket * m_pMainLogSock, * m_pGateSock;
-	int				m_iGateSockConnRetryTimes;
+	//class XSocket * m_pMainLogSock, * m_pGateSock;
+	//int				m_iGateSockConnRetryTimes;
 	class CMisc     m_Misc;
 	BOOL			m_bIsGameStarted;
-	BOOL            m_bIsLogSockAvailable, m_bIsGateSockAvailable;
+	//BOOL            m_bIsLogSockAvailable, m_bIsGateSockAvailable;
 	BOOL			m_bIsItemAvailable, m_bIsBuildItemAvailable, m_bIsNpcAvailable, m_bIsMagicAvailable;
 	BOOL			m_bIsSkillAvailable, m_bIsPortionAvailable, m_bIsQuestAvailable, m_bIsTeleportAvailable;
 	class CItem   * m_pItemConfigList[DEF_MAXITEMTYPES];
@@ -788,6 +875,15 @@ public:
 	class CSkill  * m_pSkillConfigList[DEF_MAXSKILLTYPE];
 	class CQuest  * m_pQuestConfigList[DEF_MAXQUESTTYPE];
 	//class CTeleport * m_pTeleportConfigList[DEF_MAXTELEPORTTYPE];
+
+	class XSocket* _lsock;
+
+	class PartyManager* m_pPartyManager;
+
+	void OnClientLoginRead(int h);
+	void DeleteLoginClient(int h);
+
+	std::vector<LoginClient*> _lclients_disconn;
 
 	char            m_pMsgBuffer[DEF_MSGBUFFERSIZE+1];
 

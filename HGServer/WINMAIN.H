@@ -7,6 +7,7 @@ BOOL InitApplication( HINSTANCE hInstance);
 BOOL InitInstance( HINSTANCE hInstance, int nCmdShow );
 LRESULT CALLBACK WndProc( HWND hWnd,UINT message,WPARAM wParam,LPARAM lParam );
 void OnAccept();
+void OnAcceptLogin();
 void PutLogList(char * cMsg);
 void OnKeyUp(WPARAM wParam, LPARAM lParam);
 void UpdateScreen();

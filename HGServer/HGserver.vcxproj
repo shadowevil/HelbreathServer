@@ -135,6 +135,7 @@
     <ClInclude Include="GlobalDef.h" />
     <ClInclude Include="GuildsMan.h" />
     <ClInclude Include="Item.h" />
+    <ClInclude Include="LoginServer.h" />
     <ClInclude Include="Magic.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MessageIndex.h" />
@@ -144,6 +145,7 @@
     <ClInclude Include="NetMessages.h" />
     <ClInclude Include="Npc.h" />
     <ClInclude Include="OccupyFlag.h" />
+    <ClInclude Include="PartyManager.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Portion.h" />
     <ClInclude Include="Quest.h" />
@@ -169,6 +171,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GuildsMan.cpp" />
     <ClCompile Include="Item.cpp" />
+    <ClCompile Include="LoginServer.cpp" />
     <ClCompile Include="Magic.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Mineral.cpp" />
@@ -176,6 +179,7 @@
     <ClCompile Include="Msg.cpp" />
     <ClCompile Include="Npc.cpp" />
     <ClCompile Include="OccupyFlag.cpp" />
+    <ClCompile Include="PartyManager.cpp" />
     <ClCompile Include="Portion.cpp" />
     <ClCompile Include="Quest.cpp" />
     <ClCompile Include="Skill.cpp" />
