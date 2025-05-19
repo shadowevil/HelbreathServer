@@ -41194,22 +41194,17 @@ void CGame::RequestNoticementHandler(int iClientH)
 {
 	DWORD* dwp, lpNumberOfBytesRead;
 	WORD* wp;
-	char cFile[16] = "Noticement.txt";
 
 	if (m_pClientList[iClientH] == NULL) return;
 
-	HANDLE hFile = CreateFile(cFile, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
+	HANDLE hFile = CreateFile("GameConfigs\\Noticement.txt", GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
 	DWORD dwFileSize = GetFileSize(hFile, NULL);
 	if (dwFileSize == -1) {
-		wsprintf(G_cTxt, "(X) CRITICAL ERROR! Cannot open configuration file(%s)!", cFile);
-		PutLogList(cFile);
 		return;
 	}
 
 	ZeroMemory(G_cData50000, sizeof(G_cData50000));
 
-	wsprintf(G_cTxt, "(!) Reading %s configuration file...", cFile);
-	PutLogList(G_cTxt);
 	SetFilePointer(hFile, 0, 0, FILE_BEGIN);
 
 	ReadFile(hFile, G_cData50000 + 6, dwFileSize, &lpNumberOfBytesRead, NULL);
@@ -41228,8 +41223,6 @@ void CGame::RequestNoticementHandler(int iClientH)
 	case DEF_XSOCKEVENT_SOCKETERROR:
 	case DEF_XSOCKEVENT_CRITICALERROR:
 	case DEF_XSOCKEVENT_SOCKETCLOSED:
-		wsprintf(G_cTxt, "(X) Cannot send configuration file(%s) contents to Client(%d)!", cFile, iClientH);
-		PutLogList(G_cTxt);
 		return;
 	}
 }
@@ -47101,9 +47094,9 @@ void CGame::OnStartGameSignal()
 	if (m_pMapList[i] != NULL) 
 		_bReadMapInfoFiles(i);
 	
-	bReadCrusadeStructureConfigFile("..\\GameConfigs\\Crusade.cfg");
+	bReadCrusadeStructureConfigFile("GameConfigs\\Crusade.cfg");
 	_LinkStrikePointMapIndex();
-	bReadScheduleConfigFile("..\\GameConfigs\\Schedule.cfg");
+	bReadScheduleConfigFile("GameConfigs\\Schedule.cfg");
 
 	bReadCrusadeGUIDFile("GameData\\CrusadeGUID.txt");
 	bReadApocalypseGUIDFile("GameData\\ApocalypseGUID.txt");
