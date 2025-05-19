@@ -2273,6 +2273,8 @@ void CGame::RequestInitDataHandler(int iClientH, char * pData, char cKey)
 
 	SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_HUNGER, m_pClientList[iClientH]->m_iHungerStatus, NULL, NULL, NULL);
 	SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_SUPERATTACKLEFT, NULL, NULL, NULL, NULL);
+
+	RequestNoticementHandler(iClientH); // send noticement when log in
 }
 
 int CGame::iComposeInitMapData(short sX, short sY, int iClientH, char * pData)
@@ -11452,7 +11454,7 @@ void CGame::MsgProcess()
 				break;
 
 			case MSGID_REQUEST_NOTICEMENT:
-				RequestNoticementHandler(iClientH, pData);
+				//RequestNoticementHandler(iClientH, pData);
 				break;
 			
 			case MSGID_BWM_COMMAND_SHUTUP:
@@ -41186,6 +41188,50 @@ void CGame::RequestNoticementHandler(int iClientH, char * pData)
 		iRet = m_pClientList[iClientH]->m_pXSock->iSendMsg(cData, 6);
 	}
 	// ¿¡·¯ ¹ß»ýÇØµµ ²÷Áö ¾Ê´Â´Ù.	
+}
+
+void CGame::RequestNoticementHandler(int iClientH)
+{
+	DWORD* dwp, lpNumberOfBytesRead;
+	WORD* wp;
+	char cFile[16] = "Noticement.txt";
+
+	if (m_pClientList[iClientH] == NULL) return;
+
+	HANDLE hFile = CreateFile(cFile, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
+	DWORD dwFileSize = GetFileSize(hFile, NULL);
+	if (dwFileSize == -1) {
+		wsprintf(G_cTxt, "(X) CRITICAL ERROR! Cannot open configuration file(%s)!", cFile);
+		PutLogList(cFile);
+		return;
+	}
+
+	ZeroMemory(G_cData50000, sizeof(G_cData50000));
+
+	wsprintf(G_cTxt, "(!) Reading %s configuration file...", cFile);
+	PutLogList(G_cTxt);
+	SetFilePointer(hFile, 0, 0, FILE_BEGIN);
+
+	ReadFile(hFile, G_cData50000 + 6, dwFileSize, &lpNumberOfBytesRead, NULL);
+	CloseHandle(hFile);
+
+	dwp = (DWORD*)(G_cData50000);
+	*dwp = MSGID_RESPONSE_NOTICEMENT;
+
+	wp = (WORD*)(G_cData50000 + DEF_INDEX2_MSGTYPE);
+	*wp = DEF_MSGTYPE_CONFIRM;
+
+	int iRet = m_pClientList[iClientH]->m_pXSock->iSendMsg(G_cData50000, dwFileSize + 8);
+
+	switch (iRet) {
+	case DEF_XSOCKEVENT_QUENEFULL:
+	case DEF_XSOCKEVENT_SOCKETERROR:
+	case DEF_XSOCKEVENT_CRITICALERROR:
+	case DEF_XSOCKEVENT_SOCKETCLOSED:
+		wsprintf(G_cTxt, "(X) Cannot send configuration file(%s) contents to Client(%d)!", cFile, iClientH);
+		PutLogList(G_cTxt);
+		return;
+	}
 }
 
 void CGame::_bDecodeNoticementFileContents(char *pData, DWORD dwMsgSize)

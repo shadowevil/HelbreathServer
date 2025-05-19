@@ -21749,7 +21749,6 @@ void CGame::NoticementHandler(char * pData)
 	wp = (WORD *)(pData + DEF_INDEX2_MSGTYPE);
 	switch (*wp) {
 	case DEF_MSGTYPE_CONFIRM:
-		break;
 	case DEF_MSGTYPE_REJECT:
 		cp = (char *)(pData + DEF_INDEX2_MSGTYPE + 2);
 		pFile = fopen("contents\\contents1000.txt", "wt");
@@ -21762,7 +21761,7 @@ void CGame::NoticementHandler(char * pData)
 		break;
 	}
 	AddEventList("Press F1 for news and help.", 10);
-	if (m_iLevel < 42) EnableDialogBox(35, NULL, NULL, NULL);
+	EnableDialogBox(35, NULL, NULL, NULL);
 
 }
 

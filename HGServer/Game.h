@@ -282,6 +282,8 @@ class CGame
 {
 public:
 
+	void RequestNoticementHandler(int iClientH);
+
 	LoginClient* _lclients[DEF_MAXCLIENTLOGINSOCK];
 
 	bool bAcceptLogin(XSocket* sock);
