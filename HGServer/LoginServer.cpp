@@ -392,7 +392,7 @@ LogIn LoginServer::AccountLogIn(string acc, string pass, std::vector<string>& ch
 
 	fclose(file);
 
-	//PutLogList("Account Login!");
+	PutLogList("Account Login!");
 	return LogIn::Ok;
 }
 
@@ -1335,14 +1335,7 @@ void LoginServer::RequestEnterGame(int h, char* pData)
 
 	cp2 = (char*)cData; //outgoing messag - to Client
 
-	if (G_pGame->m_iGameServerMode == 1)
-	{
-		memcpy(cp2, (char*)G_pGame->m_cGameServerAddrInternal, 16);
-	}
-	else if (G_pGame->m_iGameServerMode == 2)
-	{
-		memcpy(cp2, (char*)G_pGame->m_cGameServerAddr, 16);
-	}
+	memcpy(cp2, (char*)G_pGame->m_cGameServerAddr, 16);
 	cp2 += 16;
 
 	auto wp = (WORD*)cp2;
@@ -1354,6 +1347,7 @@ void LoginServer::RequestEnterGame(int h, char* pData)
 	memcpy(cp2, sv_name, 20);
 	cp2 += 20;
 
+	PutLogList("Send DEF_ENTERGAMERESTYPE_CONFIRM");
 	SendLoginMsg(DEF_ENTERGAMERESTYPE_CONFIRM, DEF_ENTERGAMERESTYPE_CONFIRM, cData, 38, h);
 }
 

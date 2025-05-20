@@ -554,25 +554,10 @@ void Initialize()
 	G_mmTimer = _StartTimer(300);
 
 	G_pListenSock = new class XSocket(G_hWnd, DEF_SERVERSOCKETBLOCKLIMIT);
-	if (G_pGame->m_iGameServerMode == 1)
-	{
-		G_pListenSock->bListen(G_pGame->m_cGameServerAddrInternal, G_pGame->m_iGameServerPort, WM_USER_ACCEPT);
-	}
-	else if (G_pGame->m_iGameServerMode == 2)
-	{
-		G_pListenSock->bListen(G_pGame->m_cGameServerAddr, G_pGame->m_iGameServerPort, WM_USER_ACCEPT);
-	}
+	G_pListenSock->bListen(G_pGame->m_cGameServerAddr, G_pGame->m_iGameServerPort, WM_USER_ACCEPT);
 
 	G_pLoginSock = new class XSocket(G_hWnd, DEF_SERVERSOCKETBLOCKLIMIT);
-	
-	if (G_pGame->m_iGameServerMode == 1)
-	{
-		G_pLoginSock->bListen(G_pGame->m_cGameServerAddrInternal, G_pGame->m_iLogServerPort, WM_USER_ACCEPT_LOGIN);
-	}
-	else if (G_pGame->m_iGameServerMode == 2)
-	{
-		G_pLoginSock->bListen(G_pGame->m_cGameServerAddr, G_pGame->m_iLogServerPort, WM_USER_ACCEPT_LOGIN);
-	}
+	G_pLoginSock->bListen(G_pGame->m_cGameServerAddr, G_pGame->m_iLogServerPort, WM_USER_ACCEPT_LOGIN);
 
 	pLogFile = NULL;
 	//pLogFile = fopen("test.log","wt+");

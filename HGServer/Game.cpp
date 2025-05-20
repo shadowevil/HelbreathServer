@@ -224,10 +224,10 @@ CGame::CGame(HWND hWnd)
 //	/for (i = 0; i < DEF_MAXTELEPORTTYPE; i++)
 //		m_pTeleportConfigList[i] = NULL;
 
-	for (i = 0; i < DEF_MAXSUBLOGSOCK; i++) {
+	/*for (i = 0; i < DEF_MAXSUBLOGSOCK; i++) {
 		m_pSubLogSock[i] = NULL;
 		m_bIsSubLogSockAvailable[i] = FALSE;
-	}
+	}*/
 
 	for (i = 0; i < DEF_MAXBUILDITEMS; i++) 
 		m_pBuildItemList[i] = NULL;
@@ -450,7 +450,9 @@ void CGame::OnClientSocketEvent(UINT message, WPARAM wParam, LPARAM lParam)
  DWORD dwTime = timeGetTime();
 
 	iTmp = WM_ONCLIENTSOCKETEVENT;
-	iClientH = message - iTmp;
+	iClientH = (int)(message - iTmp);
+
+	if (iClientH <= 0) return;
 	
 	if (m_pClientList[iClientH] == NULL) return;
 
@@ -839,14 +841,7 @@ BOOL CGame::bInit()
 	//PutLogList(cTxt);
 
 	_lsock = new class XSocket(m_hWnd, DEF_SERVERSOCKETBLOCKLIMIT);
-	if (m_iGameServerMode == 1)
-	{
-		_lsock->bConnect(m_cGameServerAddrInternal, m_iLogServerPort, WM_ONLOGSOCKETEVENT);
-	}
-	else if (m_iGameServerMode == 2)
-	{
-		_lsock->bConnect(m_cGameServerAddr, m_iLogServerPort, WM_ONLOGSOCKETEVENT);
-	}
+	_lsock->bConnect(m_cGameServerAddr, m_iLogServerPort, WM_ONLOGSOCKETEVENT);
 	_lsock->bInitBufferSize(DEF_MSGBUFFERSIZE);
 
 	m_bF1pressed = m_bF4pressed = m_bF12pressed = m_bF5pressed = FALSE;
@@ -4903,24 +4898,6 @@ BOOL CGame::bReadProgramConfigFile(char * cFn, bool ismaps)
 					break;
 
 				case 2:
-					// v2.04
-					ZeroMemory(m_cGameServerAddr, sizeof(m_cGameServerAddr));
-					char ServerAddr[50];
-					::gethostname(ServerAddr,50); 
-					struct hostent *pHostEnt;
-					pHostEnt = ::gethostbyname(ServerAddr);
-					if( pHostEnt != NULL ){
-						wsprintf(ServerAddr, "%d.%d.%d.%d",
-							( pHostEnt->h_addr_list[0][0] & 0x00ff ),
-							( pHostEnt->h_addr_list[0][1] & 0x00ff ),
-							( pHostEnt->h_addr_list[0][2] & 0x00ff ),
-							( pHostEnt->h_addr_list[0][3] & 0x00ff ) );
-					}
-					strcpy(m_cGameServerAddr,ServerAddr );
-
-					wsprintf(cTxt, "(*) Game server address : %s", m_cGameServerAddr);
-					PutLogList(cTxt);
-
 					m_iGameServerPort = atoi(token);
 					wsprintf(cTxt, "(*) Game server port : %d", m_iGameServerPort);
 					PutLogList(cTxt);
@@ -4929,34 +4906,6 @@ BOOL CGame::bReadProgramConfigFile(char * cFn, bool ismaps)
 
 				case 3:
 					ZeroMemory(m_cLogServerAddr, sizeof(m_cLogServerAddr));
-
-					if (bLogDNS == true) { //bLogDNS by Snaipperi
-						PutLogList(cTxt);
-						char *cAddress = token;
-						char cDnsResult[40];
-						struct hostent *host_entry;
-
-						host_entry = gethostbyname(cAddress);
-						if (host_entry == NULL) {
-							wsprintf(cTxt, "(!)DNS (%s) failed",token);
-							PutLogList(cTxt);
-							return FALSE;
-						}
-
-							wsprintf(cDnsResult, "%d.%d.%d.%d",
-							( pHostEnt->h_addr_list[0][0] & 0x00ff ),
-							( pHostEnt->h_addr_list[0][1] & 0x00ff ),
-							( pHostEnt->h_addr_list[0][2] & 0x00ff ),
-							( pHostEnt->h_addr_list[0][3] & 0x00ff ) );
-				
-							wsprintf(cTxt, "(!)DNS from (%s) to (%s) success!",token,cDnsResult);
-							PutLogList(cTxt);
-							strcpy(m_cLogServerAddr, cDnsResult);
-							wsprintf(cTxt, "(*) Log server address : %s", m_cLogServerAddr);
-							PutLogList(cTxt);
-							cReadMode = 0;
-							break;
-					}
 
 					if (strlen(token) > 20) {
 						wsprintf(cTxt, "(!!!) Log server address(%s) must within 20 chars!", token);
@@ -4991,33 +4940,6 @@ BOOL CGame::bReadProgramConfigFile(char * cFn, bool ismaps)
 
 				case 6:
 					ZeroMemory(m_cGateServerAddr, sizeof(m_cGateServerAddr));
-					if (bGateDNS == true) { //bGateDNS by Snaipperi
-						PutLogList(cTxt);
-						char *cAddress = token;
-						char cDnsResult[40];
-						struct hostent *host_entry;
-
-						host_entry = gethostbyname(cAddress);
-						if (host_entry == NULL) {
-							wsprintf(cTxt, "(!)DNS (%s) failed",token);
-							PutLogList(cTxt);
-							return FALSE;
-						}
-
-							wsprintf(cDnsResult, "%d.%d.%d.%d",
-							( host_entry->h_addr_list[0][0] & 0x00ff ),
-							( host_entry->h_addr_list[0][1] & 0x00ff ),
-							( host_entry->h_addr_list[0][2] & 0x00ff ),
-							( host_entry->h_addr_list[0][3] & 0x00ff ) );
-				
-							wsprintf(cTxt, "(!)DNS from (%s) to (%s) success!",token,cDnsResult);
-							PutLogList(cTxt);
-							strcpy(m_cGateServerAddr, cDnsResult);
-							wsprintf(cTxt, "(*) Gate server address : %s", m_cGateServerAddr);
-							PutLogList(cTxt);
-							cReadMode = 0;
-							break;
-					}
 				
 					if (strlen(token) > 20) {
 						wsprintf(cTxt, "(!!!) Gate server address(%s) must within 20 chars!", token);

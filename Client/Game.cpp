@@ -13314,11 +13314,6 @@ void CGame::LogResponseHandler(char * pData)
 		cp += 4;*/
 		ChangeGameMode(DEF_GAMEMODE_ONSELECTCHARACTER);
 		ClearContents_OnSelectCharacter();
-
-#ifndef _DEBUG
-		//if ( (wServerUpperVersion!=DEF_UPPERVERSION) || (wServerLowerVersion!=DEF_LOWERVERSION) )
-			//ChangeGameMode(DEF_GAMEMODE_ONVERSIONNOTMATCH);
-#endif
 		break;
 
 	case DEF_LOGRESMSGTYPE_REJECT:
@@ -13747,8 +13742,8 @@ BOOL CGame::bReadLoginConfigFile(char * cFn)
 		}else
 		{	if (memcmp(token, "log-server-address",18) == 0) cReadMode = 1;
 			if (memcmp(token, "log-server-port",15) == 0)    cReadMode = 2;
-			if (memcmp(token, "game-server-mode",16) == 0)   cReadMode = 3;
-			if (memcmp(token, "game-server-port", 16) == 0)   cReadMode = 3;
+			//if (memcmp(token, "game-server-mode",16) == 0)   cReadMode = 3;
+			if (memcmp(token, "game-server-port", 16) == 0)   cReadMode = 4;
 		}
 		token = strtok( NULL, seps );
 	}
@@ -38792,11 +38787,7 @@ void CGame::NotifyMsg_ServerChange(char * pData)
 		m_pLSock = NULL;
 	}
 	m_pLSock = new class XSocket(m_hWnd, DEF_SOCKETBLOCKLIMIT);
-	if (m_iGameServerMode == 1) // LAN
-	{	m_pLSock->bConnect(m_cLogServerAddr, iWorldServerPort, WM_USER_LOGSOCKETEVENT);
-	}else
-	{	m_pLSock->bConnect(cWorldServerAddr, iWorldServerPort, WM_USER_LOGSOCKETEVENT);
-	}
+	m_pLSock->bConnect(m_cLogServerAddr, iWorldServerPort, WM_USER_LOGSOCKETEVENT);
 	m_pLSock->bInitBufferSize(30000);
 
 	m_bIsPoisoned = FALSE;
