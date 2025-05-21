@@ -103,7 +103,6 @@ void LoginServer::GetCharList(string acc, char*& cp2, std::vector<string> chars)
 		char seps[] = "= \t\n";
 		char cFileName[112] = {};
 		char cDir[112] = {};
-		//mkdir("DataBase");
 		mkdir("Characters");
 		ZeroMemory(cFileName, sizeof(cFileName));
 		strcat(cFileName, "Characters");
@@ -136,8 +135,8 @@ void LoginServer::GetCharList(string acc, char*& cp2, std::vector<string> chars)
 		WORD cSex = 0, cSkin = 0;
 		WORD iLevel = 0;
 		DWORD iExp = 0;
-		u64 iApprColor = 0;
-		char cMapName[21] = {};
+		DWORD iApprColor = 0; // Antes tenías u64, pero el cliente espera DWORD (4 bytes)
+		char cMapName[11] = {}; // Siempre tamaño 11 para forzar terminador
 
 		while (token != NULL)
 		{
@@ -145,71 +144,29 @@ void LoginServer::GetCharList(string acc, char*& cp2, std::vector<string> chars)
 			{
 				switch (cReadModeA)
 				{
-				case 1: // appr1
-					sAppr1 = atoi(token);
-					cReadModeA = 0;
-					break;
-
-				case 2: // appr2
-					sAppr2 = atoi(token);
-					cReadModeA = 0;
-					break;
-
-				case 3: // appr3
-					sAppr3 = atoi(token);
-					cReadModeA = 0;
-					break;
-
-				case 4: // appr4
-					sAppr4 = atoi(token);
-					cReadModeA = 0;
-					break;
-
-				case 5: // sex-status
-					cSex = atoi(token);
-					cReadModeA = 0;
-					break;
-
-				case 6: // skin-status
-					cSkin = atoi(token);
-					cReadModeA = 0;
-					break;
-
-				case 7: // character-LEVEL
-					iLevel = atoi(token);
-					cReadModeA = 0;
-					break;
-
-				case 14: // character-EXP
-					iExp = atoi(token);
-					cReadModeA = 0;
-					break;
-
-				case 15: // appr-color
-				{
-					string tok = token;
-					iApprColor = std::stoull(token);
-					cReadModeA = 0;
-					break;
-				}
-
-				case 17: // character-loc-map
-					strcpy(cMapName, token);
-					cReadModeA = 0;
-					break;
+				case 1: sAppr1 = atoi(token); cReadModeA = 0; break;
+				case 2: sAppr2 = atoi(token); cReadModeA = 0; break;
+				case 3: sAppr3 = atoi(token); cReadModeA = 0; break;
+				case 4: sAppr4 = atoi(token); cReadModeA = 0; break;
+				case 5: cSex = atoi(token); cReadModeA = 0; break;
+				case 6: cSkin = atoi(token); cReadModeA = 0; break;
+				case 7: iLevel = atoi(token); cReadModeA = 0; break;
+				case 14: iExp = atoi(token); cReadModeA = 0; break;
+				case 15: iApprColor = (DWORD)strtoul(token, nullptr, 10); cReadModeA = 0; break;
+				case 17: ZeroMemory(cMapName, sizeof(cMapName)); strncpy(cMapName, token, 10); cMapName[10] = 0; cReadModeA = 0; break;
 				}
 			}
 			else {
-				if (memcmp(token, "appr1", 5) == 0)					cReadModeA = 1;
-				if (memcmp(token, "appr2", 5) == 0)					cReadModeA = 2;
-				if (memcmp(token, "appr3", 5) == 0)					cReadModeA = 3;
-				if (memcmp(token, "appr4", 5) == 0)					cReadModeA = 4;
-				if (memcmp(token, "sex-status", 10) == 0)			cReadModeA = 5;
-				if (memcmp(token, "skin-status", 11) == 0)			cReadModeA = 6;
-				if (memcmp(token, "character-LEVEL", 15) == 0)		cReadModeA = 7;
-				if (memcmp(token, "character-EXP", 13) == 0)		cReadModeA = 14;
-				if (memcmp(token, "appr-color-new", 14) == 0)			cReadModeA = 15;
-				if (memcmp(token, "character-loc-map", 17) == 0)	cReadModeA = 17;
+				if (memcmp(token, "appr1", 5) == 0) cReadModeA = 1;
+				if (memcmp(token, "appr2", 5) == 0) cReadModeA = 2;
+				if (memcmp(token, "appr3", 5) == 0) cReadModeA = 3;
+				if (memcmp(token, "appr4", 5) == 0) cReadModeA = 4;
+				if (memcmp(token, "sex-status", 10) == 0) cReadModeA = 5;
+				if (memcmp(token, "skin-status", 11) == 0) cReadModeA = 6;
+				if (memcmp(token, "character-LEVEL", 15) == 0) cReadModeA = 7;
+				if (memcmp(token, "character-EXP", 13) == 0) cReadModeA = 14;
+				if (memcmp(token, "appr-color-new", 14) == 0) cReadModeA = 15;
+				if (memcmp(token, "character-loc-map", 17) == 0) cReadModeA = 17;
 			}
 			token = pStrTok->pGet();
 		}
@@ -217,22 +174,26 @@ void LoginServer::GetCharList(string acc, char*& cp2, std::vector<string> chars)
 		delete pStrTok;
 		delete[] cp;
 
+		// Nombre
 		char cName[11] = {};
-		wsprintf(cName, "%s", (char*)chars[i].c_str());
+		ZeroMemory(cName, sizeof(cName));
+		strncpy(cName, chars[i].c_str(), 10); // Solo 10 bytes
+		cName[10] = 0;
 
-		Push(cp2, cName, 10);
-		Push(cp2, sAppr1);
+		Push(cp2, cName, 10);          // <- SOLO 10 bytes, sin null extra
+		Push(cp2, sAppr1);             // short
 		Push(cp2, sAppr2);
 		Push(cp2, sAppr3);
 		Push(cp2, sAppr4);
-		Push(cp2, cSex);
-		Push(cp2, cSkin);
-		Push(cp2, iLevel);
-		Push(cp2, iExp);
-		Push(cp2, iApprColor);
-		Push(cp2, cMapName, 10);
+		Push(cp2, cSex);               // WORD
+		Push(cp2, cSkin);              // WORD
+		Push(cp2, iLevel);             // WORD
+		Push(cp2, iExp);               // DWORD
+		Push(cp2, iApprColor);         // DWORD
+		Push(cp2, cMapName, 10);       // SOLO 10 BYTES del mapname, igual que nombre
 	}
 }
+
 
 LogIn LoginServer::AccountLogIn(string acc, string pass, std::vector<string>& chars)
 {
