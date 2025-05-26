@@ -380,7 +380,7 @@ BOOL CMap::bSetItem(short sX, short sY, class CItem * pItem)
 }
 
 
-class CItem * CMap::pGetItem(short sX, short sY, short * pRemainItemSprite, short * pRemainItemSpriteFrame, char * pRemainItemColor) //v1.4 color
+class CItem* CMap::pGetItem(short sX, short sY, short* pRemainItemID, char* pRemainItemColor, DWORD* pRemainItemAttr) //v1.4 color
 {
  class CTile * pTile;	
  class CItem * pItem;
@@ -398,15 +398,15 @@ class CItem * CMap::pGetItem(short sX, short sY, short * pRemainItemSprite, shor
 	pTile->m_pItem[pTile->m_cTotalItem] = NULL;
 	
 	if (pTile->m_pItem[0] == NULL) {
-		*pRemainItemSprite      = 0;
-		*pRemainItemSpriteFrame = 0;	
-		*pRemainItemColor       = 0;
+		*pRemainItemID = 0;
+		*pRemainItemColor = 0;
+		*pRemainItemAttr = 0;
 	}
 	else
 	{
-		*pRemainItemSprite      = pTile->m_pItem[0]->m_sSprite;
-		*pRemainItemSpriteFrame = pTile->m_pItem[0]->m_sSpriteFrame;
-		*pRemainItemColor       = pTile->m_pItem[0]->m_cItemColor;
+		*pRemainItemID = pTile->m_pItem[0]->m_sIDnum;
+		*pRemainItemColor = pTile->m_pItem[0]->m_cItemColor;
+		*pRemainItemAttr = pTile->m_pItem[0]->m_dwAttribute;
 	}
 
 	return pItem;

@@ -2270,6 +2270,62 @@ void CGame::RequestInitDataHandler(int iClientH, char * pData, char cKey)
 	SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_SUPERATTACKLEFT, NULL, NULL, NULL, NULL);
 
 	RequestNoticementHandler(iClientH); // send noticement when log in
+
+	bSendClientConfig(iClientH, "GameConfigs\\Item.cfg");
+	bSendClientConfig(iClientH, "GameConfigs\\Item2.cfg");
+	bSendClientConfig(iClientH, "GameConfigs\\Item3.cfg");
+}
+
+BOOL CGame::bSendClientConfig(int iClientH, char* cFile)
+{
+	DWORD* dwp, lpNumberOfBytesRead;
+	WORD* wp;
+	int iRet;
+
+	HANDLE hFile = CreateFile(cFile, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
+	DWORD dwFileSize = GetFileSize(hFile, NULL);
+	if (dwFileSize == -1) {
+		wsprintf(G_cTxt, "(X) CRITICAL ERROR! Cannot open configuration file(%s)!", cFile);
+		PutLogList(cFile);
+		return FALSE;
+	}
+
+	ZeroMemory(G_cData50000, sizeof(G_cData50000));
+
+	//wsprintf(G_cTxt, "(!) Reading %s configuration file...", cFile);
+	//PutLogList(G_cTxt);
+	SetFilePointer(hFile, 0, 0, FILE_BEGIN);
+
+	ReadFile(hFile, G_cData50000 + 6, dwFileSize, &lpNumberOfBytesRead, NULL);
+	CloseHandle(hFile);
+
+	dwp = (DWORD*)(G_cData50000);
+	*dwp = MSGID_ITEMCONFIGURATIONCONTENTS;
+
+	wp = (WORD*)(G_cData50000 + DEF_INDEX2_MSGTYPE);
+	*wp = DEF_MSGTYPE_CONFIRM;
+
+	iRet = m_pClientList[iClientH]->m_pXSock->iSendMsg(G_cData50000, dwFileSize + 8);
+
+	switch (iRet) {
+	case DEF_XSOCKEVENT_QUENEFULL:
+	case DEF_XSOCKEVENT_SOCKETERROR:
+	case DEF_XSOCKEVENT_CRITICALERROR:
+	case DEF_XSOCKEVENT_SOCKETCLOSED:
+		wsprintf(G_cTxt, "(X) Cannot send configuration file(%s) contents to Client(%d)", cFile, iClientH);
+		PutLogList(G_cTxt);
+		DeleteClient(iClientH, TRUE, TRUE);
+		delete m_pClientList[iClientH];
+		m_pClientList[iClientH] = NULL;
+		return FALSE;
+
+	default:
+		//wsprintf(G_cTxt, "(O) Send configuration file(%s) contents to Client(%d)", cFile, iClientH);
+		//PutLogList(G_cTxt);
+		break;
+	}
+
+	return TRUE;
 }
 
 int CGame::iComposeInitMapData(short sX, short sY, int iClientH, char * pData)
@@ -2281,6 +2337,7 @@ int CGame::iComposeInitMapData(short sX, short sY, int iClientH, char * pData)
  int     sTemp, sTemp2;
  WORD  * wp;
  char  * cp;
+ DWORD* dwp;
 
 	if (m_pClientList[iClientH] == NULL) return 0;
 
@@ -2553,17 +2610,21 @@ int CGame::iComposeInitMapData(short sX, short sY, int iClientH, char * pData)
 			}
 
 			if (pTile->m_pItem[0] != NULL) {
-				sp  = (short *)cp;
-				*sp	= pTile->m_pItem[0]->m_sSprite;
+				// Centu - id num
+				sp = (short*)cp;
+				*sp = pTile->m_pItem[0]->m_sIDnum;
 				cp += 2;
 				iSize += 2;
-				sp  = (short *)cp;
-				*sp	= pTile->m_pItem[0]->m_sSpriteFrame;
-				cp += 2;
-				iSize += 2;
+
 				*cp = pTile->m_pItem[0]->m_cItemColor;
 				cp++;
 				iSize++;
+
+				// Centu - attribute
+				dwp = (DWORD*)cp;
+				*dwp = pTile->m_pItem[0]->m_dwAttribute;
+				cp += 4;
+				iSize += 4;
 			}
 
 			if (pTile->m_sDynamicObjectType != NULL) {
@@ -3354,6 +3415,7 @@ short * sp, * pTotal;
 int iTemp, iTemp2;
 WORD  * wp;
 char  * cp;
+DWORD* dwp;
 
 	if (m_pClientList[iClientH] == NULL) return 0;
 
@@ -3641,19 +3703,19 @@ char  * cp;
 					}// if ((ucHeader & 0x02) != 0)
 
 					if (pTile->m_pItem[0] != NULL) {
-						sp  = (short *)cp;
-						*sp	= pTile->m_pItem[0]->m_sSprite;
-						cp += 2;
-						iSize += 2;
-
-						sp  = (short *)cp;
-						*sp	= pTile->m_pItem[0]->m_sSpriteFrame;
+						sp = (short*)cp;
+						*sp = pTile->m_pItem[0]->m_sIDnum; 
 						cp += 2;
 						iSize += 2;
 
 						*cp = pTile->m_pItem[0]->m_cItemColor;
 						cp++;
 						iSize++;
+
+						dwp = (DWORD*)cp;
+						*dwp = pTile->m_pItem[0]->m_dwAttribute;
+						cp += 4;
+						iSize += 4;
 					}
 
 					if (pTile->m_sDynamicObjectType != NULL) {
@@ -12151,7 +12213,7 @@ void CGame::DropItemHandler(int iClientH, short sItemIndex, int iAmount, char * 
 
 			SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pClientList[iClientH]->m_cMapIndex,
 				m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY,  
-				pItem->m_sSprite, pItem->m_sSpriteFrame, pItem->m_cItemColor); // v1.4 color
+				pItem->m_sIDnum, NULL, pItem->m_cItemColor, pItem->m_dwAttribute); // v1.4 color
 
 			SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_DROPITEMFIN_COUNTCHANGED, sItemIndex, iAmount, NULL, NULL);
 		}
@@ -12183,9 +12245,10 @@ void CGame::DropItemHandler(int iClientH, short sItemIndex, int iAmount, char * 
 
 			SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pClientList[iClientH]->m_cMapIndex,
 				m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY,  
-				m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_sSprite, 
-				m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_sSpriteFrame, 
-				m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_cItemColor); //v1.4 color
+				m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_sIDnum, 
+				NULL, 
+				m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_cItemColor,
+				m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_dwAttribute); //v1.4 color
 		}
 
 		m_pClientList[iClientH]->m_pItemList[sItemIndex] = NULL;
@@ -12240,7 +12303,9 @@ int CGame::iClientMotion_GetItem_Handler(int iClientH, short sX, short sY, char 
 	m_pMapList[m_pClientList[iClientH]->m_cMapIndex]->ClearOwner(0, iClientH, DEF_OWNERTYPE_PLAYER, sX, sY);
 	m_pMapList[m_pClientList[iClientH]->m_cMapIndex]->SetOwner(iClientH, DEF_OWNERTYPE_PLAYER, sX, sY);
 
-	pItem = m_pMapList[m_pClientList[iClientH]->m_cMapIndex]->pGetItem(sX, sY, &sRemainItemSprite, &sRemainItemSpriteFrame, &cRemainItemColor);
+	short sIDNum;
+	DWORD dwAttribute;
+	pItem = m_pMapList[m_pClientList[iClientH]->m_cMapIndex]->pGetItem(sX, sY, &sIDNum, &cRemainItemColor, &dwAttribute);
 	if (pItem != NULL) {
 		if (_bAddClientItemList(iClientH, pItem, &iEraseReq) == TRUE) {
 
@@ -12309,7 +12374,7 @@ int CGame::iClientMotion_GetItem_Handler(int iClientH, short sX, short sY, char 
 
 			SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_SETITEM, m_pClientList[iClientH]->m_cMapIndex,
 				                        m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY,
-				                        sRemainItemSprite, sRemainItemSpriteFrame, cRemainItemColor);
+				                        sIDNum, NULL, cRemainItemColor, dwAttribute);
 
 			iRet = m_pClientList[iClientH]->m_pXSock->iSendMsg(cData, 53);						
 			switch (iRet) {
@@ -12851,6 +12916,72 @@ void CGame::SendEventToNearClient_TypeB(DWORD dwMsgID, WORD wMsgType, char cMapI
 				 (m_pClientList[i]->m_sY <= sY + 10 ) ) {
 
 				iRet = m_pClientList[i]->m_pXSock->iSendMsg(cData, 18);
+			}
+		}
+	}
+}
+
+void CGame::SendEventToNearClient_TypeB(DWORD dwMsgID, WORD wMsgType, char cMapIndex, short sX, short sY, short sV1, short sV2, short sV3, DWORD dwV4)
+{
+	int i, iRet, iShortCutIndex;
+	char* cp, cData[100];
+	DWORD* dwp, dwTime;
+	WORD* wp;
+	short* sp;
+	BOOL bFlag;
+
+	ZeroMemory(cData, sizeof(cData));
+
+	dwp = (DWORD*)(cData + DEF_INDEX4_MSGID);
+	*dwp = dwMsgID;
+	wp = (WORD*)(cData + DEF_INDEX2_MSGTYPE);
+	*wp = wMsgType;
+
+	cp = (char*)(cData + DEF_INDEX2_MSGTYPE + 2);
+
+	sp = (short*)cp;
+	*sp = sX;
+	cp += 2;
+
+	sp = (short*)cp;
+	*sp = sY;
+	cp += 2;
+
+	sp = (short*)cp;
+	*sp = sV1;
+	cp += 2;
+
+	sp = (short*)cp;
+	*sp = sV2;
+	cp += 2;
+
+	sp = (short*)cp;
+	*sp = sV3;
+	cp += 2;
+
+	dwp = (DWORD*)cp;
+	*dwp = dwV4;
+	cp += 4;
+
+	dwTime = timeGetTime();
+
+	//for (i = 1; i < DEF_MAXCLIENTS; i++)
+	bFlag = TRUE;
+	iShortCutIndex = 0;
+	while (bFlag == TRUE) {
+		// DEF_MAXCLIENTS 
+		i = m_iClientShortCut[iShortCutIndex];
+		iShortCutIndex++;
+		if (i == 0) bFlag = FALSE;
+
+		if ((bFlag == TRUE) && (m_pClientList[i] != NULL)) {
+			if ((m_pClientList[i]->m_cMapIndex == cMapIndex) &&
+				(m_pClientList[i]->m_sX >= sX - 12) &&
+				(m_pClientList[i]->m_sX <= sX + 12) &&
+				(m_pClientList[i]->m_sY >= sY - 10) &&
+				(m_pClientList[i]->m_sY <= sY + 10)) {
+
+				iRet = m_pClientList[i]->m_pXSock->iSendMsg(cData, 20);
 			}
 		}
 	}
@@ -13501,7 +13632,7 @@ void CGame::GiveItemHandler(int iClientH, short sItemIndex, int iAmount, short d
 			// ´Ù¸¥ Å¬¶óÀÌ¾ðÆ®¿¡°Ô ¾ÆÀÌÅÛÀÌ ¶³¾îÁø °ÍÀ» ¾Ë¸°´Ù. 
 			SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pClientList[iClientH]->m_cMapIndex,
 				                        m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY,  
-				                        pItem->m_sSprite, pItem->m_sSpriteFrame, pItem->m_cItemColor); //v1.4 color
+				                        pItem->m_sIDnum, NULL, pItem->m_cItemColor, pItem->m_dwAttribute); //v1.4 color
 		}
 		else {
 			// ¾ÆÀÌÅÛÀ» ÁØ´Ù.
@@ -13609,7 +13740,7 @@ void CGame::GiveItemHandler(int iClientH, short sItemIndex, int iAmount, short d
 					// ´Ù¸¥ Å¬¶óÀÌ¾ðÆ®¿¡°Ô ¾ÆÀÌÅÛÀÌ ¶³¾îÁø °ÍÀ» ¾Ë¸°´Ù. 
 					SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pClientList[iClientH]->m_cMapIndex,
 							                    m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY,  
-								                pItem->m_sSprite, pItem->m_sSpriteFrame, pItem->m_cItemColor); //v1.4 color
+								                pItem->m_sIDnum, NULL, pItem->m_cItemColor, pItem->m_dwAttribute); //v1.4 color
 
 					// ´õÀÌ»ó °¡Áú¼ö ¾ø´Ù´Â ¸Þ½ÃÁö¸¦ º¸³½´Ù.
 					dwp  = (DWORD *)(cData + DEF_INDEX4_MSGID);
@@ -13652,7 +13783,7 @@ void CGame::GiveItemHandler(int iClientH, short sItemIndex, int iAmount, short d
 						// ´Ù¸¥ Å¬¶óÀÌ¾ðÆ®¿¡°Ô ¾ÆÀÌÅÛÀÌ ¶³¾îÁø °ÍÀ» ¾Ë¸°´Ù. 
 						SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pClientList[iClientH]->m_cMapIndex,
 								                    m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY,  
-									                pItem->m_sSprite, pItem->m_sSpriteFrame, pItem->m_cItemColor); // v1.4 color
+									                pItem->m_sIDnum, NULL, pItem->m_cItemColor, pItem->m_dwAttribute); // v1.4 color
 					}
 		   		}
 				else {
@@ -13665,7 +13796,7 @@ void CGame::GiveItemHandler(int iClientH, short sItemIndex, int iAmount, short d
 					// ´Ù¸¥ Å¬¶óÀÌ¾ðÆ®¿¡°Ô ¾ÆÀÌÅÛÀÌ ¶³¾îÁø °ÍÀ» ¾Ë¸°´Ù. 
 					SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pClientList[iClientH]->m_cMapIndex,
 							                    m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY,  
-								                pItem->m_sSprite, pItem->m_sSpriteFrame, pItem->m_cItemColor); // v1.4 color
+								                pItem->m_sIDnum, NULL, pItem->m_cItemColor, pItem->m_dwAttribute); // v1.4 color
 				}
 			}
 		}
@@ -13715,9 +13846,10 @@ void CGame::GiveItemHandler(int iClientH, short sItemIndex, int iAmount, short d
 			// ´Ù¸¥ Å¬¶óÀÌ¾ðÆ®¿¡°Ô ¾ÆÀÌÅÛÀÌ ¶³¾îÁø °ÍÀ» ¾Ë¸°´Ù. 
 			SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pClientList[iClientH]->m_cMapIndex,
 				                        m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY,  
-				                        m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_sSprite, 
-								        m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_sSpriteFrame, 
-										m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_cItemColor); // v1.4 color
+				                        m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_sIDnum, 
+								        NULL, 
+										m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_cItemColor,
+										m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_dwAttribute); // v1.4 color
 		
 			// ÀÌÁ¦ ¾ÆÀÌÅÛÀÌ ¶³¾îÁ³À¸¹Ç·Î ¸®½ºÆ®¿¡¼­ »èÁ¦ÇÒ°ÍÀ» Åëº¸ÇÑ´Ù.
 			SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_DROPITEMFIN_ERASEITEM, sItemIndex, iAmount, NULL, NULL);
@@ -13864,9 +13996,10 @@ void CGame::GiveItemHandler(int iClientH, short sItemIndex, int iAmount, short d
 					
 					SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pClientList[iClientH]->m_cMapIndex,
 							                    m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY,  
-								                m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_sSprite, 
-										        m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_sSpriteFrame, 
-												m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_cItemColor); // v1.4 color
+								                m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_sIDnum, 
+										        NULL, 
+												m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_cItemColor,
+												m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_dwAttribute); // v1.4 color
 
 					dwp  = (DWORD *)(cData + DEF_INDEX4_MSGID);
 					*dwp = MSGID_NOTIFY;
@@ -13901,9 +14034,10 @@ void CGame::GiveItemHandler(int iClientH, short sItemIndex, int iAmount, short d
 						
 						SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pClientList[iClientH]->m_cMapIndex,
 							                        m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY,  
-							                        m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_sSprite, 
-							                        m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_sSpriteFrame, 
-													m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_cItemColor); // v1.4 color
+							                        m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_sIDnum, 
+							                        NULL, 
+													m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_cItemColor,
+													m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_dwAttribute); // v1.4 color
 					}
 				}
 				else if (memcmp(m_pNpcList[sOwnerH]->m_cNpcName, "Kennedy", 7) == 0) {
@@ -13934,10 +14068,11 @@ void CGame::GiveItemHandler(int iClientH, short sItemIndex, int iAmount, short d
 						_bItemLog(DEF_ITEMLOG_DROP, iClientH, NULL, m_pClientList[iClientH]->m_pItemList[sItemIndex]);
 					
 						SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pClientList[iClientH]->m_cMapIndex,
-							                    m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY,  
-								                m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_sSprite, 
-										        m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_sSpriteFrame, 
-												m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_cItemColor); // v1.4 color
+													m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY,
+													m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_sIDnum,
+													NULL,
+													m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_cItemColor,
+													m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_dwAttribute); // v1.4 color
 
 						// v1.4 ¾ÆÀÌÅÛ Àü´ÞÀÌ ½ÇÆÐÇßÀ½À» ¾Ë¸®´Â ¹æ¹ý 
 						ZeroMemory(cCharName, sizeof(cCharName));
@@ -13956,10 +14091,11 @@ void CGame::GiveItemHandler(int iClientH, short sItemIndex, int iAmount, short d
 					
 					// ´Ù¸¥ Å¬¶óÀÌ¾ðÆ®¿¡°Ô ¾ÆÀÌÅÛÀÌ ¶³¾îÁø °ÍÀ» ¾Ë¸°´Ù. 
 					SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pClientList[iClientH]->m_cMapIndex,
-							                    m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY,  
-								                m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_sSprite, 
-										        m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_sSpriteFrame, 
-												m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_cItemColor); // v1.4 color
+												m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY,
+												m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_sIDnum,
+												NULL,
+												m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_cItemColor,
+												m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_dwAttribute); // v1.4 color
 
 					// v1.4 ¾ÆÀÌÅÛ Àü´ÞÀÌ ½ÇÆÐÇßÀ½À» ¾Ë¸®´Â ¹æ¹ý 
 					ZeroMemory(cCharName, sizeof(cCharName));
@@ -17222,6 +17358,8 @@ void CGame::PlayerMagicHandler(int iClientH, int dX, int dY, short sType, BOOL b
 	WORD  * wp, wWeaponType;
 	short sEqStatus;
 	int iMapSide = 0;
+	short sIDNum;
+	DWORD dwAttr;
 
 	dwTime = timeGetTime();
 	m_pClientList[iClientH]->m_bMagicConfirm = TRUE;
@@ -18967,7 +19105,7 @@ void CGame::PlayerMagicHandler(int iClientH, int dX, int dY, short sType, BOOL b
 
 					// Â´Ã™Â¸Â¥ Ã…Â¬Â¶Ã³Ã€ÃŒÂ¾Ã°Ã†Â®Â¿Â¡Â°Ã” Â¾Ã†Ã€ÃŒÃ…Ã›Ã€ÃŒ Â¶Â³Â¾Ã®ÃÃ¸ Â°ÃÃ€Â» Â¾Ã‹Â¸Â°Â´Ã™. 
 					SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pClientList[iClientH]->m_cMapIndex,
-						dX, dY, pItem->m_sSprite, pItem->m_sSpriteFrame, pItem->m_cItemColor); // v1.4 color
+						dX, dY, pItem->m_sIDnum, NULL, pItem->m_cItemColor, pItem->m_dwAttribute); // v1.4 color
 					break;
 
 				case DEF_MAGICTYPE_PROTECT:
@@ -19048,7 +19186,7 @@ void CGame::PlayerMagicHandler(int iClientH, int dX, int dY, short sType, BOOL b
 								break;
 						}
 					SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_MAGIC, m_pClientList[iClientH]->m_cMapIndex,
-							m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY, dX, dY, 10, 10);
+							m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY, dX, dY, 10, (short)10);
 					}
 					break;
 
@@ -19279,7 +19417,7 @@ void CGame::PlayerMagicHandler(int iClientH, int dX, int dY, short sType, BOOL b
 					m_pMapList[m_pClientList[iClientH]->m_cMapIndex]->GetOwner(&sOwnerH, &cOwnerType, dX, dY);
 					if (sOwnerH != NULL) break; // v1.41 Ã†Ã·ÃÂ¦Â¼Ã‡ Â¸Â¶Â¹Ã½Ã€Âº Â»Ã§Â¶Ã·Ã€ÃŒ Â¼Â­ Ã€Ã–Â´Ã‚ Ã€Â§Â¿Â¡Â´Ã‚ ÃˆÂ¿Â·Ã‚Ã€ÃŒ Â¾Ã¸Â´Ã™. 
 
-					pItem = m_pMapList[m_pClientList[iClientH]->m_cMapIndex]->pGetItem(dX, dY, &sRemainItemSprite, &sRemainItemSpriteFrame, &cRemainItemColor);
+					pItem = m_pMapList[m_pClientList[iClientH]->m_cMapIndex]->pGetItem(dX, dY, &sIDNum, &cRemainItemColor, &dwAttr);
 					if (pItem != NULL) {
 						// Ã‡ÃƒÂ·Â¹Ã€ÃŒÂ¾Ã®Â°Â¡ Â¾Ã†Ã€ÃŒÃ…Ã›Ã€Â» ÃˆÂ¹ÂµÃ¦Ã‡ÃÂ¿Â´Â´Ã™. 
 						if (_bAddClientItemList(iClientH, pItem, &iEraseReq) == TRUE) {
@@ -19356,7 +19494,7 @@ void CGame::PlayerMagicHandler(int iClientH, int dX, int dY, short sType, BOOL b
 
 							// Â¾Ã†Ã€ÃŒÃ…Ã›Ã€Â» ÃÃÂ°Ã­Â³Â­ ÃˆÃ„ Â³Â²Ã€Âº Â¾Ã†Ã€ÃŒÃ…Ã›Ã€Â» Â´Ã™Â¸Â¥ Ã…Â¬Â¶Ã³Ã€ÃŒÂ¾Ã°Ã†Â®Â¿Â¡Â°Ã” Â¾Ã‹Â¸Â°Â´Ã™. 
 							SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_SETITEM, m_pClientList[iClientH]->m_cMapIndex,
-								dX, dY,	sRemainItemSprite, sRemainItemSpriteFrame, cRemainItemColor); // v1.4
+								dX, dY, sIDNum, NULL, cRemainItemColor, dwAttr); // v1.4
 
 							// Â¾Ã†Ã€ÃŒÃ…Ã› ÃÂ¤ÂºÂ¸ Ã€Ã¼Â¼Ã› 
 							iRet = m_pClientList[iClientH]->m_pXSock->iSendMsg(cData, 53);
@@ -25183,7 +25321,7 @@ int CGame::iAddDynamicObjectList(short sOwner, char cOwnerType, short sType, cha
 
 		m_pDynamicObjectList[i] = new class CDynamicObject(sOwner, cOwnerType, sType, cMapIndex, sX, sY, dwTime, dwLastTime, iV1);
 		m_pMapList[cMapIndex]->SetDynamicObject(i, sType, sX, sY, dwTime);
-		SendEventToNearClient_TypeB(MSGID_DYNAMICOBJECT, DEF_MSGTYPE_CONFIRM, cMapIndex, sX, sY, sType, i, NULL);
+		SendEventToNearClient_TypeB(MSGID_DYNAMICOBJECT, DEF_MSGTYPE_CONFIRM, cMapIndex, sX, sY, sType, i, NULL, (short)0);
 
 		return i;
 	}
@@ -25229,7 +25367,7 @@ void CGame::CheckDynamicObjectList()
 			// µî·Ï½Ã°£ÀÌ ÀÏÄ¡ÇÑ´Ù¸é °´Ã¼°¡ »ç¶óÁø´Ù´Â ¸Þ½ÃÁö¸¦ º¸³»Áà¾ß ÇÑ´Ù.
 			
 			if (dwRegisterTime == m_pDynamicObjectList[i]->m_dwRegisterTime) {
-				SendEventToNearClient_TypeB(MSGID_DYNAMICOBJECT, DEF_MSGTYPE_REJECT, m_pDynamicObjectList[i]->m_cMapIndex, m_pDynamicObjectList[i]->m_sX, m_pDynamicObjectList[i]->m_sY, m_pDynamicObjectList[i]->m_sType, i, NULL);
+				SendEventToNearClient_TypeB(MSGID_DYNAMICOBJECT, DEF_MSGTYPE_REJECT, m_pDynamicObjectList[i]->m_cMapIndex, m_pDynamicObjectList[i]->m_sX, m_pDynamicObjectList[i]->m_sY, m_pDynamicObjectList[i]->m_sType, i, NULL, (short)0);
 				// ¸Ê¿¡¼­ »èÁ¦ÇÑ´Ù.
 				m_pMapList[m_pDynamicObjectList[i]->m_cMapIndex]->SetDynamicObject(NULL, NULL, m_pDynamicObjectList[i]->m_sX, m_pDynamicObjectList[i]->m_sY, dwTime);
 			}
@@ -26939,7 +27077,7 @@ void CGame::DeleteNpc(int iNpcH)
 					pItem->m_sTouchEffectValue3 = (short)timeGetTime();
 					m_pMapList[ m_pNpcList[iNpcH]->m_cMapIndex ]->bSetItem(ItemPositions[j].x, ItemPositions[j].y, pItem);
 					SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pNpcList[iNpcH]->m_cMapIndex,
-												ItemPositions[j].x, ItemPositions[j].y,	pItem->m_sSprite, pItem->m_sSpriteFrame, pItem->m_cItemColor);
+												ItemPositions[j].x, ItemPositions[j].y,	pItem->m_sIDnum, NULL, pItem->m_cItemColor, pItem->m_dwAttribute);
 					_bItemLog(DEF_ITEMLOG_NEWGENDROP, NULL, m_pNpcList[iNpcH]->m_cNpcName, pItem);
 					pItem = NULL;
 				}
@@ -26959,7 +27097,7 @@ void CGame::DeleteNpc(int iNpcH)
 				pItem->m_sTouchEffectValue3 = (short)timeGetTime();
 				m_pMapList[ m_pNpcList[iNpcH]->m_cMapIndex ]->bSetItem(m_pNpcList[iNpcH]->m_sX, m_pNpcList[iNpcH]->m_sY, pItem);
 				SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pNpcList[iNpcH]->m_cMapIndex,
-					m_pNpcList[iNpcH]->m_sX, m_pNpcList[iNpcH]->m_sY, pItem->m_sSprite, pItem->m_sSpriteFrame, pItem->m_cItemColor);
+					m_pNpcList[iNpcH]->m_sX, m_pNpcList[iNpcH]->m_sY, pItem->m_sIDnum, NULL, pItem->m_cItemColor, pItem->m_dwAttribute);
 				_bItemLog(DEF_ITEMLOG_NEWGENDROP, NULL, m_pNpcList[iNpcH]->m_cNpcName, pItem);
 			}
 		}
@@ -26986,7 +27124,7 @@ void CGame::DeleteNpc(int iNpcH)
 
 				m_pMapList[ m_pNpcList[iNpcH]->m_cMapIndex ]->bSetItem(m_pNpcList[iNpcH]->m_sX, m_pNpcList[iNpcH]->m_sY, pItem2);
 				SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pNpcList[iNpcH]->m_cMapIndex,
-					m_pNpcList[iNpcH]->m_sX, m_pNpcList[iNpcH]->m_sY, pItem2->m_sSprite, pItem2->m_sSpriteFrame, pItem2->m_cItemColor);
+					m_pNpcList[iNpcH]->m_sX, m_pNpcList[iNpcH]->m_sY, pItem2->m_sIDnum, NULL, pItem2->m_cItemColor, pItem2->m_dwAttribute);
 				_bItemLog(DEF_ITEMLOG_NEWGENDROP, NULL, m_pNpcList[iNpcH]->m_cNpcName, pItem2);
 			}
 		}
@@ -30553,7 +30691,7 @@ int CGame::iCalculateUseSkillItemEffect(int iOwnerH, char cOwnerType, char cOwne
 		
 				// ´Ù¸¥ Å¬¶óÀÌ¾ðÆ®¿¡°Ô ¾ÆÀÌÅÛÀÌ ¶³¾îÁø °ÍÀ» ¾Ë¸°´Ù. 
 				SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, cMapIndex,
-					lX, lY, pItem->m_sSprite, pItem->m_sSpriteFrame, pItem->m_cItemColor); //v1.4
+					lX, lY, pItem->m_sIDnum, NULL, pItem->m_cItemColor, pItem->m_dwAttribute); //v1.4
 			}
 		}
 		break;
@@ -31152,7 +31290,7 @@ void CGame::ReqSellItemConfirmHandler(int iClientH, char cItemID, int iNum, char
 		// ´Ù¸¥ Å¬¶óÀÌ¾ðÆ®¿¡°Ô ¾ÆÀÌÅÛÀÌ ¶³¾îÁø °ÍÀ» ¾Ë¸°´Ù. 
 		SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pClientList[iClientH]->m_cMapIndex,
 			m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY,  
-			pItemGold->m_sSprite, pItemGold->m_sSpriteFrame, pItemGold->m_cItemColor); // v1.4 color
+			pItemGold->m_sIDnum, NULL, pItemGold->m_cItemColor, pItemGold->m_dwAttribute); // v1.4 color
 
 		// ¼ÒÁöÇ° ÃÑ Áß·® Àç °è»ê 
 		iCalcTotalWeight(iClientH);
@@ -33955,7 +34093,7 @@ BOOL CGame::bDeleteFish(int iHandle, int iDelMode)
 	iH = m_pFish[iHandle]->m_sDynamicObjectHandle;
 	
 	if (m_pDynamicObjectList[iH] != NULL) {
-		SendEventToNearClient_TypeB(MSGID_DYNAMICOBJECT, DEF_MSGTYPE_REJECT, m_pDynamicObjectList[iH]->m_cMapIndex, m_pDynamicObjectList[iH]->m_sX, m_pDynamicObjectList[iH]->m_sY, m_pDynamicObjectList[iH]->m_sType, iH, NULL);
+		SendEventToNearClient_TypeB(MSGID_DYNAMICOBJECT, DEF_MSGTYPE_REJECT, m_pDynamicObjectList[iH]->m_cMapIndex, m_pDynamicObjectList[iH]->m_sX, m_pDynamicObjectList[iH]->m_sY, m_pDynamicObjectList[iH]->m_sType, iH, NULL, (short)0);
 		// ¸Ê¿¡¼­ »èÁ¦ÇÑ´Ù.
 		m_pMapList[m_pDynamicObjectList[iH]->m_cMapIndex]->SetDynamicObject(NULL, NULL, m_pDynamicObjectList[iH]->m_sX, m_pDynamicObjectList[iH]->m_sY, dwTime);
 		m_pMapList[m_pDynamicObjectList[iH]->m_cMapIndex]->m_iCurFish--;
@@ -34302,7 +34440,7 @@ void CGame::ReqGetFishThisTimeHandler(int iClientH)
 		// �ٸ� Ŭ���̾�Ʈ���� �������� ������ ���� �˸���. 
 		SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pClientList[iClientH]->m_cMapIndex,
 			                        m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY,
-			                        pItem->m_sSprite, pItem->m_sSpriteFrame, pItem->m_cItemColor); // v1.4 color
+			                        pItem->m_sIDnum, NULL, pItem->m_cItemColor, pItem->m_dwAttribute); // v1.4 color
 
 		// ���� ���� �޽��� ���� 
 		SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_FISHSUCCESS, NULL, NULL, NULL, NULL);
@@ -35541,7 +35679,7 @@ RCPH_LOOPBREAK:;
 				
 				SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pClientList[iClientH]->m_cMapIndex,
 					                        m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY,  
-					                        pItem->m_sSprite, pItem->m_sSpriteFrame, pItem->m_cItemColor); // v1.4
+					                        pItem->m_sIDnum, NULL, pItem->m_cItemColor, pItem->m_dwAttribute); // v1.4
 				
 				dwp  = (DWORD *)(cData + DEF_INDEX4_MSGID);
 				*dwp = MSGID_NOTIFY;
@@ -36252,7 +36390,7 @@ void CGame::ReqCreateCraftingHandler(int iClientH, char* pData)
 					m_pClientList[iClientH]->m_sY, pItem);
 				SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pClientList[iClientH]->m_cMapIndex,
 					m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY,
-					pItem->m_sSprite, pItem->m_sSpriteFrame, pItem->m_cItemColor);
+					pItem->m_sIDnum, NULL, pItem->m_cItemColor, pItem->m_dwAttribute);
 
 				dwp = (DWORD*)(cData + DEF_INDEX4_MSGID);
 				*dwp = MSGID_NOTIFY;
@@ -36674,7 +36812,7 @@ void CGame::_CheckMiningAction(int iClientH, int dX, int dY)
 				// ´Ù¸¥ Å¬¶óÀÌ¾ðÆ®¿¡°Ô ¾ÆÀÌÅÛÀÌ ¶³¾îÁø °ÍÀ» ¾Ë¸°´Ù. 
 				SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pClientList[iClientH]->m_cMapIndex,
 					m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY,  
-					pItem->m_sSprite, pItem->m_sSpriteFrame, pItem->m_cItemColor); // v1.4
+					pItem->m_sIDnum, NULL, pItem->m_cItemColor, pItem->m_dwAttribute); // v1.4
 				    // testcode
 					// wsprintf(G_cTxt, "Mining Success: %d", iItemID); 
 					// PutLogList(G_cTxt);
@@ -36711,7 +36849,7 @@ BOOL CGame::bDeleteMineral(int iIndex)
 
 	SendEventToNearClient_TypeB(MSGID_DYNAMICOBJECT, DEF_MSGTYPE_REJECT, m_pDynamicObjectList[iDynamicIndex]->m_cMapIndex, 
 		                        m_pDynamicObjectList[iDynamicIndex]->m_sX, m_pDynamicObjectList[iDynamicIndex]->m_sY, 
-								m_pDynamicObjectList[iDynamicIndex]->m_sType, iDynamicIndex, NULL);
+								m_pDynamicObjectList[iDynamicIndex]->m_sType, iDynamicIndex, NULL, (short)0);
 	// ¸Ê¿¡¼­ ±¤¹° µ¿Àû °´Ã¼¸¦ »èÁ¦ÇÑ´Ù.
 	m_pMapList[m_pDynamicObjectList[iDynamicIndex]->m_cMapIndex]->SetDynamicObject(NULL, NULL, m_pDynamicObjectList[iDynamicIndex]->m_sX, m_pDynamicObjectList[iDynamicIndex]->m_sY, dwTime);
 	// ±¤¹°ÀÌ »ç¶óÁ³À¸¹Ç·Î ÀÌµ¿ÀÌ °¡´ÉÇÏ°Ô ÇÑ´Ù. 
@@ -36787,6 +36925,8 @@ void CGame::CheckFireBluring(char cMapIndex, int sX, int sY)
  register short sSpr, sSprFrame;
  char  cItemColor;
  class CItem * pItem;
+ short sIDNum;
+ DWORD dwAttr;
 
 	for (ix = sX -1; ix <= sX +1; ix++)
 	for (iy = sY -1; iy <= sY +1; iy++) {
@@ -36796,12 +36936,12 @@ void CGame::CheckFireBluring(char cMapIndex, int sX, int sY)
 		switch (iItemNum) {
 		case 355: 
 			// ¼®ÅºÀÌ´Ù. ¾ÆÀÌÅÛÀ» Áö¿ì°í ºÒÀ» ¸¸µç´Ù.
-			pItem = m_pMapList[cMapIndex]->pGetItem(ix, iy, &sSpr, &sSprFrame, &cItemColor);
+			pItem = m_pMapList[cMapIndex]->pGetItem(ix, iy, &sIDNum, &cItemColor, &dwAttr);
 			if (pItem != NULL) delete pItem;
 			iAddDynamicObjectList(NULL, NULL, DEF_DYNAMICOBJECT_FIRE, cMapIndex, ix, iy, 6000);	
 
 			SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_SETITEM, cMapIndex,
-				                        ix, iy, sSpr, sSprFrame, cItemColor);
+				                        ix, iy, sIDNum, NULL, cItemColor, dwAttr);
 			break;
 		}
 	}
@@ -38529,7 +38669,7 @@ BOOL CGame::bAddItem(int iClientH, CItem * pItem, char cMode)
 		// ´Ù¸¥ Å¬¶óÀÌ¾ðÆ®¿¡°Ô ¾ÆÀÌÅÛÀÌ ¶³¾îÁø °ÍÀ» ¾Ë¸°´Ù. 
 		SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pClientList[iClientH]->m_cMapIndex,
 			                        m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY,  
-			                        pItem->m_sSprite, pItem->m_sSpriteFrame, pItem->m_cItemColor); //v1.4 color
+									pItem->m_sIDnum, NULL, pItem->m_cItemColor, pItem->m_dwAttribute); //v1.4 color
 		
 		// ´õÀÌ»ó °¡Áú¼ö ¾ø´Ù´Â ¸Þ½ÃÁö¸¦ º¸³½´Ù.
 		dwp  = (DWORD *)(cData + DEF_INDEX4_MSGID);
@@ -41804,7 +41944,7 @@ void CGame::_DeleteRandomOccupyFlag(int iMapIndex)
 			// Å¬¶óÀÌ¾ðÆ®¿¡°Ô ±ê¹ßÀÌ »ç¶óÁüÀ» ¾Ë¸®°í 
 			SendEventToNearClient_TypeB(MSGID_DYNAMICOBJECT, DEF_MSGTYPE_REJECT, m_pDynamicObjectList[iDynamicObjectIndex]->m_cMapIndex, 
 										m_pDynamicObjectList[iDynamicObjectIndex]->m_sX, m_pDynamicObjectList[iDynamicObjectIndex]->m_sY, 
-										m_pDynamicObjectList[iDynamicObjectIndex]->m_sType, iDynamicObjectIndex, NULL);
+										m_pDynamicObjectList[iDynamicObjectIndex]->m_sType, iDynamicObjectIndex, NULL, (short)0);
 			// ¸Ê¿¡¼­ ±ê¹ß µ¿Àû °´Ã¼¸¦ »èÁ¦ÇÑ´Ù.
 			m_pMapList[m_pDynamicObjectList[iDynamicObjectIndex]->m_cMapIndex]->SetDynamicObject(NULL, NULL, m_pDynamicObjectList[iDynamicObjectIndex]->m_sX, m_pDynamicObjectList[iDynamicObjectIndex]->m_sY, dwTime);
 						
@@ -46215,8 +46355,7 @@ void CGame::ReqCreateSlateHandler(int iClientH, char* pData)
 		else{
 			m_pMapList[ m_pClientList[iClientH]->m_cMapIndex ]->bSetItem(m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY, pItem);
 			SendEventToNearClient_TypeB(MSGID_MAGICCONFIGURATIONCONTENTS, DEF_COMMONTYPE_ITEMDROP, m_pClientList[iClientH]->m_cMapIndex,
-										m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY, pItem->m_sSprite, pItem->m_sSpriteFrame,
-										pItem->m_cItemColor);
+										m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY, pItem->m_sIDnum, NULL, pItem->m_cItemColor, pItem->m_dwAttribute);
 			dwp  = (DWORD *)(cData + DEF_INDEX4_MSGID);
 			*dwp = MSGID_NOTIFY;
 			wp   = (WORD *)(cData + DEF_INDEX2_MSGTYPE);
@@ -48630,7 +48769,7 @@ void CGame::NpcDeadItemGenerator(int iNpcH, short sAttackerH, char cAttackerType
 
 		SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pNpcList[iNpcH]->m_cMapIndex,
 			m_pNpcList[iNpcH]->m_sX, m_pNpcList[iNpcH]->m_sY,
-			pItem->m_sSprite, pItem->m_sSpriteFrame, pItem->m_cItemColor); //v1.4 color
+			pItem->m_sIDnum, NULL, pItem->m_cItemColor, pItem->m_dwAttribute); //v1.4 color
 
 		_bItemLog(DEF_ITEMLOG_NEWGENDROP, NULL, NULL, pItem);
 	}
@@ -52746,14 +52885,14 @@ void CGame::_CheckFarmingAction(short sAttackerH, short sTargetH, BOOL bType)
 	if (bType == 0) {
 		m_pMapList[m_pClientList[sAttackerH]->m_cMapIndex]->bSetItem(m_pClientList[sAttackerH]->m_sX, m_pClientList[sAttackerH]->m_sY, pItem);
 		SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pClientList[sAttackerH]->m_cMapIndex,
-			m_pClientList[sAttackerH]->m_sX, m_pClientList[sAttackerH]->m_sY,  pItem->m_sSprite, 
-			pItem->m_sSpriteFrame, pItem->m_cItemColor, FALSE);
+			m_pClientList[sAttackerH]->m_sX, m_pClientList[sAttackerH]->m_sY,  pItem->m_sIDnum, NULL, 
+			pItem->m_cItemColor, pItem->m_dwAttribute);
 	}
 	else if (bType == 1) {
 		m_pMapList[m_pNpcList[sTargetH]->m_cMapIndex]->bSetItem(m_pNpcList[sTargetH]->m_sX, m_pNpcList[sTargetH]->m_sY, pItem);
 		SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pNpcList[sTargetH]->m_cMapIndex,
-			m_pNpcList[sTargetH]->m_sX, m_pNpcList[sTargetH]->m_sY,  pItem->m_sSprite, 
-			pItem->m_sSpriteFrame, pItem->m_cItemColor, FALSE);
+			m_pNpcList[sTargetH]->m_sX, m_pNpcList[sTargetH]->m_sY,  pItem->m_sIDnum, NULL,
+			pItem->m_cItemColor, pItem->m_dwAttribute);
 	} 
 
 }
@@ -55155,7 +55294,7 @@ void CGame::RemoveOccupyFlags(int iMapIndex)
 
 		SendEventToNearClient_TypeB(MSGID_DYNAMICOBJECT, DEF_MSGTYPE_REJECT, m_pDynamicObjectList[iDynamicObjectIndex]->m_cMapIndex, 
 			m_pDynamicObjectList[iDynamicObjectIndex]->m_sX, m_pDynamicObjectList[iDynamicObjectIndex]->m_sY, 
-			m_pDynamicObjectList[iDynamicObjectIndex]->m_sType, iDynamicObjectIndex, NULL);
+			m_pDynamicObjectList[iDynamicObjectIndex]->m_sType, iDynamicObjectIndex, NULL, (short)0);
 
 		m_pMapList[m_pDynamicObjectList[iDynamicObjectIndex]->m_cMapIndex]->SetDynamicObject(NULL, NULL, m_pDynamicObjectList[iDynamicObjectIndex]->m_sX, m_pDynamicObjectList[iDynamicObjectIndex]->m_sY, dwTime);
 		
@@ -56107,7 +56246,7 @@ void CGame::LoteryHandler(int iClientH)
 		m_pClientList[iClientH]->m_sY, pItem);
 		SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pClientList[iClientH]->m_cMapIndex,
 		m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY,  
-		pItem->m_sSprite, pItem->m_sSpriteFrame, pItem->m_cItemColor);
+		pItem->m_sIDnum, NULL, pItem->m_cItemColor, pItem->m_dwAttribute);
 	}
 
 
@@ -56732,7 +56871,7 @@ void CGame::GetAngelHandler(int iClientH, char* pData, DWORD dwMsgSize)
 				m_pClientList[iClientH]->m_sY, pItem);
 			SendEventToNearClient_TypeB(MSGID_EVENT_COMMON, DEF_COMMONTYPE_ITEMDROP, m_pClientList[iClientH]->m_cMapIndex,
 				m_pClientList[iClientH]->m_sX, m_pClientList[iClientH]->m_sY,
-				pItem->m_sSprite, pItem->m_sSpriteFrame, pItem->m_cItemColor); // v1.4			
+				pItem->m_sIDnum, NULL, pItem->m_cItemColor, pItem->m_dwAttribute); // v1.4			
 			dwp = (DWORD*)(cData + DEF_INDEX4_MSGID);
 			*dwp = MSGID_NOTIFY;
 			wp = (WORD*)(cData + DEF_INDEX2_MSGTYPE);

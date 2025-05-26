@@ -56,8 +56,8 @@ public:
 	short m_sV3;								// +B50
 	short m_sDynamicObjectType;
 
-	short m_sItemSprite;
-	short m_sItemSpriteFrame;
+	short m_sItemID;
+	DWORD m_dwItemAttr;
 
 	char  m_cDeadOwnerFrame;
 	char  m_cOwnerAction;						// +B59

@@ -182,8 +182,25 @@ HRESULT DXC_ddraw::iFlip()
 
 	HRESULT ddVal;
 	
-	if (m_lpFrontB4)
+	if (m_bFullMode)
+	{
+#ifdef DEF_USING_WIN_IME
+		ddVal = m_lpFrontB4->Blt(NULL, m_lpBackB4, NULL, DDBLT_WAIT, NULL);
+		if (G_hEditWnd != NULL) {
+			if (ddVal != DDERR_SURFACELOST) m_lpDD4->FlipToGDISurface();
+		}
+#else
+
+		ddVal = m_lpBackB4flip->BltFast(0, 0, m_lpBackB4, &m_rcFlipping, DDBLTFAST_NOCOLORKEY); // | DDBLTFAST_WAIT);
+		ddVal = m_lpFrontB4->Flip(m_lpBackB4flip, DDFLIP_WAIT);
+
+#endif
+	}
+	else
+	{
+		//SetRect( &m_rcFlipping, 0, 0, 1152, 864 );
 		ddVal = m_lpFrontB4->Blt(&m_rcFlipping, m_lpBackB4, NULL, DDBLT_WAIT, NULL);
+	}
 
 	if (ddVal == DDERR_SURFACELOST) {
 		DDSURFACEDESC2 ddsd2;

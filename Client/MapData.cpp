@@ -1615,9 +1615,6 @@ BOOL __fastcall CMapData::bGetDeadOwner(short sX, short sY, short * pOwnerType, 
 
 	strcpy(pName, m_pData[dX][dY].m_cDeadOwnerName);
 
-	*pItemSprite      = m_pData[dX][dY].m_sItemSprite;
-	*pItemSpriteFrame = m_pData[dX][dY].m_sItemSpriteFrame;
-
 	return TRUE;
 }
 
@@ -3649,7 +3646,7 @@ int CMapData::iObjectFrameCounter(char * cPlayerName, short sViewPointX, short s
 }
 
 
-BOOL CMapData::bSetItem(short sX, short sY, short sItemSpr, short sItemSprFrame, char cItemColor, BOOL bDropEffect)
+BOOL CMapData::bSetItem(short sX, short sY, short sIDnum, char cItemColor, DWORD dwItemAttr, BOOL bDropEffect)
 {int dX, dY;
  int sAbsX, sAbsY, sDist;
 	if ((sX < m_sPivotX) || (sX >= m_sPivotX + MAPDATASIZEX) ||
@@ -3660,9 +3657,9 @@ BOOL CMapData::bSetItem(short sX, short sY, short sItemSpr, short sItemSprFrame,
 	dX = sX - m_sPivotX;
 	dY = sY - m_sPivotY;
 
-	m_pData[dX][dY].m_sItemSprite      = sItemSpr;
-	m_pData[dX][dY].m_sItemSpriteFrame = sItemSprFrame;
-	m_pData[dX][dY].m_cItemColor       = cItemColor;
+	m_pData[dX][dY].m_sItemID			= sIDnum;
+	m_pData[dX][dY].m_dwItemAttr		= dwItemAttr;
+	m_pData[dX][dY].m_cItemColor        = cItemColor;
 
 	sAbsX = abs(((m_pGame->m_sViewPointX / 32) + 12) - sX);
 	sAbsY = abs(((m_pGame->m_sViewPointY / 32) + 9)  - sY);
@@ -3670,7 +3667,7 @@ BOOL CMapData::bSetItem(short sX, short sY, short sItemSpr, short sItemSprFrame,
 	if (sAbsX > sAbsY) sDist = sAbsX;
 	else sDist = sAbsY;
 
-	if (sItemSpr != NULL)
+	if (sIDnum != NULL)
 	{	if (bDropEffect == TRUE) 
 		{	m_pGame->PlaySound('E', 11, sDist);
 			m_pGame->bAddNewEffect(14, (m_sPivotX+dX)*32, (m_sPivotY+dY)*32, NULL, NULL, 0, 0);

@@ -57,7 +57,7 @@ public:
 	BOOL bSetDynamicObject(short sX, short sY, WORD wID, short sType, BOOL bIsEvent);
 	BOOL bIsTeleportLoc(short sX, short sY);
 	BOOL bGetIsLocateable(short sX, short sY);
-	BOOL bSetItem(short sX, short sY, short sItemSpr, short sItemSprFrame, char cItemColor, BOOL bDropEffect = TRUE);
+	BOOL bSetItem(short sX, short sY, short sIDnum, char cItemColor, DWORD dwItemAttr, BOOL bDropEffect = TRUE);
 	int  iObjectFrameCounter(char * cPlayerName, short sViewPointX, short sViewPointY);
 
 	class CTile m_pData[MAPDATASIZEX][MAPDATASIZEY];

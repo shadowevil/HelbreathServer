@@ -989,6 +989,9 @@ public:
 	char m_cConstructMapName[12];
 	char m_cGameServerName[22]; //  Gateway
 
+	class CItem* m_pItemConfigList[5000];
+	BOOL _bDecodeItemConfigFileContents(char* pData, DWORD dwMsgSize);
+
 	char m_cItemDrop[25][25];
 
 	RECT m_rcPlayerRect, m_rcBodyRect;

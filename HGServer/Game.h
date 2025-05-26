@@ -283,6 +283,7 @@ class CGame
 public:
 
 	void RequestNoticementHandler(int iClientH);
+	BOOL bSendClientConfig(int iClientH, char* cFile);
 
 	LoginClient* _lclients[DEF_MAXCLIENTLOGINSOCK];
 
@@ -762,6 +763,7 @@ public:
 	void OnTimer(char cType);
 	int iComposeMoveMapData(short sX, short sY, int iClientH, char cDir, char * pData);
 	void SendEventToNearClient_TypeB(DWORD dwMsgID, WORD wMsgType, char cMapIndex, short sX, short sY, short sV1, short sV2, short sV3, short sV4 = NULL);
+	void SendEventToNearClient_TypeB(DWORD dwMsgID, WORD wMsgType, char cMapIndex, short sX, short sY, short sV1, short sV2, short sV3, DWORD dwV4 = NULL);
 	void SendEventToNearClient_TypeA(short sOwnerH, char cOwnerType, DWORD dwMsgID, WORD wMsgType, short sV1, short sV2, short sV3);
 	void DeleteClient(int iClientH, BOOL bSave, BOOL bNotify, BOOL bCountLogout = TRUE, BOOL bForceCloseConn = FALSE);
 	int  iComposeInitMapData(short sX, short sY, int iClientH, char * pData);

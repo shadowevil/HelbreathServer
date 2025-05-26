@@ -46,24 +46,54 @@ class CItem
 public:
 	CItem();
 	virtual ~CItem();
+	
 	char  m_cName[21];
+
+	short m_sIDnum;					// 아이템의 고유 번호
 	char  m_cItemType;
 	char  m_cEquipPos;
-	char  m_cItemColor;
-	char  m_cSpeed;
-	char  m_cGenderLimit;
-//	short m_sItemEffectType;
-	short m_sLevelLimit;
+	short m_sItemEffectType;
+	short m_sItemEffectValue1, m_sItemEffectValue2, m_sItemEffectValue3;
+	short m_sItemEffectValue4, m_sItemEffectValue5, m_sItemEffectValue6;
+	WORD  m_wMaxLifeSpan;
+	short m_sSpecialEffect;
+
+	//short m_sSM_HitRatio, m_sL_HitRatio;
+	//v1.432 명중률 가감 사용 안한다. 대신 특수 능력 수치가 들어간다.
+	short m_sSpecialEffectValue1, m_sSpecialEffectValue2;
+
+	short m_sX, m_sY;
+
 	short m_sSprite;
 	short m_sSpriteFrame;
-	short m_sX, m_sY;
-	short m_sItemSpecEffectValue1, m_sItemSpecEffectValue2, m_sItemSpecEffectValue3;
-	short m_sItemEffectValue1, m_sItemEffectValue2, m_sItemEffectValue3, m_sItemEffectValue4, m_sItemEffectValue5, m_sItemEffectValue6; 
-	WORD  m_wCurLifeSpan;
-	WORD  m_wMaxLifeSpan;
-	WORD  m_wPrice, m_wWeight;
+
+	char  m_cApprValue;
+	char  m_cSpeed;
+
+	DWORD m_wPrice;
+	WORD  m_wWeight;
+	short m_sLevelLimit;
+	char  m_cGenderLimit;
+
+	short m_sRelatedSkill;
+
+	char  m_cCategory;
+	BOOL  m_bIsForSale;
+
 	DWORD m_dwCount;
-	DWORD m_dwAttribute;
+	short m_sTouchEffectType;
+	short m_sTouchEffectValue1, m_sTouchEffectValue2, m_sTouchEffectValue3;
+	char  m_cItemColor; // v1.4 에서 아이템 색으로 변경되었다. 
+	short m_sItemSpecEffectValue1, m_sItemSpecEffectValue2, m_sItemSpecEffectValue3;
+	WORD  m_wCurLifeSpan;
+	DWORD m_dwAttribute;				// aaaa bbbb cccc dddd eeee ffff xxxx xxx1 
+	// 1: Custom-Made Item flag 
+	// a: Item 속성 종류 
+	// b: Item 속성 정도
+	// c: 특수 아이템 성질 Flag 
+	// d: 특수 아이템 성질 정도 
+	// e: 특수 아이템 추가 성질 Flag
+	// f: 특수 아이템 추가 성질 정도 
 };
 
 #endif // !defined(AFX_ITEM_H__211A1360_91B9_11D2_B143_00001C7030A6__INCLUDED_)

@@ -82,7 +82,7 @@ public:
 	BOOL bSearchTeleportDest(int sX, int sY, char * pMapName, int * pDx, int * pDy, char * pDir);
 	BOOL bInit(char * pName);
 	BOOL bIsValidLoc(short sX, short sY);
-	class CItem * pGetItem(short sX, short sY, short * pRemainItemSprite, short * pRemainItemSpriteFrame, char * pRemainItemColor);
+	class CItem * pGetItem(short sX, short sY, short* pRemainItemID, char* pRemainItemColor, DWORD* pRemainItemAttr);
 	BOOL bSetItem(short sX, short sY, class CItem * pItem);
 	void ClearDeadOwner(short sX, short sY);
 	void ClearOwner(int iDebugCode, short sOwnerH, char cOwnerType, short sX, short sY);
