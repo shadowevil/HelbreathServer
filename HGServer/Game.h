@@ -574,6 +574,7 @@ public:
 	void NpcRequestAssistance(int iNpcH);
 	void ToggleSafeAttackModeHandler(int iClientH);
 	void SetBerserkFlag(short sOwnerH, char cOwnerType, BOOL bStatus);
+	void SetHasteFlag(short sOwnerH, char cOwnerType, BOOL bStatus);
 	void SpecialEventHandler();
 	int iGetPlayerRelationship_SendEvent(int iClientH, int iOpponentH);
 	int iGetNpcRelationship_SendEvent(int iNpcH, int iOpponentH);

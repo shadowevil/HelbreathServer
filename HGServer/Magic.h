@@ -45,6 +45,8 @@
 #define DEF_MAGICTYPE_RESURRECTION				32 // Resurrection
 #define DEF_MAGICTYPE_SCAN						33 // Scan
 
+#define DEF_MAGICTYPE_HASTE					45
+
 #define DEF_MAXMAGICEFFECTS			100
 
 class CMagic  

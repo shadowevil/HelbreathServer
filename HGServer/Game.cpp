@@ -15844,6 +15844,7 @@ void CGame::ClientKilledHandler(int iClientH, int iAttackerH, char cAttackerType
 	SetBerserkFlag(iClientH, DEF_OWNERTYPE_PLAYER, false);
 	SetInvisibilityFlag(iClientH, DEF_OWNERTYPE_PLAYER, false);
 	SetSlateFlag(iClientH, DEF_NOTIFY_SLATECLEAR, false);
+	SetHasteFlag(iClientH, DEF_OWNERTYPE_PLAYER, false);
 
 	// 만약 교환 모드라면 교환을 취소한다.
 	if (m_pClientList[iClientH]->m_bIsExchangeMode == TRUE) {
@@ -17609,6 +17610,7 @@ void CGame::PlayerMagicHandler(int iClientH, int dX, int dY, short sType, BOOL b
 					case 16: // DEF_MAGICTYPE_CONFUSE
 					case 17: // DEF_MAGICTYPE_POISON
 					case 32: // DEF_MAGICTYPE_RESURRECTION
+					case DEF_MAGICTYPE_HASTE:
 						return;
 				}
 			}
@@ -17616,7 +17618,32 @@ void CGame::PlayerMagicHandler(int iClientH, int dX, int dY, short sType, BOOL b
 
 		if (m_pMagicConfigList[sType]->m_dwDelayTime == 0) {
 			switch (m_pMagicConfigList[sType]->m_sType) {
-				
+			case DEF_MAGICTYPE_HASTE:
+				switch (m_pMagicConfigList[sType]->m_sValue4) {
+				case 1:
+					m_pMapList[m_pClientList[iClientH]->m_cMapIndex]->GetOwner(&sOwnerH, &cOwnerType, dX, dY);
+
+					switch (cOwnerType) {
+					case DEF_OWNERTYPE_PLAYER:
+						if (m_pClientList[sOwnerH] == NULL) goto MAGIC_NOEFFECT;
+						if (sOwnerH == iClientH) goto MAGIC_NOEFFECT;
+						if (m_pClientList[sOwnerH]->m_cMagicEffectStatus[DEF_MAGICTYPE_HASTE] != 0) goto MAGIC_NOEFFECT;
+						m_pClientList[sOwnerH]->m_cMagicEffectStatus[DEF_MAGICTYPE_HASTE] = (char)m_pMagicConfigList[sType]->m_sValue4;
+						SetHasteFlag(sOwnerH, cOwnerType, TRUE);
+						break;
+
+					case DEF_OWNERTYPE_NPC:
+						goto MAGIC_NOEFFECT;
+						break;
+					}
+					bRegisterDelayEvent(DEF_DELAYEVENTTYPE_MAGICRELEASE, DEF_MAGICTYPE_HASTE, dwTime + (m_pMagicConfigList[sType]->m_dwLastTime * 1000),
+						sOwnerH, cOwnerType, NULL, NULL, NULL, m_pMagicConfigList[sType]->m_sValue4, NULL, NULL);
+
+					if (cOwnerType == DEF_OWNERTYPE_PLAYER)
+						SendNotifyMsg(NULL, sOwnerH, DEF_NOTIFY_MAGICEFFECTON, DEF_MAGICTYPE_HASTE, m_pMagicConfigList[sType]->m_sValue4, NULL, NULL);
+					break;
+				}
+				break;
 				case DEF_MAGICTYPE_DAMAGE_SPOT:
 					m_pMapList[m_pClientList[iClientH]->m_cMapIndex]->GetOwner(&sOwnerH, &cOwnerType, dX, dY);
 					if (bCheckResistingMagicSuccess(m_pClientList[iClientH]->m_cDir, sOwnerH, cOwnerType, iResult) == FALSE)
@@ -30039,6 +30066,10 @@ void CGame::DelayEventProcessor()
 				// Berserk 효과 해제
 				if (m_pDelayEventList[i]->m_iEffectType == DEF_MAGICTYPE_BERSERK)
 					SetBerserkFlag(m_pDelayEventList[i]->m_iTargetH, DEF_OWNERTYPE_PLAYER, FALSE);
+
+				// Haste
+				if (m_pDelayEventList[i]->m_iEffectType == DEF_MAGICTYPE_HASTE)
+					SetHasteFlag(m_pDelayEventList[i]->m_iTargetH, DEF_OWNERTYPE_PLAYER, FALSE);
 
 				// Confusion
 				if (m_pDelayEventList[i]->m_iEffectType == DEF_MAGICTYPE_CONFUSE)
@@ -45041,6 +45072,22 @@ void CGame::SetBerserkFlag(short sOwnerH, char cOwnerType, BOOL bStatus)
 			 m_pNpcList[sOwnerH]->m_iStatus = m_pNpcList[sOwnerH]->m_iStatus | 0x00000020;
 		else m_pNpcList[sOwnerH]->m_iStatus = m_pNpcList[sOwnerH]->m_iStatus & 0xFFFFFFDF;
 		SendEventToNearClient_TypeA(sOwnerH, DEF_OWNERTYPE_NPC, MSGID_EVENT_MOTION, DEF_OBJECTNULLACTION, NULL, NULL, NULL);
+		break;
+	}
+}
+
+void CGame::SetHasteFlag(short sOwnerH, char cOwnerType, BOOL bStatus)
+{
+	switch (cOwnerType) {
+	case DEF_OWNERTYPE_PLAYER:
+		if (m_pClientList[sOwnerH] == NULL) return;
+		if (bStatus)
+			m_pClientList[sOwnerH]->m_iStatus |= 0x00040000;
+		else m_pClientList[sOwnerH]->m_iStatus ^= 0x00040000;
+		SendEventToNearClient_TypeA(sOwnerH, DEF_OWNERTYPE_PLAYER, MSGID_EVENT_MOTION, DEF_OBJECTNULLACTION, NULL, NULL, NULL);
+		break;
+
+	case DEF_OWNERTYPE_NPC:
 		break;
 	}
 }

@@ -1817,6 +1817,9 @@ int CMapData::iObjectFrameCounter(char * cPlayerName, short sViewPointX, short s
 			if ((m_pData[dX][dY].m_iStatus & 0x40) != 0)
 				iDelay += (m_stFrame[m_pData[dX][dY].m_sOwnerType][m_pData[dX][dY].m_cOwnerAction].m_sFrameTime)>>2;
 
+			if ((m_pData[dX][dY].m_iStatus & 0x40000) != 0) // haste
+				iDelay -= (m_stFrame[m_pData[dX][dY].m_sOwnerType][DEF_OBJECTRUN].m_sFrameTime) / 2.3;
+
 			dwFrameTime = m_stFrame[m_pData[dX][dY].m_sOwnerType][m_pData[dX][dY].m_cOwnerAction].m_sFrameTime + iDelay;
 
 			if ((dwTime - m_pData[dX][dY].m_dwOwnerTime) > dwFrameTime)

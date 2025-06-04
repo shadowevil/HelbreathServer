@@ -6140,6 +6140,7 @@ void CGame::bAddNewEffect(short sType, int sX, int sY, int dX, int dY, char cSta
 		case 112: // Recall
 		case 131: // Summon
 		case 132: // Invi
+		case 178: // Haste
 			m_pEffectList[i]->m_cMaxFrame   = 12;
 			m_pEffectList[i]->m_dwFrameTime = 80;
 			lPan = -(((m_sViewPointX / 32) + fixx) - sX) * fixpan;
@@ -7040,6 +7041,7 @@ void CGame::DrawEffects()
 		case 112: // Recall
 		case 131: // Summon-Creature
 		case 132: // Invisibility
+		case 178: // Haste
 			cTempFrame = m_pEffectList[i]->m_cFrame;
 			if (cTempFrame < 0) break;
 			dX  = (m_pEffectList[i]->m_dX*32)  - m_sViewPointX;
@@ -15745,6 +15747,23 @@ BOOL   CGame::DrawObject_OnRun(int indexX, int indexY, int sX, int sY, BOOL bTra
 			m_pSprite[iBodyIndex + (_tmp_cDir -1)]->PutTransSpriteRGB(fix_x, fix_y, _tmp_cFrame, 0, -5, -5, dwTime);
 		DrawAngel(40+(_tmp_cDir - 1), fix_x+20, fix_y-20, _tmp_cFrame%4, dwTime);
 		CheckActiveAura2(fix_x, fix_y, dwTime,  _tmp_sOwnerType);
+
+		// Centuu : Haste effect
+		if ((_tmp_iStatus & 0x40000) != 0) {
+			for (int i = 1; i <= 5; i++)
+			{
+				switch (_tmp_cDir) {
+				case 1: m_pSprite[iBodyIndex + (_tmp_cDir - 1)]->PutTransSpriteRGB(fix_x, fix_y + (i * 5), _tmp_cFrame, m_wR[10] - (m_wR[0] / 3), m_wG[10] - (m_wG[0] / 3), m_wB[10] - (m_wB[0] / 3), dwTime); break;
+				case 2: m_pSprite[iBodyIndex + (_tmp_cDir - 1)]->PutTransSpriteRGB(fix_x - (i * 5), fix_y + (i * 5), _tmp_cFrame, m_wR[10] - (m_wR[0] / 3), m_wG[10] - (m_wG[0] / 3), m_wB[10] - (m_wB[0] / 3), dwTime); break;
+				case 3: m_pSprite[iBodyIndex + (_tmp_cDir - 1)]->PutTransSpriteRGB(fix_x - (i * 5), fix_y, _tmp_cFrame, m_wR[10] - (m_wR[0] / 3), m_wG[10] - (m_wG[0] / 3), m_wB[10] - (m_wB[0] / 3), dwTime); break;
+				case 4: m_pSprite[iBodyIndex + (_tmp_cDir - 1)]->PutTransSpriteRGB(fix_x - (i * 5), fix_y - (i * 5), _tmp_cFrame, m_wR[10] - (m_wR[0] / 3), m_wG[10] - (m_wG[0] / 3), m_wB[10] - (m_wB[0] / 3), dwTime); break;
+				case 5: m_pSprite[iBodyIndex + (_tmp_cDir - 1)]->PutTransSpriteRGB(fix_x, fix_y - (i * 5), _tmp_cFrame, m_wR[10] - (m_wR[0] / 3), m_wG[10] - (m_wG[0] / 3), m_wB[10] - (m_wB[0] / 3), dwTime); break;
+				case 6: m_pSprite[iBodyIndex + (_tmp_cDir - 1)]->PutTransSpriteRGB(fix_x + (i * 5), fix_y - (i * 5), _tmp_cFrame, m_wR[10] - (m_wR[0] / 3), m_wG[10] - (m_wG[0] / 3), m_wB[10] - (m_wB[0] / 3), dwTime); break;
+				case 7: m_pSprite[iBodyIndex + (_tmp_cDir - 1)]->PutTransSpriteRGB(fix_x + (i * 5), fix_y, _tmp_cFrame, m_wR[10] - (m_wR[0] / 3), m_wG[10] - (m_wG[0] / 3), m_wB[10] - (m_wB[0] / 3), dwTime); break;
+				case 8: m_pSprite[iBodyIndex + (_tmp_cDir - 1)]->PutTransSpriteRGB(fix_x + (i * 5), fix_y + (i * 5), _tmp_cFrame, m_wR[10] - (m_wR[0] / 3), m_wG[10] - (m_wG[0] / 3), m_wB[10] - (m_wB[0] / 3), dwTime); break;
+				}
+			}
+		}
 
 	}else if( strlen(_tmp_cName) > 0 )
 	{	if( (_tmp_sOwnerType>=1) && (_tmp_sOwnerType<=6) ) DrawObjectName(fix_x, fix_y, _tmp_cName, _tmp_iStatus);
