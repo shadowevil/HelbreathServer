@@ -62,7 +62,7 @@ public:
 	DWORD m_dwHPupTime, m_dwMPupTime;
 	DWORD m_dwDeadTime, m_dwRegenTime;
 
-	int  m_iHP;						// Hit Point 
+	int  m_iHP, m_iMaxHP;						// Hit Point 
 	DWORD  m_iExp;                    // 죽였을 경우 얻는 경험치. ExpDice에 의해 결정된다.
 
 	int  m_iHitDice;				// 몬스터의 Hit Dice. 이것에 의해 HP가 결정된다.

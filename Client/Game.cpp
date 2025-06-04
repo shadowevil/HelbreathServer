@@ -3302,6 +3302,12 @@ void CGame::UpdateScreen_OnLoading(bool bActive)
 				CloseHandle(m_hPakFile);
 			}
 
+			m_hPakFile = CreateFile("sprites\\PartySprite.pak", GENERIC_READ, 0, 0, OPEN_EXISTING, 0, 0);
+			if (m_hPakFile != INVALID_HANDLE_VALUE) {
+				m_pSprite[DEF_SPRID_INTERFACE_ND_PARTYSTATUS] = new class CSprite(m_hPakFile, &m_DDraw, "PartySprite", 0, false);
+				CloseHandle(m_hPakFile);
+			}
+
 			m_hPakFile = CreateFile("sprites\\DialogText.pak", GENERIC_READ, NULL, NULL, OPEN_EXISTING, NULL, NULL);
 			if( m_hPakFile != INVALID_HANDLE_VALUE ) {
 				m_pSprite[DEF_SPRID_INTERFACE_ND_TEXT] = new class CSprite(m_hPakFile, &m_DDraw, "DialogText", 0, FALSE);
@@ -26874,6 +26880,17 @@ NMH_LOOPBREAK2:;
 		}
 		break;
 
+		//50Cent - HP Bar
+	case DEF_SEND_NPCHP:
+		cp = (char*)(pData + DEF_INDEX2_MSGTYPE + 2);
+		ip = (int*)cp;
+		iNpcHP = *ip;
+		cp += 4;
+		ip = (int*)cp;
+		iNpcMaxHP = *ip;
+		cp += 4;
+		break;
+
 	case DEF_NOTIFY_DAMAGEMOVE:
 		cp = (char *)(pData + DEF_INDEX2_MSGTYPE + 2);
 		sp = (short *)cp;
@@ -28730,7 +28747,7 @@ void CGame::DrawNpcName(short sX, short sY, short sOwnerType, int iStatus)
 	{	ZeroMemory(cTxt, sizeof(cTxt));
 		strcpy(cTxt, DRAW_OBJECT_NAME87);//"(Unknown)"
 		PutString2(sX, sY+14, cTxt, 150,150,150); // v2.171
-	}else
+	}/*else
 	{	switch( _iGetFOE(iStatus) ){
 		case -2:
 			PutString2(sX, sY+14, DRAW_OBJECT_NAME90, 255, 0, 0); // "(Enemy)"
@@ -28744,7 +28761,7 @@ void CGame::DrawNpcName(short sX, short sY, short sOwnerType, int iStatus)
 		case 1:
 			PutString2(sX, sY+14, DRAW_OBJECT_NAME89, 30,255,30); // "(Friendly)"
 			break;
-	}	}
+	}	}*/
 #ifdef _DEBUG
 	wsprintf(cTxt2,"Status: 0x%.8X ",iStatus);
 	PutString2(sX, sY+42, cTxt2, 30,255,30);
@@ -28762,9 +28779,60 @@ void CGame::DrawNpcName(short sX, short sY, short sOwnerType, int iStatus)
 	case 7: strcpy(cTxt2, DRAW_OBJECT_NAME58); break;//"Explosive"
 	case 8: strcpy(cTxt2, DRAW_OBJECT_NAME59); break;//"Critical Explosive"
 	}
-	if( m_Misc.bCheckIMEString(cTxt2) ) PutString_SprFont3(sX, sY + 28, cTxt2, m_wR[13]*4, m_wG[13]*4, m_wB[13]*4, FALSE, 2);
+	if( m_Misc.bCheckIMEString(cTxt2) ) PutString_SprFont3(sX, sY + 22, cTxt2, m_wR[13]*4, m_wG[13]*4, m_wB[13]*4, FALSE, 2);
 	else PutString2(sX, sY + 28, cTxt2, 240,240,70);
 
+	// centu: no muestra la barra de hp de algunos npc
+	switch (sOwnerType) {
+	case 15:
+	case 19:
+	case 20:
+	case 24:
+	case 25:
+	case 26:
+	case 42:
+	case 55:
+	case 56:
+	case 67:
+	case 68:
+	case 69:
+	case 64:
+	{
+		switch ((_tmp_sAppr2 & 0xFF00) >> 8) {
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+		case 9:
+		case 10:
+		case 11:
+		case 12:
+		case 13:
+		case 14:
+		default:
+			break;
+		}
+	}
+	case 90:
+		break;
+	default:
+		//50Cent - HP Bar 
+		//Centuu - fixed
+		bSendCommand(MSGID_COMMAND_COMMON, DEF_COMMONTYPE_REQ_GETNPCHP, 0, _tmp_wObjectID, 0, 0, 0);
+		if (iNpcHP > 0)
+		{
+			m_pSprite[DEF_SPRID_INTERFACE_ND_PARTYSTATUS]->PutSpriteFastWidth(sX, sY + 16, 18, 75, m_dwCurTime, false);
+			int iBarWidth2 = (iNpcHP * 75) / iNpcMaxHP;
+			if (iBarWidth2 < 0) iBarWidth2 = 0;
+			if (iBarWidth2 > 75) iBarWidth2 = 75;
+			m_pSprite[DEF_SPRID_INTERFACE_ND_PARTYSTATUS]->PutSpriteFastWidth(sX, sY + 16, 19, iBarWidth2, m_dwCurTime, false); // 16
+		}
+		break;
+	}
 }
 
 void CGame::DrawObjectName(short sX, short sY, char * pName, int iStatus)

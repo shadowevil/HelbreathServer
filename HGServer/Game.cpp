@@ -12147,6 +12147,14 @@ void CGame::ClientCommonHandler(int iClientH, char * pData)
 		RequestAcceptJoinPartyHandler(iClientH, iV1);
 		break;
 
+	//50Cent - HP Bar
+	case DEF_COMMONTYPE_REQ_GETNPCHP:
+		if ((iV1 - 10000 <= 0) || (iV1 - 10000 >= DEF_MAXNPCS)) return;
+		if (m_pNpcList[iV1 - 10000] == NULL) return;
+		if (m_pNpcList[iV1 - 10000]->m_iHP > m_pNpcList[iV1 - 10000]->m_iMaxHP) m_pNpcList[iV1 - 10000]->m_iMaxHP = m_pNpcList[iV1 - 10000]->m_iHP;
+		SendNotifyMsg(NULL, iClientH, DEF_SEND_NPCHP, m_pNpcList[iV1 - 10000]->m_iHP, m_pNpcList[iV1 - 10000]->m_iMaxHP, NULL, NULL);
+		break;
+
 	default:
 		wsprintf(G_cTxt,"Unknown message received! (0x%.8X)",wCommand);
 		PutLogList(G_cTxt);
@@ -14145,6 +14153,18 @@ void CGame::SendNotifyMsg(int iFromH, int iToH, WORD wMsgType, DWORD sV1, DWORD 
 
 	// !!! sV1, sV2, sV3´Â DWORDÇüÀÓÀ» ¸í½ÉÇÏ¶ó.
 	switch (wMsgType) {
+	case DEF_SEND_NPCHP: //50Cent - HP Bar
+		ip = (int*)cp;
+		*ip = (int)sV1;
+		cp += 4;
+
+		ip = (int*)cp;
+		*ip = (int)sV2;
+		cp += 4;
+
+		iRet = m_pClientList[iToH]->m_pXSock->iSendMsg(cData, 14);
+		break;
+
 	case DEF_NOTIFY_HELDENIANCOUNT:
 		wp  = (WORD *)cp;
 		*wp = (WORD)sV1;
@@ -16698,6 +16718,9 @@ BOOL CGame::_bInitNpcAttr(class CNpc * pNpc, char * pNpcName, short sClass, char
 			else pNpc->m_iHP  = ((m_pNpcConfigList[i]->m_iHitDice * 4) + m_pNpcConfigList[i]->m_iHitDice + iDice(1, m_pNpcConfigList[i]->m_iHitDice));
 			// v1.4 È®ÀÎÄÚµå
 			if (pNpc->m_iHP == 0) pNpc->m_iHP = 1; 
+
+			//50Cent - HP Bar
+			pNpc->m_iMaxHP = pNpc->m_iHP;
 
 			pNpc->m_iExpDiceMin		 = m_pNpcConfigList[i]->m_iExpDiceMin;
 			pNpc->m_iExpDiceMax		 = m_pNpcConfigList[i]->m_iExpDiceMax;

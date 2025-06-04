@@ -12,6 +12,10 @@
 #define DEF_NOTIFY_CRAFTING_SUCCESS				0x0BF0 // Crafting ok
 #define DEF_NOTIFY_CRAFTING_FAIL					0x0BF1 // Crafting failed
 
+//50Cent - HP Bar
+#define DEF_COMMONTYPE_REQ_GETNPCHP					0x1F12
+#define DEF_SEND_NPCHP								0x1F13
+
 // Reversed by Snoopy from real 3.72 client
 #define DEF_REQUEST_ANGEL				0x0FC9421E
 

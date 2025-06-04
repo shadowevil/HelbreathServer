@@ -992,6 +992,8 @@ public:
 	class CItem* m_pItemConfigList[5000];
 	BOOL _bDecodeItemConfigFileContents(char* pData, DWORD dwMsgSize);
 
+	int iNpcHP, iNpcMaxHP;
+
 	char m_cItemDrop[25][25];
 
 	RECT m_rcPlayerRect, m_rcBodyRect;
