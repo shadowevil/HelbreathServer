@@ -10042,6 +10042,43 @@ int CGame::iClientMotion_Attack_Handler(int iClientH, short sX, short sY, short 
 		if ((wType != 0) && ((dwTime - m_pClientList[iClientH]->m_dwRecentAttackTime) > 100)) { 
 			if ((m_pClientList[iClientH]->m_pIsProcessingAllowed == FALSE) && (m_pClientList[iClientH]->m_bIsInsideWarehouse == FALSE) 
 				&& (m_pClientList[iClientH]->m_bIsInsideWizardTower == FALSE) && (m_pClientList[iClientH]->m_bIsInsideOwnTown == FALSE)) {
+				
+				DWORD dwType1 = NULL, dwType2, dwValue1, dwValue2;
+				if (m_pClientList[iClientH]->m_sItemEquipmentStatus[DEF_EQUIPPOS_RHAND] != -1) {
+					sItemIndex = m_pClientList[iClientH]->m_sItemEquipmentStatus[DEF_EQUIPPOS_RHAND];
+				}
+				else if (m_pClientList[iClientH]->m_sItemEquipmentStatus[DEF_EQUIPPOS_TWOHAND] != -1) {
+					sItemIndex = m_pClientList[iClientH]->m_sItemEquipmentStatus[DEF_EQUIPPOS_TWOHAND];
+				}
+				else sItemIndex = -1;
+
+				if (sItemIndex != -1 && m_pClientList[iClientH]->m_pItemList[sItemIndex] != NULL) {
+					if ((m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_dwAttribute & 0x00F00000) != 0) {
+						dwType1 = (m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_dwAttribute & 0x00F00000) >> 20;
+						dwValue1 = (m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_dwAttribute & 0x000F0000) >> 16;
+						dwType2 = (m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_dwAttribute & 0x0000F000) >> 12;
+						dwValue2 = (m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_dwAttribute & 0x00000F00) >> 8;
+					}
+
+					if (dwType1 == 2) {
+						// Centuu - fix for poison
+						switch (cOwnerType) {
+						case DEF_OWNERTYPE_PLAYER:
+							if (m_pClientList[sOwner]->m_iAdminUserLevel < 1 && !m_pClientList[sOwner]->m_bIsPoisoned && !bCheckResistingPoisonSuccess(sOwner, cOwnerType))
+							{
+								m_pClientList[sOwner]->m_bIsPoisoned = TRUE;
+								m_pClientList[sOwner]->m_iPoisonLevel = dwValue1 * 5;
+								m_pClientList[sOwner]->m_dwPoisonTime = dwTime;
+								SetPoisonFlag(sOwner, cOwnerType, TRUE);
+								SendNotifyMsg(NULL, sOwner, DEF_NOTIFY_MAGICEFFECTON, DEF_MAGICTYPE_POISON, m_pClientList[sOwner]->m_iPoisonLevel, NULL, NULL);
+							}
+							break;
+						case DEF_OWNERTYPE_NPC:
+							break;
+						}
+					}
+				}
+				
 				sItemIndex = m_pClientList[iClientH]->m_sItemEquipmentStatus[DEF_EQUIPPOS_TWOHAND];
 				if (sItemIndex != -1 && m_pClientList[iClientH]->m_pItemList[sItemIndex] != NULL) {
 					if(m_pClientList[iClientH]->m_pItemList[sItemIndex]->m_sIDnum == 874){ // Directional bow
