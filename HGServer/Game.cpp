@@ -23840,6 +23840,14 @@ BOOL CGame::bCheckLevelUp(int iClientH)
 				if (m_pClientList[iClientH]->m_bIsPlayerCivil == TRUE)
 					ForceChangePlayMode(iClientH, TRUE);
 
+			// centu - max hp,mp,sp when level up
+			m_pClientList[iClientH]->m_iHP = iGetMaxHP(iClientH);
+			m_pClientList[iClientH]->m_iMP = iGetMaxMP(iClientH);
+			m_pClientList[iClientH]->m_iSP = iGetMaxSP(iClientH);
+			SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_HP, NULL, NULL, NULL, NULL);
+			SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_MP, NULL, NULL, NULL, NULL);
+			SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_SP, NULL, NULL, NULL, NULL);
+
 			// ·¹º§ÀÌ ¿À¸¥°ÍÀ» Åëº¸ÇÑ´Ù.
 			SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_LEVELUP, NULL, NULL, NULL, NULL);
 
@@ -23850,14 +23858,19 @@ BOOL CGame::bCheckLevelUp(int iClientH)
 			CalcTotalItemEffect(iClientH, -1, FALSE);
 
 			//v1.4 ´ÙÀ½ ·¹º§ 
-			wsprintf(G_cTxt, "(!) Level up: Player (%s) Level (%d) Experience(%d) Next Level Experience(%d)", m_pClientList[iClientH]->m_cCharName,m_pClientList[iClientH]->m_iLevel, m_pClientList[iClientH]->m_iExp, m_pClientList[iClientH]->m_iNextLevelExp);
-			PutLogFileList(G_cTxt);
+			//wsprintf(G_cTxt, "(!) Level up: Player (%s) Level (%d) Experience(%d) Next Level Experience(%d)", m_pClientList[iClientH]->m_cCharName,m_pClientList[iClientH]->m_iLevel, m_pClientList[iClientH]->m_iExp, m_pClientList[iClientH]->m_iNextLevelExp);
+			//PutLogFileList(G_cTxt);
 		}
 		else { 
-			AddGizon(iClientH);
+			m_pClientList[iClientH]->m_iGizonItemUpgradeLeft++;
+			
+			m_pClientList[iClientH]->m_iNextLevelExp = m_iLevelExpTable[m_iPlayerMaxLevel + 1];
+			m_pClientList[iClientH]->m_iExp = m_iLevelExpTable[m_iPlayerMaxLevel];
 			//addon
 			SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_GIZONITEMUPGRADELEFT, m_pClientList[iClientH]->m_iGizonItemUpgradeLeft, 1, NULL, NULL);
 		}
+
+		SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_EXP, NULL, NULL, NULL, NULL);
 	}
 	
 	return FALSE;
