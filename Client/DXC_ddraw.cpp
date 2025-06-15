@@ -824,3 +824,91 @@ void DXC_ddraw::ChangeBPP(i8 bpp) {
 	d.dmBitsPerPel = bpp;
 	ChangeDisplaySettings(&d, 0);
 }
+
+void DXC_ddraw::DrawItemShadowBox(short sX, short sY, short dX, short dY, int iType)
+{
+	WORD* pDst, wValue;
+	int ix, iy;
+
+	if (sX < 0)
+		sX = 0;
+
+	if (sY <= 0)
+		sY = 0;
+
+	if (dX >= 799)
+		dX = dX - (dX - 799);
+
+	if (dY >= 599)
+		dY = dY - (dY - 599);
+
+	int countx = dX - sX;
+	int county = dY - sY;
+
+	for (int a = 0; a < countx; a++)
+	{
+		PutPixel(sX + (a), sY, 152, 123, 54);
+		PutPixel(sX + (a), sY - 1, 152, 123, 54);
+		PutPixel(sX + (a), dY, 152, 123, 54);
+		PutPixel(sX + (a), dY - 1, 152, 123, 54);
+	}
+
+	for (int b = 0; b < county; b++)
+	{
+		PutPixel(sX, sY + (b), 152, 123, 54);
+		PutPixel(sX + 1, sY + (b), 152, 123, 54);
+		PutPixel(dX, sY + (b), 152, 123, 54);
+		PutPixel(dX + 1, sY + (b), 152, 123, 54);
+	}
+
+
+	pDst = (WORD*)m_pBackB4Addr + sX + ((sY)*m_sBackB4Pitch);
+
+	if (iType == 0) {
+		switch (m_cPixelFormat) {
+		case 1:
+			for (iy = 0; iy <= (dY - sY); iy++) {
+
+				for (ix = 0; ix <= (dX - sX); ix++)
+					pDst[ix] = (pDst[ix] & 0xf7de) >> 1;
+
+				pDst += m_sBackB4Pitch;
+			}
+			break;
+
+		case 2:
+			for (iy = 0; iy <= (dY - sY); iy++) {
+
+				for (ix = 0; ix <= (dX - sX); ix++)
+					pDst[ix] = (pDst[ix] & 0x7bde) >> 1;
+
+				pDst += m_sBackB4Pitch;
+			}
+			break;
+		}
+	}
+	else
+	{
+		switch (iType) {
+		case 1:
+			if (m_cPixelFormat == 1)
+				wValue = 0x38e7;
+			else wValue = 0x1ce7;
+			break;
+
+		case 2:
+			if (m_cPixelFormat == 1)
+				wValue = 0x1863;
+			else wValue = 0xc63;
+			break;
+		}
+
+		for (iy = 0; iy <= (dY - sY); iy++) {
+
+			for (ix = 0; ix <= (dX - sX); ix++)
+				pDst[ix] = wValue;
+
+			pDst += m_sBackB4Pitch;
+		}
+	}
+}

@@ -3,6 +3,9 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "Client.h"
+#include <direct.h>
+
+extern char G_cTxt[512];
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -312,6 +315,19 @@ CClient::CClient(HWND hWnd)
 	m_bMagicItem = FALSE;
 	m_iSpellCount = 0;
 	m_bMagicPauseTime = FALSE;
+
+	for (i = 0; i < 13; i++)
+	{
+		for (int x = 0; x < 17; x++)
+		{
+			m_pShards[i][x] = NULL;
+			m_pFragments[i][x] = NULL;
+		}
+	}
+
+	for (i = 0; i < 100; i++) {
+		m_pMobKillCount[i] = NULL;
+	}
 }
 
 CClient::~CClient()
@@ -329,6 +345,29 @@ CClient::~CClient()
 			delete m_pItemInBankList[i];
 			m_pItemInBankList[i]=NULL;
 		}
+
+	for (i = 0; i < 13; i++)
+	{
+		for (int x = 0; x < 17; x++)
+		{
+			if (m_pShards[i][x] != NULL) {
+				delete m_pShards[i][x];
+				m_pShards[i][x] = NULL;
+			}
+
+			if (m_pFragments[i][x] != NULL) {
+				delete m_pFragments[i][x];
+				m_pFragments[i][x] = NULL;
+			}
+		}
+	}
+
+	for (i = 0; i < 100; i++) {
+		if (m_pMobKillCount[i] != NULL) {
+			delete m_pMobKillCount[i];
+			m_pMobKillCount[i] = NULL;
+		}
+	}
 }
 
 BOOL CClient::bCreateNewParty()
@@ -347,4 +386,283 @@ BOOL CClient::bCreateNewParty()
 	}
 
 	return TRUE;
+}
+
+static void tokenize(string const& str, const char* delim,
+	std::vector<string>& out)
+{
+	char* token = strtok(const_cast<char*>(str.c_str()), delim);
+	while (token != nullptr)
+	{
+		out.push_back(string(token));
+		token = strtok(nullptr, delim);
+	}
+}
+
+static string get_line(string file, string value1)
+{
+	ifstream fin(file);
+
+	string line;
+
+	while (getline(fin, line))
+	{
+		if (line.find(value1) != string::npos)
+			return line;
+	}
+
+	return "#";
+}
+
+string CClient::getvalue(string val, char* fileName)
+{
+	_mkdir(fileName);
+
+	char cFileName[112] = {};
+	char cDir[112] = {};
+	strcat(cFileName, fileName);
+	strcat(cFileName, "\\");
+	wsprintf(cDir, "AscII%d", (unsigned char)m_cCharName[0]);
+	strcat(cFileName, cDir);
+	strcat(cFileName, "\\");
+	strcat(cFileName, m_cCharName);
+	strcat(cFileName, ".txt");
+
+	string result = get_line(cFileName, val);
+	if (string(result) == "#") return result;
+	else result.erase(0, val.length());
+	return result;
+}
+
+void CClient::read_mobs_data()
+{
+	for (int i = 0; i < 100; i++)
+	{
+		wsprintf(G_cTxt, "mob-%d = ", i + 1);
+		string token = getvalue(G_cTxt, "Mobs");
+		if (string(token) == "#") continue;
+		const char* delim = " ";
+		vector<string> out;
+		tokenize(token, delim, out);
+
+		CMobCounter* u = new class CMobCounter;
+
+		int count = 0;
+		for (auto& token : out)
+		{
+			count++;
+			switch (count)
+			{
+			case 1: strcpy(u->cNpcName, (char*)token.c_str()); break;
+			case 2: u->iKillCount = atoi((char*)token.c_str()); break;
+			case 3: u->iNextCount = atoi((char*)token.c_str()); break;
+			case 4: u->iLevel = atoi((char*)token.c_str()); break;
+			default: break;
+			}
+		}
+
+		m_pMobKillCount[i] = u;
+	}
+}
+
+void CClient::save_mobs_data()
+{
+	char cFileName[112] = {};
+	char cDir[112] = {};
+	strcat(cFileName, "Mobs");
+	strcat(cFileName, "\\");
+	wsprintf(cDir, "AscII%d", (unsigned char)m_cCharName[0]);
+	strcat(cFileName, cDir);
+	strcat(cFileName, "\\");
+	strcat(cFileName, m_cCharName);
+	strcat(cFileName, ".txt");
+
+	FILE* fp = fopen(cFileName, "wt");
+
+	if (fp != NULL)
+	{
+		for (int i = 0; i < 100; i++)
+		{
+			if (m_pMobKillCount[i] != NULL)
+			{
+				string m_sSave = "mob-";
+				m_sSave.append(to_string(i + 1));
+				m_sSave.append(" = ");
+				m_sSave.append(m_pMobKillCount[i]->cNpcName);
+				m_sSave.append(" ");
+				m_sSave.append(to_string(m_pMobKillCount[i]->iKillCount));
+				m_sSave.append(" ");
+				m_sSave.append(to_string(m_pMobKillCount[i]->iNextCount));
+				m_sSave.append(" ");
+				m_sSave.append(to_string(m_pMobKillCount[i]->iLevel));
+				m_sSave.append("\n");
+
+				fwrite((char*)m_sSave.c_str(), 1, m_sSave.size(), fp);
+			}
+		}
+
+		fclose(fp);
+	}
+}
+
+void CClient::read_shards_data()
+{
+	for (int i = 0; i < 13; i++)
+	{
+		for (int x = 0; x < 17; x++)
+		{
+			wsprintf(G_cTxt, "shard-%d-%d = ", i + 1, x + 1);
+			string token = getvalue(G_cTxt, "Shards");
+			if (string(token) == "#") continue;
+			const char* delim = " ";
+			vector<string> out;
+			tokenize(token, delim, out);
+
+			CEnchanting* u = new class CEnchanting;
+
+			int count = 0;
+			for (auto& token : out)
+			{
+				count++;
+				switch (count)
+				{
+				case 1: strcpy(u->cName, (char*)token.c_str()); break;
+				case 2: u->iCount = atoi((char*)token.c_str()); break;
+				case 3: strcpy(u->cDesc, (char*)token.c_str()); break;
+				case 4: u->dwType = (DWORD)atoi((char*)token.c_str()); break;
+				case 5: u->dwValue = (DWORD)atoi((char*)token.c_str()); break;
+				default: break;
+				}
+			}
+
+			m_pShards[i][x] = u;
+		}
+	}
+}
+void CClient::save_shards_data()
+{
+	char cFileName[112] = {};
+	char cDir[112] = {};
+	strcat(cFileName, "Shards");
+	strcat(cFileName, "\\");
+	wsprintf(cDir, "AscII%d", (unsigned char)m_cCharName[0]);
+	strcat(cFileName, cDir);
+	strcat(cFileName, "\\");
+	strcat(cFileName, m_cCharName);
+	strcat(cFileName, ".txt");
+
+	FILE* fp = fopen(cFileName, "wt");
+
+	if (fp != NULL)
+	{
+		for (int i = 0; i < 13; i++)
+		{
+			for (int x = 0; x < 17; x++)
+			{
+				if (m_pShards[i][x] != NULL)
+				{
+					string m_sSave = "shard-";
+					m_sSave.append(to_string(i + 1));
+					m_sSave.append("-");
+					m_sSave.append(to_string(x + 1));
+					m_sSave.append(" = ");
+					m_sSave.append(m_pShards[i][x]->cName);
+					m_sSave.append(" ");
+					m_sSave.append(to_string(m_pShards[i][x]->iCount));
+					m_sSave.append(" ");
+					m_sSave.append(m_pShards[i][x]->cDesc);
+					m_sSave.append(" ");
+					m_sSave.append(to_string(m_pShards[i][x]->dwType));
+					m_sSave.append(" ");
+					m_sSave.append(to_string(m_pShards[i][x]->dwValue));
+					m_sSave.append("\n");
+
+					fwrite((char*)m_sSave.c_str(), 1, m_sSave.size(), fp);
+				}
+			}
+		}
+
+		fclose(fp);
+	}
+}
+
+void CClient::read_fragments_data()
+{
+	for (int i = 0; i < 13; i++)
+	{
+		for (int x = 0; x < 17; x++)
+		{
+			wsprintf(G_cTxt, "fragment-%d-%d = ", i + 1, x + 1);
+			string token = getvalue(G_cTxt, "Fragments");
+			if (string(token) == "#") continue;
+			const char* delim = " ";
+			vector<string> out;
+			tokenize(token, delim, out);
+
+			CEnchanting* u = new class CEnchanting;
+
+			int count = 0;
+			for (auto& token : out)
+			{
+				count++;
+				switch (count)
+				{
+				case 1: strcpy(u->cName, (char*)token.c_str()); break;
+				case 2: u->iCount = atoi((char*)token.c_str()); break;
+				case 3: strcpy(u->cDesc, (char*)token.c_str()); break;
+				case 4: u->dwType = (DWORD)atoi((char*)token.c_str()); break;
+				case 5: u->dwValue = (DWORD)atoi((char*)token.c_str()); break;
+				default: break;
+				}
+			}
+
+			m_pFragments[i][x] = u;
+		}
+	}
+}
+void CClient::save_fragments_data()
+{
+	char cFileName[112] = {};
+	char cDir[112] = {};
+	strcat(cFileName, "Fragments");
+	strcat(cFileName, "\\");
+	wsprintf(cDir, "AscII%d", (unsigned char)m_cCharName[0]);
+	strcat(cFileName, cDir);
+	strcat(cFileName, "\\");
+	strcat(cFileName, m_cCharName);
+	strcat(cFileName, ".txt");
+
+	FILE* fp = fopen(cFileName, "wt");
+
+	if (fp != NULL)
+	{
+		for (int i = 0; i < 13; i++)
+		{
+			for (int x = 0; x < 17; x++)
+			{
+				if (m_pFragments[i][x] != NULL)
+				{
+					string m_sSave = "fragment-";
+					m_sSave.append(to_string(i + 1));
+					m_sSave.append("-");
+					m_sSave.append(to_string(x + 1));
+					m_sSave.append(" = ");
+					m_sSave.append(m_pFragments[i][x]->cName);
+					m_sSave.append(" ");
+					m_sSave.append(to_string(m_pFragments[i][x]->iCount));
+					m_sSave.append(" ");
+					m_sSave.append(m_pFragments[i][x]->cDesc);
+					m_sSave.append(" ");
+					m_sSave.append(to_string(m_pFragments[i][x]->dwType));
+					m_sSave.append(" ");
+					m_sSave.append(to_string(m_pFragments[i][x]->dwValue));
+					m_sSave.append("\n");
+
+					fwrite((char*)m_sSave.c_str(), 1, m_sSave.size(), fp);
+				}
+			}
+		}
+
+		fclose(fp);
+	}
 }

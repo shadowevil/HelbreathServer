@@ -22,6 +22,7 @@ typedef signed char i8;
 class DXC_ddraw  
 {
 public:	
+	void DrawItemShadowBox(short sX, short sY, short dX, short dY, int iType = 0);
 	bool m_init;
 	void ChangeBPP(i8 bpp);
 	void * operator new (size_t size) 

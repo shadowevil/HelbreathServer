@@ -54,6 +54,7 @@ using namespace std;
 #include "BuildItem.h"
 #include "ItemName.h"
 #include "Curse.h"
+#include "MobCounter.h"
 #ifdef DEF_USING_WIN_IME
 	#include <RICHEDIT.H>
 #endif
@@ -143,6 +144,37 @@ using namespace std;
 #define DEF_MAXCRUSADESTRUCTURES	300
 
 
+// shards
+#define SHARD_NONE		0
+#define SHARD_CRITICAL	1
+#define SHARD_POISONING	2
+#define SHARD_RIGHTEOUS	3
+#define SHARD_UNUSED	4	// UNUSED
+#define SHARD_AGILE		5
+#define SHARD_LIGHT		6
+#define SHARD_SHARP		7
+#define SHARD_STRONG	8
+#define SHARD_ANCIENT	9
+#define SHARD_CASTPROB	10
+#define SHARD_MANACONV	11
+#define SHARD_CRITICAL2	12
+
+// fragments
+#define FRAGMENT_NONE		0
+#define FRAGMENT_PSNRES		1
+#define FRAGMENT_HITPROB	2
+#define FRAGMENT_DEF		3
+#define FRAGMENT_HPREC		4
+#define FRAGMENT_SPREC		5
+#define FRAGMENT_MPREC		6
+#define FRAGMENT_MR			7
+#define FRAGMENT_PA			8
+#define FRAGMENT_MA			9
+#define FRAGMENT_CAD		10
+#define FRAGMENT_EXP		11
+#define FRAGMENT_GOLD		12
+
+
 
 typedef unsigned long uint32;
 
@@ -219,6 +251,47 @@ public:
 	char cStateChange1;
 	char cStateChange2;
 	char cStateChange3;
+
+	struct {
+		char cName[21], cDesc[11];
+		int iCount;
+		DWORD dwType;
+		DWORD dwValue;
+	} m_stShards[13][17];
+
+	struct {
+		char cName[21], cDesc[11];
+		int iCount;
+		DWORD dwType;
+		DWORD dwValue;
+	} m_stFragments[13][17];
+
+	void DrawDialogBox_EnchantingUpgradeAll(short msX, short msY);
+	void DlgBoxClick_EnchantingUpgradeAll(short msX, short msY);
+
+	void DrawDialogBox_EnchantingUpgrade(int msX, int msY);
+	void DlgBoxClick_EnchantingUpgrade(int msX, int msY);
+
+	void DrawDialogBox_Enchanting(int msX, int msY);
+	void DlgBoxClick_Enchanting(int msX, int msY);
+
+	void DrawDialogBox_EnchantingBag(int msX, int msY);
+	void DlgBoxClick_EnchantingBag(int msX, int msY);
+
+	char* GetFragmentDesc(DWORD dwType);
+	char* GetShardDesc(DWORD dwType);
+	char* GetFragmentName(DWORD dwType);
+	char* GetShardName(DWORD dwType);
+
+	bool CheckValidFragment(DWORD dwType);
+	bool CheckValidShard(DWORD dwType);
+
+	void bItemDrop_Enchanting();
+
+	void NotifyMsg_MobKillCount(char* pData);
+	void DrawDialogBox_MobKills(short msX, short msY, short msZ, char cLB);
+
+	class CMobCounter* m_pMobKillCount[100];
 
 	int m_iTeleportMapCount;
 	void ResponseTeleportList(char * pData);

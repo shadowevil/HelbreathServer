@@ -48,6 +48,7 @@
 #include "GlobalDef.h"
 #include "TempNpcItem.h"
 #include "PartyManager.h"
+#include "MobCounter.h"
 
 #define DEF_MAXADMINS				50
 #define DEF_MAXMAPS					100
@@ -214,6 +215,18 @@ typedef unsigned char u8;
 typedef signed char i8;
 
 
+template <typename T>
+static bool In(const T& value, std::initializer_list<T> values) {
+	return std::any_of(values.begin(), values.end(),
+		[&value](const T& x) { return x == value; });
+}
+
+template <typename T>
+static bool NotIn(const T& value, std::initializer_list<T> values) {
+	return !In(value, values);
+}
+
+
 template <typename T, class = typename enable_if<!is_pointer<T>::value>::type >
 static void Push(char*& cp, T value) {
 	auto p = (T*)cp;
@@ -282,6 +295,8 @@ class CGame
 {
 public:
 
+	void RequestMobKills(int client);
+
 	void RequestNoticementHandler(int iClientH);
 	BOOL bSendClientConfig(int iClientH, char* cFile);
 
@@ -324,9 +339,9 @@ public:
 	BOOL bPlantSeedBag(int iMapIndex, int dX, int dY, int iItemEffectValue1, int iItemEffectValue2, int iClientH);
 	void _CheckFarmingAction(short sAttackerH, short sTargetH, BOOL bType);
 
-	void GreenBall_Weather(int iClientH, char * pData, DWORD dwMsgSize);
+	
 	void ApocalypseEnder();
-	void ApocalypseStarter();
+	
 	BOOL bReadScheduleConfigFile(char *pFn);
 
 	BOOL bReadHeldenianGUIDFile(char * cFn);
@@ -336,11 +351,7 @@ public:
 	void LocalEndApocalypse();
 	void LocalStartApocalypse(DWORD dwApocalypseGUID);
 	void GlobalEndApocalypseMode();
-	void GlobalStartApocalypseMode(int iClientH, char *pData, DWORD dwMsgSize);
-	void OpenApocalypseGate(int iClientH);
-
-	// KLKS clean tiles
-	void AdminOrder_CleanMap(int iClientH, char * pData, DWORD dwMsgSize);
+	
 	
 	// Lists
 	BOOL bReadBannedListConfigFile(char *pFn);
@@ -395,7 +406,7 @@ public:
 
 	// Acidx commands
 	void AdminOrder_Time(int iClientH, char * pData, DWORD dwMsgSize);
-	void AdminOrder_CheckRep(int iClientH, char *pData);
+	
 	void AdminOrder_Pushplayer(int iClientH, char * pData, DWORD dwMsgSize);
 
 	void AdminOrder_CheckRep(int iClientH, char *pData,DWORD dwMsgSize);
@@ -432,17 +443,17 @@ public:
 	void RequestChangePlayMode(int iClientH);
 	void GetHeroMantleHandler(int iClientH,int iItemID,char * pString);
 	void AdminOrder_Weather(int iClientH, char * pData, DWORD dwMsgSize);
-	void AdminOrder_SendMSG(int iClientH, char *pData, DWORD dwMsgSize);
+	
 	void SendMsg(short sOwnerH, char cOwnerType, BOOL bStatus, long lPass);
 	BOOL bCheckMagicInt(int iClientH);
 	BOOL bChangeState(char cStateChange, char* cStr, char *cVit,char *cDex,char *cInt,char *cMag,char *cChar);
 	void StateChangeHandler(int iClientH, char * pData, DWORD dwMsgSize);
 	void AdminOrder_SetStatus(int iClientH, char *pData, DWORD dwMsgSize);
-	void SetStatusFlag(short sOwnerH, char cOwnerType, BOOL bStatus, int iPass);
+	
 	void SetPoisonFlag(short sOwnerH, char cOwnerType, BOOL bStatus);
 	void GayDave(char cDave[350], char cInput[350]);
 	void AdminOrder_SummonStorm(int iClientH, char* pData, DWORD dwMsgSize);
-	void AdminOrder_CallMagic(int iClientH, char * pData, DWORD dwMsgSize);
+	
 	void AdminOrder_SummonDeath(int iClientH);
 	void AdminOrder_SetZerk(int iClientH, char * pData, DWORD dwMsgSize);
 	void AdminOrder_SetFreeze(int iClientH, char * pData, DWORD dwMsgSize);
@@ -576,7 +587,7 @@ public:
 	void SetBerserkFlag(short sOwnerH, char cOwnerType, BOOL bStatus);
 	void SetHasteFlag(short sOwnerH, char cOwnerType, BOOL bStatus);
 	void SpecialEventHandler();
-	int iGetPlayerRelationship_SendEvent(int iClientH, int iOpponentH);
+	
 	int iGetNpcRelationship_SendEvent(int iNpcH, int iOpponentH);
 	int _iForcePlayerDisconect(int iNum);
 	int iGetMapIndex(char * pMapName);
@@ -785,9 +796,7 @@ public:
 	BOOL bCheckIsItemUpgradeSuccess(int iClientH, int iItemIndex, int iSomH, BOOL bBonus = FALSE);
 	void RequestItemUpgradeHandler(int iClientH, int iItemIndex);
 
-	// ArchAngle's Codes
-	void StormBringer(int iClientH, short dX, short dY);
-	void FireBow(short iClientH, short dX, short dY);
+	
 	
 	//Party Codes
 	void RequestCreatePartyHandler(int iClientH);
@@ -1183,13 +1192,22 @@ public:
 	void RequestResurrectPlayer(int iClientH, bool bResurrect);
 	void LoteryHandler(int iClientH);
 	void SetSkillAll(int iClientH,char * pData, DWORD dwMsgSize);
-	void EKAnnounce(int iClientH, char* pMsg);
+	
 	/*void GetAngelMantleHandler(int iClientH,int iItemID,char * pString);
 	void CheckAngelUnequip(int iClientH, int iAngelID);
 	int iAngelEquip(int iClientH);*/
 
 	void SetAngelFlag(short sOwnerH, char cOwnerType, int iStatus, int iTemp);
 	void GetAngelHandler(int iClientH, char* pData, DWORD dwMsgSize);
+
+	void RequestEnchantUpgradeHandler(int client, DWORD type, DWORD lvl, int iType);
+	int GetRequiredLevelForUpgrade(DWORD value);
+	void RequestItemEnchantHandler(int iClientH, int sDestItemID, int iType);
+	void RequestItemDisenchantHandler(int iClientH, int iItemIndex);
+	char* GetShardDesc(DWORD dwType);
+	char* GetFragmentDesc(DWORD dwType);
+	char* GetShardName(DWORD dwType);
+	char* GetFragmentName(DWORD dwType);
 };
 
 #endif // !defined(AFX_GAME_H__C3D29FC5_755B_11D2_A8E6_00001C7030A6__INCLUDED_)

@@ -494,6 +494,24 @@ CGame::CGame()
 	m_stDialogBoxInfo[42].sSizeX = 258;
 	m_stDialogBoxInfo[42].sSizeY = 339;
 
+	// Upgrade Window
+	m_stDialogBoxInfo[44].sX = 380;
+	m_stDialogBoxInfo[44].sY = 180;
+	m_stDialogBoxInfo[44].sSizeX = 160;
+	m_stDialogBoxInfo[44].sSizeY = 85;
+
+	// Mob Kill Count
+	m_stDialogBoxInfo[48].sX = 337 + SCREENX;
+	m_stDialogBoxInfo[48].sY = 57 + SCREENY;
+	m_stDialogBoxInfo[48].sSizeX = 258;
+	m_stDialogBoxInfo[48].sSizeY = 339;
+
+	// Upgrade all
+	m_stDialogBoxInfo[49].sX = 185;
+	m_stDialogBoxInfo[49].sY = 100;
+	m_stDialogBoxInfo[49].sSizeX = 350;
+	m_stDialogBoxInfo[49].sSizeY = 105;
+
 	// Snoopy: Resurection
 	m_stDialogBoxInfo[50].sX = 185 + SCREENX;
 	m_stDialogBoxInfo[50].sY = 100 + SCREENY;
@@ -505,6 +523,20 @@ CGame::CGame()
 	m_stDialogBoxInfo[51].sY = 57 + SCREENY;
 	m_stDialogBoxInfo[51].sSizeX = 258;
 	m_stDialogBoxInfo[51].sSizeY = 339;
+
+	// Enchanting Bag
+	m_stDialogBoxInfo[54].sX = 140;
+	m_stDialogBoxInfo[54].sY = 110;
+	m_stDialogBoxInfo[54].sSizeX = 258;
+	m_stDialogBoxInfo[54].sSizeY = 350;
+
+	//Enchanting
+	m_stDialogBoxInfo[58].sX = 140;
+	m_stDialogBoxInfo[58].sY = 110;
+	m_stDialogBoxInfo[58].sSizeX = 258;
+	m_stDialogBoxInfo[58].sSizeY = 399;
+
+
 
 	m_bCtrlPressed  = FALSE;
 	m_bShiftPressed = FALSE;
@@ -2889,6 +2921,124 @@ DICFC_STOPDECODING:;
 	return TRUE;
 }
 
+void CGame::NotifyMsg_MobKillCount(char* pData)
+{
+	char* cp;
+	short* sp;
+	int i;
+
+	cp = (char*)(pData + DEF_INDEX2_MSGTYPE + 2);
+
+	for (i = 0; i < 100; i++)
+	{
+		if (m_pMobKillCount[i] != NULL)
+		{
+			delete m_pMobKillCount[i];
+			m_pMobKillCount[i] = NULL;
+		}
+	}
+
+	short total = (short)*cp;
+	cp += 2;
+
+	for (i = 0; i < total; i++)
+	{
+		m_pMobKillCount[i] = new class CMobCounter;
+
+		sp = (short*)cp;
+		m_pMobKillCount[i]->iKillCount = *sp;
+		cp += 2;
+
+		sp = (short*)cp;
+		m_pMobKillCount[i]->iNextCount = *sp;
+		cp += 2;
+
+		sp = (short*)cp;
+		m_pMobKillCount[i]->iLevel = *sp;
+		cp += 2;
+
+		memcpy(m_pMobKillCount[i]->cNpcName, cp, 20);
+		cp += 20;
+	}
+}
+
+void CGame::DrawDialogBox_MobKills(short msX, short msY, short msZ, char cLB)
+{
+	short sX, sY;
+	int  i, iTotalLines, iPointerLoc;
+	char cTemp[255], cTemp2[255], cTemp3[255];
+	double d1, d2, d3;
+
+	sX = m_stDialogBoxInfo[48].sX;
+	sY = m_stDialogBoxInfo[48].sY;
+
+	DrawNewDialogBox(DEF_SPRID_INTERFACE_ND_GAME2, sX, sY, 2);
+	PutString_SprFont(sX + 80, sY + 10, "Monster's Kills", 1, 1, 8);
+
+	PutString2(sX + 30, sY + 15 + 15, "Name", 0, 255, 0);
+	PutString2(sX + 125, sY + 15 + 15, "Progress", 0, 255, 0);
+	PutString2(sX + 183 + 10 + 10, sY + 15 + 15, "Level", 0, 255, 0);
+
+	switch (m_stDialogBoxInfo[48].cMode) {
+	case 0:
+		iTotalLines = 0;
+		for (i = 0; i < 100; i++)
+			if (m_pMobKillCount[i] != NULL) iTotalLines++;
+
+		if (iTotalLines > 18) {
+			d1 = (double)m_stDialogBoxInfo[48].sView;
+			d2 = (double)(iTotalLines - 18);
+			d3 = (274.0f * d1) / d2;
+			iPointerLoc = (int)(d3);
+			DrawNewDialogBox(DEF_SPRID_INTERFACE_ND_GAME2, sX, sY, 1);
+			DrawNewDialogBox(DEF_SPRID_INTERFACE_ND_GAME2, sX + 242, sY + iPointerLoc + 35, 7);
+		}
+		else iPointerLoc = NULL;
+
+		if (cLB != NULL && iTotalLines > 18)
+		{
+			if (iGetTopDialogBoxIndex() == 48)
+			{
+				if ((msX >= sX + 235) && (msX <= sX + 260) && (msY >= sY + 10) && (msY <= sY + 330))
+				{
+					d1 = (double)(msY - (sY + 35));
+					d2 = (double)(iTotalLines - 18);
+					d3 = (d1 * d2) / 274.0f;
+					m_stDialogBoxInfo[48].sView = (int)(d3 + 0.5f);
+				}
+			}
+		}
+		else m_stDialogBoxInfo[48].bIsScrollSelected = false;
+		if (iGetTopDialogBoxIndex() == 48 && msZ != NULL)
+		{
+			m_stDialogBoxInfo[48].sView = m_stDialogBoxInfo[48].sView - msZ / 60;
+			m_DInput.m_sZ = NULL;
+		}
+		if (iTotalLines > 18 && m_stDialogBoxInfo[48].sView > iTotalLines - 18) m_stDialogBoxInfo[48].sView = iTotalLines - 18;
+		if (m_stDialogBoxInfo[48].sView < 0 || iTotalLines < 18) m_stDialogBoxInfo[48].sView = NULL;
+
+		for (i = 0; i < 18; i++)
+		{
+			if (((i + m_stDialogBoxInfo[48].sView) < 100) && (m_pMobKillCount[i + m_stDialogBoxInfo[48].sView] != NULL))
+			{
+				ZeroMemory(cTemp, sizeof(cTemp));
+				wsprintf(cTemp, "%s", m_pMobKillCount[i + m_stDialogBoxInfo[48].sView]->cNpcName);
+
+				ZeroMemory(cTemp3, sizeof(cTemp3));
+				wsprintf(cTemp3, "%d/%d", m_pMobKillCount[i + m_stDialogBoxInfo[48].sView]->iKillCount, m_pMobKillCount[i + m_stDialogBoxInfo[48].sView]->iNextCount);
+
+				ZeroMemory(cTemp2, sizeof(cTemp2));
+				wsprintf(cTemp2, "%d", m_pMobKillCount[i + m_stDialogBoxInfo[48].sView]->iLevel);
+
+				PutString2(sX + 30, sY + 30 + (i * 15) + 15, cTemp, 255, 255, 255);
+				PutString2(sX + 123, sY + 30 + (i * 15) + 15, cTemp3, 255, 255, 255);
+				PutString2(sX + 183 + 10 + 15, sY + 30 + (i * 15) + 15, cTemp2, 255, 255, 255);
+			}
+		}
+		break;
+	}
+}
+
 
 void CGame::GameRecvMsgHandler(DWORD dwMsgSize, char * pData)
 { DWORD * dwpMsgID;
@@ -2897,7 +3047,9 @@ void CGame::GameRecvMsgHandler(DWORD dwMsgSize, char * pData)
 	case MSGID_ITEMCONFIGURATIONCONTENTS:
 		_bDecodeItemConfigFileContents((char*)(pData + DEF_INDEX2_MSGTYPE + 2), dwMsgSize);
 		break;
-
+	case DEF_NOTIFY_MOBKILLS:
+		NotifyMsg_MobKillCount(pData);
+		break;
 	case MSGID_RESPONSE_CHARGED_TELEPORT:
 		ResponseChargedTeleport(pData);
 		break;
@@ -4164,6 +4316,19 @@ BOOL CGame::_bCheckDlgBoxClick(short msX, short msY)
 			case 51:
 				DlgBoxClick_CMDHallMenu(msX, msY);
 				break;
+
+			case 58:
+				DlgBoxClick_Enchanting(msX, msY);
+				break;
+			case 54:
+				DlgBoxClick_EnchantingBag(msX, msY);
+				break;
+			case 44:
+				DlgBoxClick_EnchantingUpgrade(msX, msY);
+				break;
+			case 49:
+				DlgBoxClick_EnchantingUpgradeAll(msX, msY);
+				break;
 			}
 
 			return TRUE;
@@ -4326,6 +4491,10 @@ BOOL CGame::_bCheckDraggingItemRelease(short msX, short msY)
 			case 40:
 				bItemDrop_Slates();
 				break;
+
+			case 58:
+				bItemDrop_Enchanting();
+				break;
 			}
 			return TRUE;
 	}	}
@@ -4333,7 +4502,24 @@ BOOL CGame::_bCheckDraggingItemRelease(short msX, short msY)
 	return FALSE;
 }
 
+void CGame::bItemDrop_Enchanting()
+{
+	char cItemID;
+	cItemID = (char)m_stMCursor.sSelectedObjectID;
+	if (m_bIsItemDisabled[cItemID] == TRUE) return;
+	if (m_cCommand < 0) return;
+	if (m_pItemList[cItemID]->m_cEquipPos == DEF_EQUIPPOS_NONE) return;
 
+	switch (m_stDialogBoxInfo[58].cMode) {
+	case 0:
+	case 1:
+		m_bIsItemDisabled[m_stDialogBoxInfo[58].sV1] = FALSE;
+		m_stDialogBoxInfo[58].sV1 = cItemID;
+		m_bIsItemDisabled[cItemID] = TRUE;
+		PlaySound('E', 29, 0);
+		break;
+	}
+}
 
 void CGame::bItemDrop_ExternalScreen(char cItemID, short msX, short msY)
 {char  cName[21];
@@ -15975,6 +16161,22 @@ int CGame::_iCheckDlgBoxFocus(short msX, short msY, char cButtonSide)
 					else return -1;
 					break;
 
+				case 48:
+					sX = m_stDialogBoxInfo[48].sX;
+					sY = m_stDialogBoxInfo[48].sY;
+					if ((msX >= sX + 240) && (msX <= sX + 260) && (msY >= sY + 40) && (msY <= sY + 320))
+					{
+						m_stDialogBoxInfo[48].bIsScrollSelected = TRUE;
+						return -1;
+					}
+					if (m_stDialogBoxInfo[48].bIsScrollSelected == FALSE)
+					{
+						m_stMCursor.cSelectedObjectType = DEF_SELECTEDOBJTYPE_DLGBOX;
+						m_stMCursor.sSelectedObjectID = cDlgID;
+					}
+					else return -1;
+					break;
+
 				case 18:
 					sX = m_stDialogBoxInfo[18].sX;
 					sY = m_stDialogBoxInfo[18].sY;
@@ -16532,6 +16734,9 @@ void CGame::DrawDialogBoxs(short msX, short msY, short msZ, char cLB)
 		case 42:
 			DrawDialogBox_ChangeStatsMajestic(msX, msY);
 			break;
+		case 48:
+			DrawDialogBox_MobKills(msX, msY, msZ, cLB);
+			break;
 		case 50: // Snoopy: Resurection?
 			DrawDialogBox_Resurect(msX, msY);
 			break;
@@ -16582,6 +16787,41 @@ void CGame::EnableDialogBox(int iBoxID, int cType, int sV1, int sV2, char * pStr
  short sX, sY;
 
 	switch (iBoxID) {
+		// Enchanting
+	case 58:
+	case 54:
+		if (m_bIsDialogEnabled[iBoxID] == false)
+		{
+			m_stDialogBoxInfo[iBoxID].bFlag = false;
+			m_stDialogBoxInfo[iBoxID].cMode = 0;
+			m_stDialogBoxInfo[iBoxID].sV2 = -1;
+			m_stDialogBoxInfo[iBoxID].sV3 = -1;
+			m_stDialogBoxInfo[iBoxID].sV1 = -1;
+			m_stDialogBoxInfo[iBoxID].dwV1 = NULL;
+		}
+		break;
+	case 44:
+		if (m_bIsDialogEnabled[iBoxID] == false)
+		{
+			m_stDialogBoxInfo[iBoxID].bFlag = false;
+			m_stDialogBoxInfo[iBoxID].cMode = cType;
+			m_stDialogBoxInfo[iBoxID].sV2 = sV2;
+			m_stDialogBoxInfo[iBoxID].sV3 = -1;
+			m_stDialogBoxInfo[iBoxID].sV1 = sV1;
+			m_stDialogBoxInfo[iBoxID].dwV1 = NULL;
+		}
+		break;
+	case 49:
+		if (m_bIsDialogEnabled[iBoxID] == false)
+		{
+			m_stDialogBoxInfo[iBoxID].bFlag = false;
+			m_stDialogBoxInfo[iBoxID].cMode = cType;
+			m_stDialogBoxInfo[iBoxID].sV2 = -1;
+			m_stDialogBoxInfo[iBoxID].sV3 = -1;
+			m_stDialogBoxInfo[iBoxID].sV1 = sV1;
+			m_stDialogBoxInfo[iBoxID].dwV1 = NULL;
+		}
+		break;
 	case 11:
 		if (m_bIsDialogEnabled[11] == FALSE)
 		{	switch (cType) {
@@ -16717,6 +16957,7 @@ void CGame::EnableDialogBox(int iBoxID, int cType, int sV1, int sV2, char * pStr
 		break;
 
 	case 15:
+	case 48: // mob counter
 		break;
 
 	case 24:
@@ -24753,6 +24994,23 @@ void CGame::OnKeyUp(WPARAM wParam)
  DWORD dwTime = timeGetTime();
 
 	switch (wParam) {
+	case 69://'E'
+		if (m_cGameMode == DEF_GAMEMODE_ONMAINGAME)
+		{
+			if (m_bCtrlPressed)
+			{
+				if (m_bIsDialogEnabled[54] == FALSE && m_bIsDialogEnabled[58] == FALSE)
+				{
+					EnableDialogBox(58, NULL, NULL, NULL);
+				}
+				else
+				{
+					DisableDialogBox(58);
+					DisableDialogBox(54);
+				}
+			}
+		}
+		break;
 	case VK_SHIFT:
 		m_bShiftPressed = FALSE;
 		break;
@@ -24911,11 +25169,11 @@ void CGame::OnKeyUp(WPARAM wParam)
 		break;
 
 	case VK_F2:
-		UseShortCut( 1 );
+		UseShortCut( 2 );
 		break;
 
 	case VK_F3:
-		UseShortCut( 2 );
+		UseShortCut( 3 );
 		break;
 
 	case VK_INSERT:
@@ -25024,7 +25282,10 @@ void CGame::OnKeyUp(WPARAM wParam)
 		break;
 
 	case VK_F11:
-		m_bDialogTrans = !m_bDialogTrans;
+		//m_bDialogTrans = !m_bDialogTrans;
+		if (m_bIsDialogEnabled[48] == true)
+			DisableDialogBox(48);
+		else EnableDialogBox(48, 0, 0, 0);
 		break;
 
 	case VK_F12:
@@ -25035,13 +25296,14 @@ void CGame::OnKeyUp(WPARAM wParam)
 		break;
 
 	case VK_F1:
-		if (m_bInputStatus) return;
-		if (m_bIsDialogEnabled[35] == FALSE) // 35 CLEROTH
-			EnableDialogBox(35, NULL, NULL, NULL);
-		else
-		{	DisableDialogBox(35);
-			DisableDialogBox(18);
-		}
+		//if (m_bInputStatus) return;
+		//if (m_bIsDialogEnabled[35] == FALSE) // 35 CLEROTH
+		//	EnableDialogBox(35, NULL, NULL, NULL);
+		//else
+		//{	DisableDialogBox(35);
+		//	DisableDialogBox(18);
+		//}
+		UseShortCut(1);
 		break;
 
 	case VK_UP:
@@ -25811,10 +26073,10 @@ void CGame::UpdateScreen_OnQueryDeleteCharacter()
 
 void CGame::NotifyMsgHandler(char * pData)
 {DWORD * dwp, dwTime, dwTemp;
- WORD  * wp, wEventType;
- char  * cp, cTemp[510], cTxt[120];
+ WORD  * wp, wEventType, wType, wValue, wCount;
+ char  * cp, cTemp[510], cTxt[120], cName[21], cDesc[11];
  short * sp, sX, sY, sV1, sV2, sV3, sV4, sV5, sV6, sV7, sV8, sV9;
- int   * ip, i, iV1, iV2, iV3, iV4;
+ int   * ip, i, iV1, iV2, iV3, iV4, iType, iValue;
 
 	dwTime = timeGetTime();
 
@@ -25822,7 +26084,66 @@ void CGame::NotifyMsgHandler(char * pData)
 	wEventType = *wp;
 
 	switch (wEventType) {
+	case msg_shard:
+		cp = (char*)(pData + DEF_INDEX2_MSGTYPE + 2);
+		wp = (WORD*)cp;
+		wType = *wp;
+		cp += 2;
 
+		wp = (WORD*)cp;
+		wValue = *wp;
+		cp += 2;
+
+		wp = (WORD*)cp;
+		wCount = *wp;
+		cp += 2;
+
+		ZeroMemory(cName, sizeof(cName));
+		memcpy(cName, cp, 20);
+		cp += 20;
+
+		ZeroMemory(cDesc, sizeof(cDesc));
+		memcpy(cDesc, cp, 10);
+		cp += 10;
+
+		iType = wType;
+		iValue = wValue - 1;
+		m_stShards[iType][iValue].dwType = wType;
+		m_stShards[iType][iValue].dwValue = wValue;
+		m_stShards[iType][iValue].iCount = wCount;
+		strcpy(m_stShards[iType][iValue].cName, cName);
+		strcpy(m_stShards[iType][iValue].cDesc, cDesc);
+		break;
+	case msg_fragment:
+		cp = (char*)(pData + DEF_INDEX2_MSGTYPE + 2);
+		wp = (WORD*)cp;
+		wType = *wp;
+		cp += 2;
+
+		wp = (WORD*)cp;
+		wValue = *wp;
+		cp += 2;
+
+		wp = (WORD*)cp;
+		wCount = *wp;
+		cp += 2;
+
+		ZeroMemory(cName, sizeof(cName));
+		memcpy(cName, cp, 20);
+		cp += 20;
+
+		ZeroMemory(cDesc, sizeof(cDesc));
+		memcpy(cDesc, cp, 10);
+		cp += 10;
+
+		iType = wType;
+		iValue = wValue - 1;
+		m_stFragments[iType][iValue].dwType = wType;
+		m_stFragments[iType][iValue].dwValue = wValue;
+		m_stFragments[iType][iValue].iCount = wCount;
+		strcpy(m_stFragments[iType][iValue].cName, cName);
+		strcpy(m_stFragments[iType][iValue].cDesc, cDesc);
+		break;
 	case DEF_NOTIFY_SLATE_BERSERK:		// reversed by Snoopy: 0x0BED
 		AddEventList( DEF_MSG_NOTIFY_SLATE_BERSERK, 10 );//"Berserk magic casted!"
 		m_bUsingSlate = TRUE;
@@ -28245,6 +28566,27 @@ void CGame::DlbBoxDoubleClick_Inventory(short msX, short msY)
 				{	bSendCommand(MSGID_COMMAND_COMMON, DEF_COMMONTYPE_REQ_REPAIRITEM, NULL, cItemID, m_stDialogBoxInfo[39].sV3, NULL, m_pItemList[cItemID]->m_cName, m_stDialogBoxInfo[39].sV4); // v1.4
 					return;
 			}	}
+
+			if (m_bIsDialogEnabled[14])
+			{	// centu - wh
+				bItemDrop_Bank(msX, msY);
+				return;
+			}
+			else if (m_bIsDialogEnabled[31])
+			{	// centu - sell
+				bItemDrop_SellList(msX, msY);
+				return;
+			}
+			else if (m_bIsDialogEnabled[34])
+			{	// centu - upgrade
+				bItemDrop_ItemUpgrade();
+				return;
+			}
+			else if (m_bIsDialogEnabled[58])
+			{	// centu - enchanting
+				bItemDrop_Enchanting();
+				return;
+			}
 
 			if (   (m_pItemList[cItemID]->m_cItemType == DEF_ITEMTYPE_USE_DEPLETE)
 				|| (m_pItemList[cItemID]->m_cItemType == DEF_ITEMTYPE_USE_PERM)
@@ -41462,7 +41804,7 @@ void CGame::GoHomepage()
 // num : 1 - F2, 2 - F3
 void CGame::UseShortCut( int num )
 {int index;
-	if( num < 3 ) index = num+1;
+	if( num < 4 ) index = num;
 	else index = num+7;
 	if(m_cGameMode != DEF_GAMEMODE_ONMAINGAME) return;
 	if (m_bCtrlPressed == TRUE)
@@ -42961,3 +43303,994 @@ void CGame::DebugLog(char * cStr)
 
 
 
+void CGame::DrawDialogBox_EnchantingUpgradeAll(short msX, short msY)
+{
+	char cText[64];
+	short sX, sY;
+	sX = m_stDialogBoxInfo[49].sX;
+	sY = m_stDialogBoxInfo[49].sY;
+
+	short limitX, limitY, addx = 0, addy = 0;
+
+	limitX = sX + m_stDialogBoxInfo[49].sSizeX;
+	limitY = sY + m_stDialogBoxInfo[49].sSizeY;
+	m_DDraw.DrawItemShadowBox(sX, sY, limitX, limitY);
+	m_DDraw.DrawItemShadowBox(sX, sY, limitX, limitY);
+
+	switch (m_stDialogBoxInfo[49].cMode) {
+	case 0:
+		wsprintf(cText, "Do you want to upgrade all %s shards?", GetShardName((DWORD)m_stDialogBoxInfo[49].sV1));
+		PutString(sX + 25, sY + 20, cText, RGB(255, 255, 255));
+
+		if ((msX >= sX + 30) && (msX <= sX + 30 + DEF_BTNSZX) && (msY >= sY + 55) && (msY <= sY + 55 + DEF_BTNSZY)) {
+			//DrawNewDialogBox2(SPRID_NEWBUTTON2, sX + 30, sY + 55, 0, FALSE, FALSE);
+			PutString2(sX + 80, sY + 57, "Yes", 250, 250, 0);
+		}
+		else {
+			//DrawNewDialogBox2(SPRID_NEWBUTTON1, sX + 30, sY + 55, 0, FALSE, FALSE);
+			PutString2(sX + 80, sY + 57, "Yes", 255, 255, 255);
+		}
+
+		if ((msX >= sX + 170) && (msX <= sX + 170 + DEF_BTNSZX) && (msY >= sY + 55) && (msY <= sY + 55 + DEF_BTNSZY)) {
+			//DrawNewDialogBox2(SPRID_NEWBUTTON2, sX + 170, sY + 55, 0, FALSE, FALSE);
+			PutString2(sX + 210, sY + 57, "No", 250, 250, 0);
+		}
+		else {
+			//DrawNewDialogBox2(SPRID_NEWBUTTON1, sX + 170, sY + 55, 0, FALSE, FALSE);
+			PutString2(sX + 210, sY + 57, "No", 255, 255, 255);
+		}
+		break;
+	case 1:
+		wsprintf(cText, "Do you want to upgrade all %s fragments?", GetFragmentName((DWORD)m_stDialogBoxInfo[49].sV1));
+		PutString(sX + 25, sY + 20, cText, RGB(255, 255, 255));
+
+		if ((msX >= sX + 30) && (msX <= sX + 30 + DEF_BTNSZX) && (msY >= sY + 55) && (msY <= sY + 55 + DEF_BTNSZY)) {
+			//DrawNewDialogBox2(SPRID_NEWBUTTON2, sX + 30, sY + 55, 0, FALSE, FALSE);
+			PutString2(sX + 80, sY + 57, "Yes", 250, 250, 0);
+		}
+		else {
+			//DrawNewDialogBox2(SPRID_NEWBUTTON1, sX + 30, sY + 55, 0, FALSE, FALSE);
+			PutString2(sX + 80, sY + 57, "Yes", 255, 255, 255);
+		}
+
+		if ((msX >= sX + 170) && (msX <= sX + 170 + DEF_BTNSZX) && (msY >= sY + 55) && (msY <= sY + 55 + DEF_BTNSZY)) {
+			//DrawNewDialogBox2(SPRID_NEWBUTTON2, sX + 170, sY + 55, 0, FALSE, FALSE);
+			PutString2(sX + 210, sY + 57, "No", 250, 250, 0);
+		}
+		else {
+			//DrawNewDialogBox2(SPRID_NEWBUTTON1, sX + 170, sY + 55, 0, FALSE, FALSE);
+			PutString2(sX + 210, sY + 57, "No", 255, 255, 255);
+		}
+		break;
+	}
+}
+
+void CGame::DlgBoxClick_EnchantingUpgradeAll(short msX, short msY)
+{
+	short sX, sY;
+	sX = m_stDialogBoxInfo[49].sX;
+	sY = m_stDialogBoxInfo[49].sY;
+	if ((msX >= sX + 30) && (msX <= sX + 30 + DEF_BTNSZX) && (msY >= sY + 55) && (msY <= sY + 55 + DEF_BTNSZY))
+	{   // yes
+		for (int i = 0; i < 17; i++)
+		{
+			bSendCommand(MSGID_COMMAND_COMMON, DEF_COMMONTYPE_UPGRADEENCHANT, NULL, m_stDialogBoxInfo[49].sV1, i, m_stDialogBoxInfo[49].cMode + 10, NULL);
+		}
+		DisableDialogBox(49);
+		PlaySound('E', 14, 5);
+	}
+	else if ((msX >= sX + 170) && (msX <= sX + 170 + DEF_BTNSZX) && (msY >= sY + 55) && (msY <= sY + 55 + DEF_BTNSZY))
+	{	// no
+		DisableDialogBox(49);
+		PlaySound('E', 14, 5);
+	}
+}
+
+void CGame::DrawDialogBox_EnchantingUpgrade(int msX, int msY)
+{
+	int i, sX, sY;
+	char cItemColor, cStr1[120], cStr2[120], cStr3[120];
+	DWORD dwTime = timeGetTime();
+	int iLoc, iLenSize, iEntry = 0;
+	char cTxt[3], cDesc[64];
+
+	sX = m_stDialogBoxInfo[44].sX;
+	sY = m_stDialogBoxInfo[44].sY;
+
+	short limitX, limitY, addx = 0, addy = 0;
+
+	limitX = sX + m_stDialogBoxInfo[44].sSizeX;
+	limitY = sY + m_stDialogBoxInfo[44].sSizeY;
+	m_DDraw.DrawItemShadowBox(sX, sY, limitX, limitY);
+	m_DDraw.DrawItemShadowBox(sX, sY, limitX, limitY);
+
+	wsprintf(cDesc, "%s Lv.%d", m_stDialogBoxInfo[44].cMode == 0 ? GetShardName((DWORD)m_stDialogBoxInfo[44].sV1) : GetFragmentName((DWORD)m_stDialogBoxInfo[44].sV1), m_stDialogBoxInfo[44].sV2 + 1);
+	PutAlignedString(sX + 5, limitX, sY + 5, cDesc, 255, 168, 0);
+
+	if ((msX >= sX + 5) && (msX <= limitX) && (msY >= sY + 20) && (msY <= sY + 20 + 14))
+		PutAlignedString(sX + 5, limitX, sY + 20, "Withdraw", 250, 250, 250);
+	else PutAlignedString(sX + 5, limitX, sY + 20, "Withdraw", 19, 104, 169);
+
+	if ((msX >= sX + 5) && (msX <= limitX) && (msY >= sY + 35) && (msY <= sY + 35 + 14))
+		PutAlignedString(sX + 5, limitX, sY + 35, "Upgrade all", 250, 250, 250);
+	else PutAlignedString(sX + 5, limitX, sY + 35, "Upgrade all", 19, 104, 169);
+
+	if ((msX >= sX + 5) && (msX <= limitX) && (msY >= sY + 50) && (msY <= sY + 50 + 14))
+		PutAlignedString(sX + 5, limitX, sY + 50, "Upgrade one", 250, 250, 250);
+	else PutAlignedString(sX + 5, limitX, sY + 50, "Upgrade one", 19, 104, 169);
+
+	if ((msX >= sX + 5) && (msX <= limitX) && (msY >= sY + 65) && (msY <= sY + 65 + 14))
+		PutAlignedString(sX + 5, limitX, sY + 65, "Cancel", 250, 250, 250);
+	else PutAlignedString(sX + 5, limitX, sY + 65, "Cancel", 19, 104, 169);
+}
+
+void CGame::DlgBoxClick_EnchantingUpgrade(int msX, int msY)
+{
+	int i, sX, sY;
+	char cItemColor, cStr1[120], cStr2[120], cStr3[120];
+	DWORD dwTime = timeGetTime();
+	int iLoc, iLenSize, iEntry = 0;
+	char cTxt[3], cDesc[64];
+
+	sX = m_stDialogBoxInfo[44].sX;
+	sY = m_stDialogBoxInfo[44].sY;
+
+	short limitX, limitY, addx = 0, addy = 0;
+
+	limitX = sX + m_stDialogBoxInfo[44].sSizeX;
+	limitY = sY + m_stDialogBoxInfo[44].sSizeY;
+
+	// Withdraw
+	if ((msX >= sX + 5) && (msX <= limitX) && (msY >= sY + 20) && (msY <= sY + 20 + 14))
+	{
+
+	}
+
+	// Upgrade all
+	if ((msX >= sX + 5) && (msX <= limitX) && (msY >= sY + 35) && (msY <= sY + 35 + 14))
+	{
+		bSendCommand(MSGID_COMMAND_COMMON, DEF_COMMONTYPE_UPGRADEENCHANT, NULL, m_stDialogBoxInfo[44].sV1, m_stDialogBoxInfo[44].sV2, m_stDialogBoxInfo[44].cMode + 10, NULL);
+		DisableDialogBox(44);
+		PlaySound('E', 14, 5);
+	}
+
+	// Upgrade one
+	if ((msX >= sX + 5) && (msX <= limitX) && (msY >= sY + 50) && (msY <= sY + 50 + 14))
+	{
+		bSendCommand(MSGID_COMMAND_COMMON, DEF_COMMONTYPE_UPGRADEENCHANT, NULL, m_stDialogBoxInfo[44].sV1, m_stDialogBoxInfo[44].sV2, m_stDialogBoxInfo[44].cMode, NULL);
+		DisableDialogBox(44);
+		PlaySound('E', 14, 5);
+	}
+
+	// Cancel
+	if ((msX >= sX + 5) && (msX <= limitX) && (msY >= sY + 65) && (msY <= sY + 65 + 14))
+	{
+		DisableDialogBox(44);
+		PlaySound('E', 14, 5);
+	}
+}
+
+void CGame::DrawDialogBox_Enchanting(int msX, int msY)
+{
+	int i, sX, sY;
+	char cItemColor, cStr1[120], cStr2[120], cStr3[120], cStr4[120], cStr5[120], cStr6[120];
+	DWORD dwTime = timeGetTime();
+	int iLoc, iLenSize, iEntry = 0;
+	char cTxt[3], cDesc[64];
+
+	sX = m_stDialogBoxInfo[58].sX;
+	sY = m_stDialogBoxInfo[58].sY;
+
+	short limitX, limitY, addx = 0, addy = 0;
+
+	limitX = sX + m_stDialogBoxInfo[58].sSizeX;
+	limitY = sY + m_stDialogBoxInfo[58].sSizeY;
+	m_DDraw.DrawItemShadowBox(sX, sY, limitX, limitY);
+	m_DDraw.DrawItemShadowBox(sX, sY, limitX, limitY);
+
+	if (m_stDialogBoxInfo[58].cMode != 2)
+	{
+		// recuadro para item
+		m_DDraw.DrawItemShadowBox(sX + 20 - 5 + 90 - 2 - 5 - 4, sY + 90 + 10 + 24 + 10 - 1, sX + 50 + 5 + 80 + 40, sY + 145 + 102);
+
+		if ((msX >= sX + 15) && (msX <= limitX - 15) && (msY >= limitY - 35) && (msY <= limitY - 15)) {
+			//DrawNewDialogBox2(SPRID_NEWBUTTON2, sX + 70, limitY - 32, 0, FALSE, FALSE);
+			PutAlignedString(sX + 5, limitX, limitY - 30, "Enchanting Bag", 255, 240, 0);
+		}
+		else
+		{
+			//DrawNewDialogBox2(SPRID_NEWBUTTON1, sX + 70, limitY - 32, 0, FALSE, FALSE);
+			PutAlignedString(sX + 5, limitX, limitY - 30, "Enchanting Bag", 255, 240, 255);
+		}
+	}
+
+	switch (m_stDialogBoxInfo[58].cMode) {
+	case 0: // enchant
+		PutString_SprFont2(sX + 15, sY + 5, "Enchant", 0, 255, 0);
+		PutString_SprFont2(sX + 95, sY + 5, "Disenchant", 19, 104, 169);
+		PutString_SprFont2(sX + 185, sY + 5, "Recover", 19, 104, 169);
+
+		PutAlignedString(sX + 5, limitX, sY + 40, "Drop an item here to enchant it.", 255, 255, 255);
+		PutAlignedString(sX + 5, limitX, sY + 55, "Enchanting the first stat requires shards.", 255, 255, 255);
+		PutAlignedString(sX + 5, limitX, sY + 70, "The second stat requires fragments.", 255, 255, 255);
+		PutAlignedString(sX + 5, limitX, sY + 85, "Disenchant items to get both.", 255, 255, 255);
+		PutAlignedString(sX + 5, limitX, sY + 100, "You can also combine shards/fragments.", 255, 255, 255);
+
+		if (m_stDialogBoxInfo[58].sV1 != -1)
+		{
+			i = m_stDialogBoxInfo[58].sV1;
+			cItemColor = m_pItemList[i]->m_cItemColor;
+			if ((m_pItemList[i]->m_cEquipPos == DEF_EQUIPPOS_LHAND)
+				|| (m_pItemList[i]->m_cEquipPos == DEF_EQUIPPOS_RHAND)
+				|| (m_pItemList[i]->m_cEquipPos == DEF_EQUIPPOS_TWOHAND))
+			{
+				m_pSprite[DEF_SPRID_ITEMPACK_PIVOTPOINT + m_pItemList[i]->m_sSprite]->PutSpriteRGB(sX + 134, sY + 182, m_pItemList[i]->m_sSpriteFrame, m_wWR[cItemColor] - m_wR[0], m_wWG[cItemColor] - m_wG[0], m_wWB[cItemColor] - m_wB[0], dwTime);
+			}
+			else
+			{
+				m_pSprite[DEF_SPRID_ITEMPACK_PIVOTPOINT + m_pItemList[i]->m_sSprite]->PutSpriteRGB(sX + 134, sY + 182, m_pItemList[i]->m_sSpriteFrame, m_wR[cItemColor] - m_wR[0], m_wG[cItemColor] - m_wG[0], m_wB[cItemColor] - m_wB[0], dwTime);
+			}
+
+			ZeroMemory(cStr1, sizeof(cStr1));
+			ZeroMemory(cStr2, sizeof(cStr2));
+			ZeroMemory(cStr3, sizeof(cStr3));
+			ZeroMemory(cStr4, sizeof(cStr4));
+			ZeroMemory(cStr5, sizeof(cStr5));
+			ZeroMemory(cStr6, sizeof(cStr6));
+			GetItemName(m_pItemList[i], cStr1, cStr2, cStr3);
+			PutAlignedString(sX + 5, limitX, sY + 260, cStr1, 255, 255, 0);
+			PutAlignedString(sX + 5, limitX, sY + 275, cStr2, 255, 255, 255);
+			PutAlignedString(sX + 5, limitX, sY + 290, cStr3, 255, 255, 255);
+
+			auto attr = m_pItemList[i]->m_dwAttribute;
+			auto dwType1 = (attr & 0x00F00000) >> 20;
+			auto dwValue1 = (attr & 0x000F0000) >> 16;
+			auto dwType2 = (attr & 0x0000F000) >> 12;
+			auto dwValue2 = (attr & 0x00000F00) >> 8;
+
+			ZeroMemory(cDesc, sizeof(cDesc));
+
+			if (dwType1 == NULL && dwType2 == NULL)
+			{
+				PutAlignedString(sY + 45, limitX, sY + 350, "This item cannot be enchanted!", 250, 0, 0);
+			}
+
+			if (dwType1 != NULL)
+			{
+				wsprintf(cDesc, "Ench. Shard Lv.%d", dwValue1);
+				if ((msX >= sX + 15) && (msX <= limitX - 15) && (msY >= limitY - (57 + 22)) && (msY <= limitY - (37 + 22))) {
+					//DrawNewDialogBox2(SPRID_NEWBUTTON2, sX + 70, limitY - (54 + 22), 0, FALSE, FALSE);
+					PutAlignedString(sX + 5, limitX, limitY - (52 + 22), cDesc, 255, 240, 0);
+				}
+				else
+				{
+					//DrawNewDialogBox2(SPRID_NEWBUTTON1, sX + 70, limitY - (54 + 22), 0, FALSE, FALSE);
+					PutAlignedString(sX + 5, limitX, limitY - (52 + 22), cDesc, 255, 240, 255);
+				}
+			}
+
+			if (dwType2 != NULL)
+			{
+				wsprintf(cDesc, "Ench. Frag. Lv.%d", dwValue2);
+				if ((msX >= sX + 15) && (msX <= limitX - 15) && (msY >= limitY - 57) && (msY <= limitY - 37)) {
+					//DrawNewDialogBox2(SPRID_NEWBUTTON2, sX + 70, limitY - 54, 0, FALSE, FALSE);
+					PutAlignedString(sX + 5, limitX, limitY - 52, cDesc, 255, 240, 0);
+				}
+				else
+				{
+					//DrawNewDialogBox2(SPRID_NEWBUTTON1, sX + 70, limitY - 54, 0, FALSE, FALSE);
+					PutAlignedString(sX + 5, limitX, limitY - 52, cDesc, 255, 240, 255);
+				}
+			}
+		}
+		break;
+	case 1: // disenchant
+		PutString_SprFont2(sX + 15, sY + 5, "Enchant", 19, 104, 169);
+		PutString_SprFont2(sX + 95, sY + 5, "Disenchant", 0, 255, 0);
+		PutString_SprFont2(sX + 185, sY + 5, "Recover", 19, 104, 169);
+
+		PutAlignedString(sX + 5, limitX, sY + 40, "Drop an item here to disenchant it.", 255, 255, 255);
+		PutAlignedString(sX + 5, limitX, sY + 55, "The first stat disenchants to shards.", 255, 255, 255);
+		PutAlignedString(sX + 5, limitX, sY + 70, "The second stat disenchants to fragments.", 255, 255, 255);
+		PutAlignedString(sX + 5, limitX, sY + 85, "Disenchanting will destroy the item.", 250, 0, 0);
+
+		if (m_stDialogBoxInfo[58].sV1 != -1)
+		{
+			i = m_stDialogBoxInfo[58].sV1;
+			cItemColor = m_pItemList[i]->m_cItemColor;
+			if ((m_pItemList[i]->m_cEquipPos == DEF_EQUIPPOS_LHAND)
+				|| (m_pItemList[i]->m_cEquipPos == DEF_EQUIPPOS_RHAND)
+				|| (m_pItemList[i]->m_cEquipPos == DEF_EQUIPPOS_TWOHAND))
+			{
+				m_pSprite[DEF_SPRID_ITEMPACK_PIVOTPOINT + m_pItemList[i]->m_sSprite]->PutSpriteRGB(sX + 134, sY + 182, m_pItemList[i]->m_sSpriteFrame, m_wWR[cItemColor] - m_wR[0], m_wWG[cItemColor] - m_wG[0], m_wWB[cItemColor] - m_wB[0], dwTime);
+			}
+			else
+			{
+				m_pSprite[DEF_SPRID_ITEMPACK_PIVOTPOINT + m_pItemList[i]->m_sSprite]->PutSpriteRGB(sX + 134, sY + 182, m_pItemList[i]->m_sSpriteFrame, m_wR[cItemColor] - m_wR[0], m_wG[cItemColor] - m_wG[0], m_wB[cItemColor] - m_wB[0], dwTime);
+			}
+
+			ZeroMemory(cStr1, sizeof(cStr1));
+			ZeroMemory(cStr2, sizeof(cStr2));
+			ZeroMemory(cStr3, sizeof(cStr3));
+			ZeroMemory(cStr4, sizeof(cStr4));
+			ZeroMemory(cStr5, sizeof(cStr5));
+			ZeroMemory(cStr6, sizeof(cStr6));
+			GetItemName(m_pItemList[i], cStr1, cStr2, cStr3);
+			PutAlignedString(sX + 5, limitX, sY + 260, cStr1, 255, 255, 0);
+			PutAlignedString(sX + 5, limitX, sY + 275, cStr2, 255, 255, 255);
+			PutAlignedString(sX + 5, limitX, sY + 290, cStr3, 255, 255, 255);
+
+			if (strlen(cStr2) == 0 && strlen(cStr3) == 0)
+			{
+				PutAlignedString(sY + 45, limitX, sY + 350, "This item cannot be disenchanted!", 250, 0, 0);
+			}
+			else {
+				if ((msX >= sX + 15) && (msX <= limitX - 15) && (msY >= limitY - 57) && (msY <= limitY - 37)) {
+					//DrawNewDialogBox2(SPRID_NEWBUTTON2, sX + 70, limitY - 54, 0, FALSE, FALSE);
+					PutAlignedString(sX + 5, limitX, limitY - 52, "Disenchant", 255, 240, 0);
+				}
+				else
+				{
+					//DrawNewDialogBox2(SPRID_NEWBUTTON1, sX + 70, limitY - 54, 0, FALSE, FALSE);
+					PutAlignedString(sX + 5, limitX, limitY - 52, "Disenchant", 255, 240, 255);
+				}
+			}
+		}
+		break;
+	case 2: // recover
+		PutString_SprFont2(sX + 15, sY + 5, "Enchant", 19, 104, 169);
+		PutString_SprFont2(sX + 95, sY + 5, "Disenchant", 19, 104, 169);
+		PutString_SprFont2(sX + 185, sY + 5, "Recover", 0, 255, 0);
+
+		PutAlignedString(sX + 5, limitX, sY + 40, "Recovering disenchanted items:", 255, 255, 255);
+		PutAlignedString(sX + 5, limitX, sY + 55, "Requires shards and fragments from the item.", 255, 255, 255);
+		PutAlignedString(sX + 5, limitX, sY + 85, "DO NOT use this as storage, as items in", 250, 0, 0);
+		PutAlignedString(sX + 5, limitX, sY + 100, "this list will be deleted when the server reboots.", 250, 0, 0);
+		break;
+
+	case 3: // disenchant process
+		if (m_stDialogBoxInfo[58].sV1 != -1)
+		{
+			i = m_stDialogBoxInfo[58].sV1;
+			cItemColor = m_pItemList[i]->m_cItemColor;
+			if ((m_pItemList[i]->m_cEquipPos == DEF_EQUIPPOS_LHAND)
+				|| (m_pItemList[i]->m_cEquipPos == DEF_EQUIPPOS_RHAND)
+				|| (m_pItemList[i]->m_cEquipPos == DEF_EQUIPPOS_TWOHAND))
+			{
+				m_pSprite[DEF_SPRID_ITEMPACK_PIVOTPOINT + m_pItemList[i]->m_sSprite]->PutSpriteRGB(sX + 134, sY + 182, m_pItemList[i]->m_sSpriteFrame, m_wWR[cItemColor] - m_wR[0], m_wWG[cItemColor] - m_wG[0], m_wWB[cItemColor] - m_wB[0], dwTime);
+			}
+			else
+			{
+				m_pSprite[DEF_SPRID_ITEMPACK_PIVOTPOINT + m_pItemList[i]->m_sSprite]->PutSpriteRGB(sX + 134, sY + 182, m_pItemList[i]->m_sSpriteFrame, m_wR[cItemColor] - m_wR[0], m_wG[cItemColor] - m_wG[0], m_wB[cItemColor] - m_wB[0], dwTime);
+			}
+		}
+
+		bSendCommand(MSGID_COMMAND_COMMON, DEF_COMMONTYPE_DISENCHANTITEM, NULL, i, NULL, NULL, NULL);
+		DisableDialogBox(58);
+		break;
+	case 4: // enchant shards
+		if (m_stDialogBoxInfo[58].sV1 != -1)
+		{
+			i = m_stDialogBoxInfo[58].sV1;
+			cItemColor = m_pItemList[i]->m_cItemColor;
+			if ((m_pItemList[i]->m_cEquipPos == DEF_EQUIPPOS_LHAND)
+				|| (m_pItemList[i]->m_cEquipPos == DEF_EQUIPPOS_RHAND)
+				|| (m_pItemList[i]->m_cEquipPos == DEF_EQUIPPOS_TWOHAND))
+			{
+				m_pSprite[DEF_SPRID_ITEMPACK_PIVOTPOINT + m_pItemList[i]->m_sSprite]->PutSpriteRGB(sX + 134, sY + 182, m_pItemList[i]->m_sSpriteFrame, m_wWR[cItemColor] - m_wR[0], m_wWG[cItemColor] - m_wG[0], m_wWB[cItemColor] - m_wB[0], dwTime);
+			}
+			else
+			{
+				m_pSprite[DEF_SPRID_ITEMPACK_PIVOTPOINT + m_pItemList[i]->m_sSprite]->PutSpriteRGB(sX + 134, sY + 182, m_pItemList[i]->m_sSpriteFrame, m_wR[cItemColor] - m_wR[0], m_wG[cItemColor] - m_wG[0], m_wB[cItemColor] - m_wB[0], dwTime);
+			}
+		}
+
+		bSendCommand(MSGID_COMMAND_COMMON, DEF_COMMONTYPE_ENCHANTITEM, NULL, i, 0, NULL, NULL);
+		DisableDialogBox(58);
+		AddEventList("Enchanting shard successful!", 10);
+		break;
+	case 5: // enchant fragments
+		if (m_stDialogBoxInfo[58].sV1 != -1)
+		{
+			i = m_stDialogBoxInfo[58].sV1;
+			cItemColor = m_pItemList[i]->m_cItemColor;
+			if ((m_pItemList[i]->m_cEquipPos == DEF_EQUIPPOS_LHAND)
+				|| (m_pItemList[i]->m_cEquipPos == DEF_EQUIPPOS_RHAND)
+				|| (m_pItemList[i]->m_cEquipPos == DEF_EQUIPPOS_TWOHAND))
+			{
+				m_pSprite[DEF_SPRID_ITEMPACK_PIVOTPOINT + m_pItemList[i]->m_sSprite]->PutSpriteRGB(sX + 134, sY + 182, m_pItemList[i]->m_sSpriteFrame, m_wWR[cItemColor] - m_wR[0], m_wWG[cItemColor] - m_wG[0], m_wWB[cItemColor] - m_wB[0], dwTime);
+			}
+			else
+			{
+				m_pSprite[DEF_SPRID_ITEMPACK_PIVOTPOINT + m_pItemList[i]->m_sSprite]->PutSpriteRGB(sX + 134, sY + 182, m_pItemList[i]->m_sSpriteFrame, m_wR[cItemColor] - m_wR[0], m_wG[cItemColor] - m_wG[0], m_wB[cItemColor] - m_wB[0], dwTime);
+			}
+		}
+
+		bSendCommand(MSGID_COMMAND_COMMON, DEF_COMMONTYPE_ENCHANTITEM, NULL, i, 1, NULL, NULL);
+		DisableDialogBox(58);
+		AddEventList("Enchanting fragment successful!", 10);
+		break;
+	}
+}
+
+void CGame::DlgBoxClick_Enchanting(int msX, int msY)
+{
+	int sX, sY;
+	sX = m_stDialogBoxInfo[58].sX;
+	sY = m_stDialogBoxInfo[58].sY;
+
+	int limitX = sX + m_stDialogBoxInfo[58].sSizeX;
+	int limitY = sY + m_stDialogBoxInfo[58].sSizeY;
+
+	if ((msX >= sX + 10 && msX <= sX + 94) && (msY >= sY && msY <= sY + 25)) {
+		m_stDialogBoxInfo[58].cMode = 0; // enchant
+		PlaySound('E', 14, 5);
+	}
+
+	if ((msX >= sX + 95 && msX <= sX + 184) && (msY >= sY && msY <= sY + 25)) {
+		m_stDialogBoxInfo[58].cMode = 1; // disenchant
+		PlaySound('E', 14, 5);
+	}
+
+	if ((msX >= sX + 185 && msX <= limitX) && (msY >= sY && msY <= sY + 25)) {
+		m_stDialogBoxInfo[58].cMode = 2; // recover
+		PlaySound('E', 14, 5);
+	}
+
+	switch (m_stDialogBoxInfo[58].cMode) {
+	case 0:
+		if ((msX >= sX + 15 && msX <= limitX - 15) && (msY >= limitY - (57 + 22) && msY <= limitY - (37 + 22)))
+		{
+			m_stDialogBoxInfo[58].cMode = 4; // enchant shards
+			PlaySound('E', 14, 5);
+		}
+
+		if ((msX >= sX + 15 && msX <= limitX - 15) && (msY >= limitY - 57 && msY <= limitY - 37))
+		{
+			m_stDialogBoxInfo[58].cMode = 5; // enchant fragments
+			PlaySound('E', 14, 5);
+		}
+
+		if ((msX >= sX + 15) && (msX <= limitX - 15) && (msY >= limitY - 35) && (msY <= limitY - 15))
+		{
+			if (m_bIsDialogEnabled[54] == FALSE) EnableDialogBox(54, NULL, NULL, NULL); // enchanting bag
+			PlaySound('E', 14, 5);
+		}
+		break;
+	case 1:
+		if ((msX >= sX + 15 && msX <= limitX - 15) && (msY >= limitY - 57 && msY <= limitY - 37))
+		{
+			m_stDialogBoxInfo[58].cMode = 3;
+			PlaySound('E', 14, 5);
+		}
+
+		if ((msX >= sX + 15) && (msX <= limitX - 15) && (msY >= limitY - 35) && (msY <= limitY - 15))
+		{
+			if (m_bIsDialogEnabled[54] == FALSE) EnableDialogBox(54, NULL, NULL, NULL); // enchanting bag
+			PlaySound('E', 14, 5);
+		}
+		break;
+	}
+}
+
+void CGame::DrawDialogBox_EnchantingBag(int msX, int msY)
+{
+	int i, sX, sY;
+	char cItemColor, cStr1[120], cStr2[120], cStr3[120];
+	DWORD dwTime = timeGetTime();
+	int iLoc, iLenSize, iEntry = 0;
+	char cTxt[3], cMsg[21];
+
+	sX = m_stDialogBoxInfo[54].sX;
+	sY = m_stDialogBoxInfo[54].sY;
+
+	short limitX, limitY, addx = 0, addy = 0;
+
+	m_stDialogBoxInfo[54].sSizeX = (short)(265 * 2.3f);
+
+	limitX = sX + m_stDialogBoxInfo[54].sSizeX;
+	limitY = sY + m_stDialogBoxInfo[54].sSizeY;
+	m_DDraw.DrawItemShadowBox(sX, sY, limitX, limitY);
+	m_DDraw.DrawItemShadowBox(sX, sY, limitX, limitY);
+	m_DDraw.DrawItemShadowBox(sX, sY, limitX, sY + 25);
+	m_DDraw.DrawItemShadowBox(sX, sY, limitX, sY + 25);
+	// title
+	PutString_SprFont2(sX + 230, sY + 5, "Enchanting Bag", 240, 240, 240);
+
+	// footer
+	PutAlignedString(sX + 45, limitX, limitY - 30, "Drop enchanting ingredients from your inventory to this bag to deposit them", 255, 255, 255);
+
+	switch (m_stDialogBoxInfo[54].cMode) {
+	case 0: // shards
+		PutString_SprFont2(sX + 50 + 80, sY + 35, "Shards", 0, 255, 0);
+		PutString_SprFont2(sX + 180 + 230, sY + 35, "Fragments", 19, 104, 169);
+
+		// levels
+		PutString2(sX + 180 - 25, sY + 70, "Lv.", 255, 168, 0);
+		addx = 25;
+		for (int i = 1; i < 18; i++)
+		{
+			wsprintf(cTxt, "%d", i);
+			PutString2(sX + 180 - 25 + addx, sY + 70, cTxt, 255, 168, 0);
+			addx += 25;
+		}
+
+		// ingredients
+		addy += 15;
+		PutString2(sX + 20, sY + 70 + addy, "Poisoning", 255, 255, 255);
+
+		addy += 15;
+		PutString2(sX + 20, sY + 70 + addy, "Light", 255, 255, 255);
+
+		addy += 15;
+		PutString2(sX + 20, sY + 70 + addy, "Endurance", 255, 255, 255);
+
+		addy += 15;
+		PutString2(sX + 20, sY + 70 + addy, "Cast Prob.", 255, 255, 255);
+
+		addy += 15;
+		PutString2(sX + 20, sY + 70 + addy, "Mana Conv.", 255, 255, 255);
+
+		// values
+		addx = 25; addy = 15;
+		ZeroMemory(cMsg, sizeof(cMsg));
+		for (int x = 0; x < 13; x++)
+		{
+			if (!CheckValidShard(m_stShards[x][0].dwType)) continue;
+			for (i = 0; i < 17; i++)
+			{
+				wsprintf(cMsg, "%d", m_stShards[x][i].iCount);
+				if (m_stShards[x][i].iCount > 0)
+				{
+					if (m_stShards[x][i].iCount > 9)
+					{
+						if ((msX >= sX + 180 - 25 + addx) && (msX <= sX + 190 - 25 + addx) && (msY >= sY + 70 + addy) && (msY <= sY + 85 + addy))
+							PutString2(sX + 180 - 25 + addx, sY + 70 + addy, cMsg, 255, 255, 255);
+						else PutString2(sX + 180 - 25 + addx, sY + 70 + addy, cMsg, 19, 104, 169);
+					}
+					else
+					{
+						if ((msX >= sX + 180 - 25 + addx) && (msX <= sX + 195 - 25 + addx) && (msY >= sY + 70 + addy) && (msY <= sY + 85 + addy))
+							PutString2(sX + 180 - 25 + addx, sY + 70 + addy, cMsg, 255, 255, 255);
+						else PutString2(sX + 180 - 25 + addx, sY + 70 + addy, cMsg, 19, 104, 169);
+					}
+				}
+				else PutString2(sX + 180 - 25 + addx, sY + 70 + addy, cMsg, 140, 140, 140);
+				addx += 25;
+			}
+
+			if ((msX >= sX + 170 - 25 + addx) && (msX <= sX + 180 - 25 + addx) && (msY >= sY + 75 + addy) && (msY <= sY + 90 + addy))
+				m_pSprite[DEF_SPRID_INTERFACE_ADDINTERFACE]->PutSpriteRGB(sX + 170 - 25 + addx, sY + 75 + addy, 20, 250, 250, 0, m_dwTime);
+			else m_pSprite[DEF_SPRID_INTERFACE_ADDINTERFACE]->PutSpriteRGB(sX + 170 - 25 + addx, sY + 75 + addy, 20, 19, 104, 169, m_dwTime);
+
+			addy += 15;
+			addx = 25;
+		}
+		break;
+
+	case 1: // fragments
+		PutString_SprFont2(sX + 50 + 80, sY + 35, "Shards", 19, 104, 169);
+		PutString_SprFont2(sX + 180 + 230, sY + 35, "Fragments", 0, 255, 0);
+
+		// levels
+		PutString2(sX + 180 - 25, sY + 70, "Lv.", 255, 168, 0);
+		addx = 25;
+		for (i = 1; i < 18; i++)
+		{
+			wsprintf(cTxt, "%d", i);
+			PutString2(sX + 180 - 25 + addx, sY + 70, cTxt, 255, 168, 0);
+			addx += 25;
+		}
+
+		// ingredients
+		addy += 15;
+		PutString2(sX + 20, sY + 70 + addy, "Poison Resistance", 255, 255, 255);
+
+		addy += 15;
+		PutString2(sX + 20, sY + 70 + addy, "Hit Ratio", 255, 255, 255);
+
+		addy += 15;
+		PutString2(sX + 20, sY + 70 + addy, "Defense Ratio", 255, 255, 255);
+
+		addy += 15;
+		PutString2(sX + 20, sY + 70 + addy, "HP Recovery", 255, 255, 255);
+
+		addy += 15;
+		PutString2(sX + 20, sY + 70 + addy, "SP Recovery", 255, 255, 255);
+
+		addy += 15;
+		PutString2(sX + 20, sY + 70 + addy, "MP Recovery", 255, 255, 255);
+
+		addy += 15;
+		PutString2(sX + 20, sY + 70 + addy, "Magic Resistance", 255, 255, 255);
+
+		addy += 15;
+		PutString2(sX + 20, sY + 70 + addy, "Physical Absorption", 255, 255, 255);
+
+		addy += 15;
+		PutString2(sX + 20, sY + 70 + addy, "Magical Absorption", 255, 255, 255);
+
+		addy += 15;
+		PutString2(sX + 20, sY + 70 + addy, "Experience", 255, 255, 255);
+
+		addy += 15;
+		PutString2(sX + 20, sY + 70 + addy, "Gold", 255, 255, 255);
+
+		// values
+		addx = 25; addy = 15;
+		ZeroMemory(cMsg, sizeof(cMsg));
+		for (int x = 0; x < 13; x++)
+		{
+			if (!CheckValidFragment(m_stFragments[x][0].dwType)) continue;
+			for (i = 0; i < 17; i++)
+			{
+				wsprintf(cMsg, "%d", m_stFragments[x][i].iCount);
+				if (m_stFragments[x][i].iCount > 0)
+				{
+					if (m_stFragments[x][i].iCount > 9)
+					{
+						if ((msX >= sX + 180 - 25 + addx) && (msX <= sX + 190 - 25 + addx) && (msY >= sY + 70 + addy) && (msY <= sY + 85 + addy))
+							PutString2(sX + 180 - 25 + addx, sY + 70 + addy, cMsg, 255, 255, 255);
+						else PutString2(sX + 180 - 25 + addx, sY + 70 + addy, cMsg, 19, 104, 169);
+					}
+					else
+					{
+						if ((msX >= sX + 180 - 25 + addx) && (msX <= sX + 195 - 25 + addx) && (msY >= sY + 70 + addy) && (msY <= sY + 85 + addy))
+							PutString2(sX + 180 - 25 + addx, sY + 70 + addy, cMsg, 255, 255, 255);
+						else PutString2(sX + 180 - 25 + addx, sY + 70 + addy, cMsg, 19, 104, 169);
+					}
+				}
+				else PutString2(sX + 180 - 25 + addx, sY + 70 + addy, cMsg, 140, 140, 140);
+				addx += 25;
+			}
+
+			if ((msX >= sX + 170 - 25 + addx) && (msX <= sX + 180 - 25 + addx) && (msY >= sY + 75 + addy) && (msY <= sY + 90 + addy))
+				m_pSprite[DEF_SPRID_INTERFACE_ADDINTERFACE]->PutSpriteRGB(sX + 170 - 25 + addx, sY + 75 + addy, 20, 250, 250, 0, m_dwTime);
+			else m_pSprite[DEF_SPRID_INTERFACE_ADDINTERFACE]->PutSpriteRGB(sX + 170 - 25 + addx, sY + 75 + addy, 20, 19, 104, 169, m_dwTime);
+
+			addy += 15;
+			addx = 25;
+		}
+
+		break;
+
+	case 2: // upgrade shards
+		m_stDialogBoxInfo[54].cMode = 0;
+		m_stDialogBoxInfo[54].bFlag = FALSE;
+		if (m_bIsDialogEnabled[44] == FALSE)
+		{
+			EnableDialogBox(44, 0, m_stDialogBoxInfo[54].sV1, m_stDialogBoxInfo[54].sV2);
+		}
+		break;
+	case 3: // upgrade fragments
+		m_stDialogBoxInfo[54].cMode = 1;
+		m_stDialogBoxInfo[54].bFlag = FALSE;
+		if (m_bIsDialogEnabled[44] == FALSE)
+		{
+			EnableDialogBox(44, 1, m_stDialogBoxInfo[54].sV1, m_stDialogBoxInfo[54].sV2);
+		}
+		break;
+	case 4: // Upgrade all shards
+		m_stDialogBoxInfo[54].cMode = 0;
+		m_stDialogBoxInfo[54].bFlag = FALSE;
+		if (m_bIsDialogEnabled[49] == FALSE)
+		{
+			EnableDialogBox(49, 0, m_stDialogBoxInfo[54].sV1, NULL);
+		}
+		break;
+	case 5: // Upgrade all fragments
+		m_stDialogBoxInfo[54].cMode = 1;
+		m_stDialogBoxInfo[54].bFlag = FALSE;
+		if (m_bIsDialogEnabled[49] == FALSE)
+		{
+			EnableDialogBox(49, 1, m_stDialogBoxInfo[54].sV1, NULL);
+		}
+		break;
+	}
+}
+
+bool CGame::CheckValidShard(DWORD dwType)
+{
+	switch (dwType)
+	{
+	case SHARD_POISONING:
+	case SHARD_LIGHT:
+	case SHARD_STRONG:
+	case SHARD_CASTPROB:
+	case SHARD_MANACONV:
+		return true;
+	}
+	return false;
+}
+
+bool CGame::CheckValidFragment(DWORD dwType)
+{
+	switch (dwType)
+	{
+	case FRAGMENT_PSNRES:
+	case FRAGMENT_HITPROB:
+	case FRAGMENT_DEF:
+	case FRAGMENT_HPREC:
+	case FRAGMENT_SPREC:
+	case FRAGMENT_MPREC:
+	case FRAGMENT_MR:
+	case FRAGMENT_PA:
+	case FRAGMENT_MA:
+	case FRAGMENT_EXP:
+	case FRAGMENT_GOLD:
+		return true;
+	}
+	return false;
+}
+
+char* CGame::GetShardName(DWORD dwType)
+{
+	switch (dwType) {
+	case SHARD_CRITICAL:
+		return "Critical Hit Damage";
+	case SHARD_CRITICAL2:
+		return "Crit. Increase Chance";
+	case SHARD_POISONING:
+		return "Poisoning";
+	case SHARD_RIGHTEOUS:
+		return "Righteous";
+	case SHARD_AGILE:
+		return "Agile";
+	case SHARD_LIGHT:
+		return "Light";
+	case SHARD_SHARP:
+		return "Sharp";
+	case SHARD_STRONG:
+		return "Endurance";
+	case SHARD_ANCIENT:
+		return "Ancient";
+	case SHARD_CASTPROB:
+		return "Magic Casting Probability";
+	case SHARD_MANACONV:
+		return "Mana Converting";
+	}
+
+	return "";
+}
+
+char* CGame::GetFragmentName(DWORD dwType)
+{
+	switch (dwType) {
+	case FRAGMENT_PSNRES:
+		return "Poison Resistance";
+	case FRAGMENT_HITPROB:
+		return "Hitting Probability";
+	case FRAGMENT_DEF:
+		return "Defense Ratio";
+	case FRAGMENT_HPREC:
+		return "HP Recovery";
+	case FRAGMENT_SPREC:
+		return "SP Recovery";
+	case FRAGMENT_MPREC:
+		return "MP Recovery";
+	case FRAGMENT_MR:
+		return "Magic Resistance";
+	case FRAGMENT_PA:
+		return "Physical Absorption";
+	case FRAGMENT_MA:
+		return "Magic Absorption";
+	case FRAGMENT_CAD:
+		return "Consecutive Attack Damage";
+	case FRAGMENT_EXP:
+		return "Experience";
+	case FRAGMENT_GOLD:
+		return "Gold";
+	}
+
+	return "";
+}
+
+char* CGame::GetShardDesc(DWORD dwType)
+{
+	switch (dwType) {
+	case SHARD_CRITICAL:
+	case SHARD_CRITICAL2:
+		return "crit";
+	case SHARD_POISONING:
+		return "pd";
+	case SHARD_RIGHTEOUS:
+		return "right";
+	case SHARD_AGILE:
+		return "agile";
+	case SHARD_LIGHT:
+		return "light";
+	case SHARD_SHARP:
+		return "sharp";
+	case SHARD_STRONG:
+		return "str";
+	case SHARD_ANCIENT:
+		return "anc";
+	case SHARD_CASTPROB:
+		return "cp";
+	case SHARD_MANACONV:
+		return "mana";
+	}
+
+	return "";
+}
+
+char* CGame::GetFragmentDesc(DWORD dwType)
+{
+	switch (dwType) {
+	case FRAGMENT_PSNRES:
+		return "pr";
+	case FRAGMENT_HITPROB:
+		return "hr";
+	case FRAGMENT_DEF:
+		return "dr";
+	case FRAGMENT_HPREC:
+		return "hp";
+	case FRAGMENT_SPREC:
+		return "sp";
+	case FRAGMENT_MPREC:
+		return "mp";
+	case FRAGMENT_MR:
+		return "mr";
+	case FRAGMENT_PA:
+		return "pa";
+	case FRAGMENT_MA:
+		return "ma";
+	case FRAGMENT_CAD:
+		return "cad";
+	case FRAGMENT_EXP:
+		return "exp";
+	case FRAGMENT_GOLD:
+		return "gold";
+	}
+
+	return "";
+}
+
+void CGame::DlgBoxClick_EnchantingBag(int msX, int msY)
+{
+	char cMsg[52];
+	int sX, sY, limitX, addx, addy;
+	sX = m_stDialogBoxInfo[54].sX;
+	sY = m_stDialogBoxInfo[54].sY;
+
+	m_stDialogBoxInfo[54].sSizeX = (short)(265 * 2.3f);
+
+	limitX = sX + m_stDialogBoxInfo[54].sSizeX;
+
+	if ((msX >= sX + 10) && (msX <= sX + limitX / 2) && (msY >= sY + 25) && (msY <= sY + 55)) {
+		m_stDialogBoxInfo[54].cMode = 0; // shards
+		PlaySound('E', 14, 5);
+	}
+
+	if ((msX >= sX + limitX / 2) && (msX <= sX + limitX) && (msY >= sY + 25) && (msY <= sY + 55)) {
+		m_stDialogBoxInfo[54].cMode = 1; // fragments
+		PlaySound('E', 14, 5);
+	}
+
+	switch (m_stDialogBoxInfo[54].cMode)
+	{
+	case 0:
+		// values
+		addx = 25; addy = 15;
+		ZeroMemory(cMsg, sizeof(cMsg));
+		for (int x = 0; x < 13; x++)
+		{
+			if (!CheckValidShard(m_stShards[x][0].dwType)) continue;
+			for (int i = 0; i < 17; i++)
+			{
+				if (m_stShards[x][i].iCount > 0)
+				{
+					if (m_stShards[x][i].iCount > 9)
+					{
+						if ((msX >= sX + 180 - 25 + addx) && (msX <= sX + 190 - 25 + addx) && (msY >= sY + 70 + addy) && (msY <= sY + 85 + addy))
+						{
+							if (m_stDialogBoxInfo[54].bFlag == FALSE)
+							{
+								m_stDialogBoxInfo[54].cMode = 2;
+								m_stDialogBoxInfo[54].sV1 = x;
+								m_stDialogBoxInfo[54].sV2 = i;
+								m_stDialogBoxInfo[54].bFlag = TRUE;
+								PlaySound('E', 14, 5);
+							}
+							break;
+						}
+					}
+					else
+					{
+						if ((msX >= sX + 180 - 25 + addx) && (msX <= sX + 195 - 25 + addx) && (msY >= sY + 70 + addy) && (msY <= sY + 85 + addy))
+						{
+							if (m_stDialogBoxInfo[54].bFlag == FALSE)
+							{
+								m_stDialogBoxInfo[54].cMode = 2;
+								m_stDialogBoxInfo[54].sV1 = x;
+								m_stDialogBoxInfo[54].sV2 = i;
+								m_stDialogBoxInfo[54].bFlag = TRUE;
+								PlaySound('E', 14, 5);
+							}
+							break;
+						}
+					}
+				}
+
+				addx += 25;
+			}
+
+			// Upgrade all
+			if ((msX >= sX + 170 - 25 + addx) && (msX <= sX + 180 - 25 + addx) && (msY >= sY + 75 + addy) && (msY <= sY + 90 + addy))
+			{
+				if (m_stDialogBoxInfo[54].bFlag == FALSE)
+				{
+					m_stDialogBoxInfo[54].cMode = 4;
+					m_stDialogBoxInfo[54].sV1 = x;
+					m_stDialogBoxInfo[54].bFlag = TRUE;
+					PlaySound('E', 14, 5);
+				}
+			}
+
+			addy += 15;
+			addx = 25;
+		}
+		break;
+	case 1:
+		// values
+		addx = 25; addy = 15;
+		ZeroMemory(cMsg, sizeof(cMsg));
+		for (int x = 0; x < 13; x++)
+		{
+			if (!CheckValidShard(m_stShards[x][0].dwType)) continue;
+			for (int i = 0; i < 17; i++)
+			{
+				if (m_stShards[x][i].iCount > 0)
+				{
+					if (m_stShards[x][i].iCount > 9)
+					{
+						if ((msX >= sX + 180 - 25 + addx) && (msX <= sX + 190 - 25 + addx) && (msY >= sY + 70 + addy) && (msY <= sY + 85 + addy))
+						{
+							if (m_stDialogBoxInfo[54].bFlag == FALSE)
+							{
+								m_stDialogBoxInfo[54].cMode = 3;
+								m_stDialogBoxInfo[54].sV1 = x;
+								m_stDialogBoxInfo[54].sV2 = i;
+								m_stDialogBoxInfo[54].bFlag = TRUE;
+								PlaySound('E', 14, 5);
+							}
+							break;
+						}
+					}
+					else
+					{
+						if ((msX >= sX + 180 - 25 + addx) && (msX <= sX + 195 - 25 + addx) && (msY >= sY + 70 + addy) && (msY <= sY + 85 + addy))
+						{
+							if (m_stDialogBoxInfo[54].bFlag == FALSE)
+							{
+								m_stDialogBoxInfo[54].cMode = 3;
+								m_stDialogBoxInfo[54].sV1 = x;
+								m_stDialogBoxInfo[54].sV2 = i;
+								m_stDialogBoxInfo[54].bFlag = TRUE;
+								PlaySound('E', 14, 5);
+							}
+							break;
+						}
+					}
+				}
+				addx += 25;
+			}
+
+			// Upgrade all
+			if ((msX >= sX + 170 - 25 + addx) && (msX <= sX + 180 - 25 + addx) && (msY >= sY + 75 + addy) && (msY <= sY + 90 + addy))
+			{
+				if (m_stDialogBoxInfo[54].bFlag == FALSE)
+				{
+					m_stDialogBoxInfo[54].cMode = 5;
+					m_stDialogBoxInfo[54].sV1 = x;
+					m_stDialogBoxInfo[54].bFlag = TRUE;
+					PlaySound('E', 14, 5);
+				}
+			}
+
+			addy += 15;
+			addx = 25;
+		}
+		break;
+	}
+}

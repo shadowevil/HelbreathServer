@@ -16,6 +16,15 @@
 #define DEF_COMMONTYPE_REQ_GETNPCHP					0x1F12
 #define DEF_SEND_NPCHP								0x1F13
 
+#define DEF_COMMONTYPE_DISENCHANTITEM 0x0A75
+#define DEF_COMMONTYPE_ENCHANTITEM 0x0A73
+#define DEF_COMMONTYPE_UPGRADEENCHANT 0x0A74
+
+#define msg_shard 0x0A71
+#define msg_fragment 0x0A72
+
+#define DEF_NOTIFY_MOBKILLS 0x0A68
+
 // Reversed by Snoopy from real 3.72 client
 #define DEF_REQUEST_ANGEL				0x0FC9421E
 

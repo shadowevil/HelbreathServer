@@ -341,7 +341,7 @@ bool CGame::bAcceptLogin(XSocket* sock)
 		}
 	}
 
-CLOSE_ANYWAY:;
+CLOSE_ANYWAY:
 
 	auto pTmpSock = new XSocket(m_hWnd, DEF_SERVERSOCKETBLOCKLIMIT);
 	sock->bAccept(pTmpSock, NULL);
@@ -427,7 +427,7 @@ BOOL CGame::bAccept(class XSocket * pXSock)
 		return TRUE;
 	}
 
-CLOSE_ANYWAY:;
+CLOSE_ANYWAY:
 
 	pTmpSock = new class XSocket(m_hWnd, DEF_SERVERSOCKETBLOCKLIMIT);
 	pXSock->bAccept(pTmpSock, NULL); 
@@ -435,7 +435,7 @@ CLOSE_ANYWAY:;
 
 	return FALSE;
 
-CLOSE_CONN:;
+CLOSE_CONN:
 	delete m_pClientList[a];
 	m_pClientList[a] = 0;
 	RemoveClientShortCut(a);
@@ -1796,7 +1796,7 @@ void CGame::RequestInitDataHandler(int iClientH, char * pData, char cKey)
 	case DEF_XSOCKEVENT_SOCKETCLOSED:
 		// ì¨íš§ì©íš„íšì² ì¨ì§ ì¨˜ì¨ì¨€ì©ì¨‹ì§  ì©”ì§•ì¨Œì§±ì§¸ì§• ì¨”íš©ì¨©ì²µíš‰íš©ì¨ˆíš¢ì¨ì±• íšì§ì§¸íš‡íš‰íš—ì¨ˆíš¢.
 		DeleteClient(iClientH, TRUE, TRUE);
-		if(pBuffer != NULL) delete pBuffer;
+		if(pBuffer != NULL) delete[] pBuffer;
 		return;
 	}
 
@@ -1822,7 +1822,7 @@ void CGame::RequestInitDataHandler(int iClientH, char * pData, char cKey)
 			PutLogFileList(G_cTxt);
 
 			DeleteClient(iClientH, FALSE, TRUE);
-			if(pBuffer != NULL) delete pBuffer;
+			if(pBuffer != NULL) delete[] pBuffer;
 			return;
 		}
 		memcpy(cp, m_pClientList[iClientH]->m_pItemList[i]->m_cName, 20);
@@ -1880,7 +1880,7 @@ void CGame::RequestInitDataHandler(int iClientH, char * pData, char cKey)
 			PutLogFileList(G_cTxt);
 
 			DeleteClient(iClientH, FALSE, TRUE);
-			if(pBuffer != NULL) delete pBuffer;
+			if(pBuffer != NULL) delete[] pBuffer;
 			return;
 		}
 		memcpy(cp, m_pClientList[iClientH]->m_pItemInBankList[i]->m_cName, 20);
@@ -1939,7 +1939,7 @@ void CGame::RequestInitDataHandler(int iClientH, char * pData, char cKey)
 	case DEF_XSOCKEVENT_CRITICALERROR:
 	case DEF_XSOCKEVENT_SOCKETCLOSED:
 		DeleteClient(iClientH, TRUE, TRUE);
-		if(pBuffer != NULL) delete pBuffer;
+		if(pBuffer != NULL) delete[] pBuffer;
 		return;
 	}
 
@@ -2054,11 +2054,11 @@ void CGame::RequestInitDataHandler(int iClientH, char * pData, char cKey)
 	case DEF_XSOCKEVENT_CRITICALERROR:
 	case DEF_XSOCKEVENT_SOCKETCLOSED:
 		DeleteClient(iClientH, TRUE, TRUE);
-		if(pBuffer != NULL) delete pBuffer;
+		if(pBuffer != NULL) delete[] pBuffer;
 		return;
 	}
 
-	if(pBuffer != NULL) delete pBuffer;
+	if(pBuffer != NULL) delete[] pBuffer;
 
 	SendEventToNearClient_TypeA(iClientH, DEF_OWNERTYPE_PLAYER, MSGID_EVENT_LOG, DEF_MSGTYPE_CONFIRM, NULL, NULL, NULL);
 
@@ -2274,6 +2274,57 @@ void CGame::RequestInitDataHandler(int iClientH, char * pData, char cKey)
 	bSendClientConfig(iClientH, "GameConfigs\\Item.cfg");
 	bSendClientConfig(iClientH, "GameConfigs\\Item2.cfg");
 	bSendClientConfig(iClientH, "GameConfigs\\Item3.cfg");
+
+	RequestMobKills(iClientH);
+}
+
+void CGame::RequestMobKills(int client)
+{
+	auto player = m_pClientList[client];
+	if (player == NULL) return;
+
+	char* cData = G_cData50000; //esta es el "buffer", onda, la memoria que neceisto para enviar
+
+	DWORD* dwp = (DWORD*)(cData + DEF_INDEX4_MSGID);
+	*dwp = DEF_NOTIFY_MOBKILLS;//a la memoria esa le escribo este mensaje
+	WORD* wp = (WORD*)(cData + DEF_INDEX2_MSGTYPE);
+	*wp = NULL;//este no se usa, le mando 0
+
+	char* cp = (char*)(cData + DEF_INDEX2_MSGTYPE + 2); //eso se usa para decirle "desde aca empiezo a escribir"
+
+	short* pTotal = (short*)cp;
+	cp += 2;
+
+	short* sp;
+
+	int count = 0;
+	for (int i = 0; i < 100; i++) //recorro todosl os clientes
+	{
+		auto mob = player->m_pMobKillCount[i];
+
+		if (mob != NULL)
+		{
+			sp = (short*)cp;
+			*sp = mob->iKillCount;
+			cp += 2;
+
+			sp = (short*)cp;
+			*sp = mob->iNextCount;
+			cp += 2;
+
+			sp = (short*)cp;
+			*sp = mob->iLevel;
+			cp += 2;
+
+			memcpy(cp, mob->cNpcName, 20); //copiar el nombre del char (de tama�o 20) a la data
+			cp += 20;//decirle a la data que le sume 20 bites
+
+			count++;
+		}
+	}
+
+	*pTotal = count; //esto es medio enroscado, es para decirle cuantos onlines escribio
+	player->m_pXSock->iSendMsg(G_cData50000, cp - G_cData50000);//mandarle la data a p que es el cliente
 }
 
 BOOL CGame::bSendClientConfig(int iClientH, char* cFile)
@@ -2904,13 +2955,17 @@ void CGame::DeleteClient(int iClientH, BOOL bSave, BOOL bNotify, BOOL bCountLogo
 				PutLogList(G_cTxt);
 				goto DC_LOOPBREAK1;
 			}
-DC_LOOPBREAK1:;
+DC_LOOPBREAK1:
 			for (i = 0; i < DEF_MAXPARTYMEMBERS-1; i++)
 				if ((m_stPartyInfo[m_pClientList[iClientH]->m_iPartyID].iIndex[i] == 0) && (m_stPartyInfo[m_pClientList[iClientH]->m_iPartyID].iIndex[i+1] != 0)) {
 					m_stPartyInfo[m_pClientList[iClientH]->m_iPartyID].iIndex[i]   = m_stPartyInfo[m_pClientList[iClientH]->m_iPartyID].iIndex[i+1];
 					m_stPartyInfo[m_pClientList[iClientH]->m_iPartyID].iIndex[i+1] = 0;
 				}
 	}
+
+	m_pClientList[iClientH]->save_mobs_data();
+	m_pClientList[iClientH]->save_shards_data();
+	m_pClientList[iClientH]->save_fragments_data();
 
 	m_iTotalClients--;
 
@@ -4901,6 +4956,10 @@ void CGame::InitPlayerData(int iClientH, char * pData, DWORD dwSize)
 				break;
 		}
 	}*/
+
+	m_pClientList[iClientH]->read_mobs_data();
+	m_pClientList[iClientH]->read_shards_data();
+	m_pClientList[iClientH]->read_fragments_data();
 }
 
 void CGame::GameProcess()
@@ -5130,12 +5189,12 @@ BOOL CGame::bReadProgramConfigFile(char * cFn, bool ismaps)
 			//token = strtok( NULL, seps );
 		}
 		delete pStrTok;
-		delete cp;
+		delete[] cp;
 	}
 	if (pFile != NULL) fclose(pFile);
 
 	if (m_iGameServerMode == 0) {
-		wsprintf(cTxt, "(!!!) Game server mode cannot be empty. It must be either LAN/lan/INTERNET/internet", token);
+		wsprintf(cTxt, "(!!!) Game server mode cannot be empty. It must be either LAN/lan/INTERNET/internet");
 		PutLogList(cTxt);
 		return FALSE;	
 	}
@@ -5426,7 +5485,7 @@ BOOL CGame::bReadSettingsConfigFile(char * cFn)
       } 
 
       delete pStrTok; 
-      delete cp; 
+      delete[] cp; 
    } 
    if (pFile != NULL) fclose(pFile); 
 
@@ -5473,7 +5532,7 @@ BOOL CGame::bReadCrusadeStructureConfigFile(char * cFn)
 					case 1:
 						if (_bGetIsStringIsNumber(token) == FALSE) {
 							PutLogList("(!!!) CRITICAL ERROR!  Crusade configuration file error - Wrong Data format(1).");
-							delete cp;
+							delete[] cp;
 							delete pStrTok;
 							return FALSE;
 						}
@@ -5481,7 +5540,7 @@ BOOL CGame::bReadCrusadeStructureConfigFile(char * cFn)
 
 						if (m_stCrusadeStructures[iIndex].cType != NULL) {
 							PutLogList("(!!!) CRITICAL ERROR!  Crusade configuration file error - Duplicate portion number.");
-							delete cp;
+							delete[] cp;
 							delete pStrTok;
 							return FALSE;
 						}
@@ -5499,7 +5558,7 @@ BOOL CGame::bReadCrusadeStructureConfigFile(char * cFn)
 					case 3:
 						if (_bGetIsStringIsNumber(token) == FALSE) {
 							PutLogList("(!!!) CRITICAL ERROR!  Crusade configuration file error - Wrong Data format.");
-							delete cp;
+							delete[] cp;
 							delete pStrTok;
 							return FALSE;
 						}
@@ -5510,7 +5569,7 @@ BOOL CGame::bReadCrusadeStructureConfigFile(char * cFn)
 					case 4:
 						if (_bGetIsStringIsNumber(token) == FALSE) {
 							PutLogList("(!!!) CRITICAL ERROR!  Crusade configuration file error - Wrong Data format.");
-							delete cp;
+							delete[] cp;
 							delete pStrTok;
 							return FALSE;
 						}
@@ -5521,7 +5580,7 @@ BOOL CGame::bReadCrusadeStructureConfigFile(char * cFn)
 					case 5:
 						if (_bGetIsStringIsNumber(token) == FALSE) {
 							PutLogList("(!!!) CRITICAL ERROR!  Crusade configuration file error - Wrong Data format.");
-							delete cp;
+							delete[] cp;
 							delete pStrTok;
 							return FALSE;
 						}
@@ -5547,7 +5606,7 @@ BOOL CGame::bReadCrusadeStructureConfigFile(char * cFn)
 		}	
 
 		delete pStrTok;
-		delete cp;
+		delete[] cp;
 
 		if ((cReadModeA != 0) || (cReadModeB != 0)) {
 			PutLogList("(!!!) CRITICAL ERROR! Crusade Structure configuration file contents error!");
@@ -5628,7 +5687,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 					if (m_pClientList[iClientH]->m_cMapIndex == -1) {
 						wsprintf(cTxt, "(!) Player(%s) tries to enter unknown map : %s", m_pClientList[iClientH]->m_cCharName, cTmpName); 
 						PutLogList(cTxt);
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -5640,7 +5699,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -5652,7 +5711,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -5665,7 +5724,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 				wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 				PutLogList(cTxt);
-				delete pContents;
+				delete[] pContents;
 				delete pStrTok;
 				return FALSE;
 				}
@@ -5680,7 +5739,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				// New 07/05/2004
 				// v2.12
 				if (iItemIndex >= DEF_MAXITEMS) {
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -5697,7 +5756,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 					WriteFile(hFile, (char *)pContents, dwSize+2, &nWrite, NULL);
 					CloseHandle(hFile);
 
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -5709,7 +5768,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -5736,7 +5795,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -5749,7 +5808,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -5762,7 +5821,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -5775,7 +5834,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -5788,7 +5847,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -5801,7 +5860,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -5814,7 +5873,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -5827,7 +5886,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -5840,7 +5899,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -5854,7 +5913,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -5930,7 +5989,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -5942,7 +6001,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -5954,7 +6013,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -5966,7 +6025,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -5978,7 +6037,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6024,7 +6083,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6037,7 +6096,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6050,7 +6109,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6064,7 +6123,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6078,7 +6137,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6091,7 +6150,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6104,7 +6163,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6117,7 +6176,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6130,7 +6189,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6143,7 +6202,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6156,7 +6215,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6169,7 +6228,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6182,7 +6241,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6203,7 +6262,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6221,7 +6280,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				switch(cReadModeB) {
 			case 1:
 				if (iItemInBankIndex >= DEF_MAXBANKITEMS) {
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6238,7 +6297,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 					CloseHandle(hFile);
 					///////////// @@@@@@@@@@@@@@@
 
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6250,7 +6309,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6278,7 +6337,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6291,7 +6350,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6304,7 +6363,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6317,7 +6376,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6330,7 +6389,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6343,7 +6402,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6356,7 +6415,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6369,7 +6428,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6382,7 +6441,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6397,7 +6456,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6479,7 +6538,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6492,7 +6551,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6505,7 +6564,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6518,7 +6577,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6531,7 +6590,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6544,7 +6603,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6557,7 +6616,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6570,7 +6629,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6583,7 +6642,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6596,7 +6655,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6609,7 +6668,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6622,7 +6681,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6648,7 +6707,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6661,7 +6720,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6685,7 +6744,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6710,7 +6769,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6723,7 +6782,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6736,7 +6795,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6749,7 +6808,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6762,7 +6821,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6774,7 +6833,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6791,7 +6850,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6809,7 +6868,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6822,7 +6881,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6835,7 +6894,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6851,7 +6910,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6865,7 +6924,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6879,7 +6938,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6895,7 +6954,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6908,7 +6967,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6925,7 +6984,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6938,7 +6997,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6951,7 +7010,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6964,7 +7023,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6977,7 +7036,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -6990,7 +7049,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -7003,7 +7062,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -7016,7 +7075,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -7032,7 +7091,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -7045,7 +7104,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -7058,7 +7117,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -7075,7 +7134,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -7088,7 +7147,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -7101,7 +7160,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -7114,7 +7173,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (strlen(token) > 10) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -7127,7 +7186,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -7140,7 +7199,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -7153,7 +7212,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -7166,7 +7225,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -7179,7 +7238,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -7192,7 +7251,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -7206,7 +7265,7 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					wsprintf(cTxt, "(!!!) Player(%s) data file error! wrong Data format - Connection closed. ", m_pClientList[iClientH]->m_cCharName); 
 					PutLogList(cTxt);
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -7349,10 +7408,10 @@ BOOL CGame::_bDecodePlayerDatafileContents(int iClientH, char * pData, DWORD dwS
 		//token = strtok( NULL, seps );							    
 	}													  
 
-DPDC_STOP_DECODING:;	
+DPDC_STOP_DECODING:
 
 	delete pStrTok;
-	delete pContents;
+	delete[] pContents;
 	if ((cReadModeA != 0) || (cReadModeB != 0)) {
 		wsprintf(cTxt, "(!!!) Player(%s) data file contents error(%d %d)! Connection closed.", m_pClientList[iClientH]->m_cCharName, cReadModeA, cReadModeB);
 		PutLogList(cTxt);
@@ -7442,7 +7501,7 @@ DPDC_STOP_DECODING:;
 		iDateSum1 = (__int64)m_pClientList[iClientH]->m_iReserveTime;
 		iDateSum2 = (__int64)(SysTime.wMonth*10000 + SysTime.wDay*100 + SysTime.wHour);
 		if (iDateSum2 >= iDateSum1) {
-			SendNotifyMsg(NULL, i, DEF_NOTIFY_FIGHTZONERESERVE, -2, NULL, NULL, NULL);
+			SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_FIGHTZONERESERVE, -2, NULL, NULL, NULL);
 			m_pClientList[iClientH]->m_iFightzoneNumber = 0; 
 			m_pClientList[iClientH]->m_iReserveTime = 0;
 			m_pClientList[iClientH]->m_iFightZoneTicketNumber = 0;
@@ -8117,7 +8176,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 				case 1:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - ItemIDnumber");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8130,7 +8189,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					if (m_pItemConfigList[iItemConfigListIndex] != NULL) {
 						wsprintf(cTxt, "(!!!) CRITICAL ERROR! Duplicate ItemIDnum(%d)", iItemConfigListIndex);
 						PutLogList(cTxt);
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8148,7 +8207,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_cItemType
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - ItemType");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8159,7 +8218,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_cEquipPos
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - EquipPos");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8170,7 +8229,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sItemEffectType
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - ItemEffectType");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8181,7 +8240,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sItemEffectValue1
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - ItemEffectValue1");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8192,7 +8251,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sItemEffectValue2
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - ItemEffectValue2");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8203,7 +8262,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sItemEffectValue3
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - ItemEffectValue3");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8214,7 +8273,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sItemEffectValue4
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - ItemEffectValue4");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8225,7 +8284,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sItemEffectValue5
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - ItemEffectValue5");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8236,7 +8295,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sItemEffectValue6
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - ItemEffectValue6");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8247,7 +8306,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_wMaxLifeSpan
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - MaxLifeSpan");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8258,7 +8317,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sSpecialEffect
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - MaxFixCount");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8269,7 +8328,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sSprite
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - Sprite");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8280,7 +8339,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sSpriteFrame
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - SpriteFrame");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8291,7 +8350,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_wPrice
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - Price");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8307,7 +8366,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_wWeight
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - Weight");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8318,7 +8377,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// Appr Value
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - ApprValue");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8329,7 +8388,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_cSpeed
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - Speed");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8341,7 +8400,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sLevelLimit
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - LevelLimit");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8353,7 +8412,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_cGederLimit
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - GenderLimit");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8365,7 +8424,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sSpecialEffectValue1
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - SM_HitRatio");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8377,7 +8436,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sSpecialEffectValue2
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - L_HitRatio");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8389,7 +8448,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sRelatedSkill
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - RelatedSkill");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8401,7 +8460,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_cCategory
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - Category");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8413,7 +8472,7 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_cItemColor
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file error - Category");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -8444,10 +8503,10 @@ BOOL CGame::_bDecodeItemConfigFileContents(char * pData, DWORD dwMsgSize)
 		//token = strtok( NULL, seps );
 	}
 	
-DICFC_STOPDECODING:;
+DICFC_STOPDECODING:
 
 	delete pStrTok;
-	delete pContents;
+	delete[] pContents;
 
 	if ((cReadModeA != 0) || (cReadModeB != 0)) {
 		PutLogList("(!!!) CRITICAL ERROR! ITEM configuration file contents error!");
@@ -8549,7 +8608,7 @@ BOOL CGame::bSetNpcFollowMode(char * pName, char * pFollowName, char cFollowOwne
 		goto NEXT_STEP_SNFM1;
 	}
 
-NEXT_STEP_SNFM1:;
+NEXT_STEP_SNFM1:
 
 	switch (cFollowOwnerType) {
 	case DEF_OWNERTYPE_NPC:
@@ -8573,7 +8632,7 @@ NEXT_STEP_SNFM1:;
 		break;
 	}
 
-NEXT_STEP_SNFM2:;
+NEXT_STEP_SNFM2:
 
 	if ((iIndex == -1) || (iFollowIndex == -1)) return FALSE;
 
@@ -10853,7 +10912,7 @@ void CGame::NpcBehavior_Attack(int iNpcH)
 						}
 						break;
 					}
-NBA_BREAK1:;
+NBA_BREAK1:
 					SendEventToNearClient_TypeA(iNpcH, DEF_OWNERTYPE_NPC, MSGID_EVENT_MOTION, DEF_OBJECTATTACK, dX, dY, 20); // 20: �ʻ��
 					iCalculateAttackEffect(m_pNpcList[iNpcH]->m_iTargetIndex, m_pNpcList[iNpcH]->m_cTargetType, iNpcH, DEF_OWNERTYPE_NPC, dX, dY, 20);
 					break;
@@ -10884,7 +10943,7 @@ NBA_BREAK1:;
 			return;
 		}
 
-NBA_CHASE:;		
+NBA_CHASE:		
 
 		if (m_pNpcList[iNpcH]->m_cActionLimit != 0) return;
 
@@ -10949,7 +11008,7 @@ void CGame::RemoveFromTarget(short sTargetH, char cTargetType, int iCode)
 
 void CGame::NpcKilledHandler(short sAttackerH, char cAttackerType, int iNpcH, short sDamage)
 {
- short  sAttackerWeapon;
+ short  sAttackerWeapon, sType;
  int    * ip, i, iQuestIndex, iConstructionPoint, iWarContribution, iMapIndex;
  double dTmp1, dTmp2, dTmp3;
  char   * cp, cData[120], cQuestRemain;
@@ -10961,6 +11020,8 @@ void CGame::NpcKilledHandler(short sAttackerH, char cAttackerType, int iNpcH, sh
 	m_pNpcList[iNpcH]->m_bIsKilled = TRUE;
 	m_pNpcList[iNpcH]->m_iHP = 0;
 	m_pNpcList[iNpcH]->m_iLastDamage = sDamage;
+
+	sType = m_pNpcList[iNpcH]->m_sType;
 
 	m_pMapList[m_pNpcList[iNpcH]->m_cMapIndex]->m_iTotalAliveObject--;
 
@@ -10999,7 +11060,7 @@ void CGame::NpcKilledHandler(short sAttackerH, char cAttackerType, int iNpcH, sh
 			iExp += (DWORD)dTmp3;
 		}
 
-		if (m_pNpcList[iNpcH]->m_sType == 81) {
+		if (sType == 81) {
 			for (i = 1; i < DEF_MAXCLIENTS; i++) {
 				if (m_pClientList[i] != NULL) {		
 				SendNotifyMsg(sAttackerH, i, DEF_NOTIFY_ABADDONKILLED, NULL, NULL, NULL, NULL,NULL,NULL,NULL,NULL,NULL,NULL, NULL);		
@@ -11022,7 +11083,7 @@ void CGame::NpcKilledHandler(short sAttackerH, char cAttackerType, int iNpcH, sh
 				switch (m_pQuestConfigList[iQuestIndex]->m_iType) {
 				case DEF_QUESTTYPE_MONSTERHUNT:
 					if ( (m_pClientList[sAttackerH]->m_bQuestMatchFlag_Loc == TRUE) &&
-						 (m_pQuestConfigList[iQuestIndex]->m_iTargetType == m_pNpcList[iNpcH]->m_sType) ) {
+						 (m_pQuestConfigList[iQuestIndex]->m_iTargetType == sType) ) {
 						m_pClientList[sAttackerH]->m_iCurQuestCount++;
 						cQuestRemain = (m_pQuestConfigList[m_pClientList[sAttackerH]->m_iQuest]->m_iMaxCount - m_pClientList[sAttackerH]->m_iCurQuestCount);
 						SendNotifyMsg(NULL, sAttackerH, DEF_NOTIFY_QUESTCOUNTER, cQuestRemain, NULL, NULL, NULL);
@@ -11032,11 +11093,26 @@ void CGame::NpcKilledHandler(short sAttackerH, char cAttackerType, int iNpcH, sh
 				}
 			}
 		}
+
+		// Centuu - mob kill's counter
+		if (m_pClientList[sAttackerH]->m_pMobKillCount[sType] == NULL)
+		{
+			m_pClientList[sAttackerH]->m_pMobKillCount[sType] = new class CMobCounter(m_pNpcList[iNpcH]->m_cNpcName);
+		}
+
+		m_pClientList[sAttackerH]->m_pMobKillCount[sType]->iKillCount++;
+		if (m_pClientList[sAttackerH]->m_pMobKillCount[sType]->iKillCount >= m_pClientList[sAttackerH]->m_pMobKillCount[sType]->iNextCount)
+		{
+			m_pClientList[sAttackerH]->m_pMobKillCount[sType]->iLevel++;
+			m_pClientList[sAttackerH]->m_pMobKillCount[sType]->iNextCount *= 2;
+		}
+
+		RequestMobKills(sAttackerH); // refresh
 	}
 
 	// v1.41
 	if (cAttackerType == DEF_OWNERTYPE_PLAYER) {
-		switch (m_pNpcList[iNpcH]->m_sType) {
+		switch (sType) {
 		case 32:
 			m_pClientList[sAttackerH]->m_iRating -= 5;
 			if (m_pClientList[sAttackerH]->m_iRating < -10000) m_pClientList[sAttackerH]->m_iRating = 0;
@@ -11050,7 +11126,7 @@ void CGame::NpcKilledHandler(short sAttackerH, char cAttackerType, int iNpcH, sh
 
 	// Crusade
 	iConstructionPoint = 0;
-	switch (m_pNpcList[iNpcH]->m_sType) {
+	switch (sType) {
 	case 1:  iConstructionPoint = 50; iWarContribution = 100; break;
 	case 2:  iConstructionPoint = 50; iWarContribution = 100; break;
 	case 3:  iConstructionPoint = 50; iWarContribution = 100; break;
@@ -11140,7 +11216,7 @@ void CGame::NpcKilledHandler(short sAttackerH, char cAttackerType, int iNpcH, sh
 		}
 	}
 
-NKH_GOTOPOINT1:;
+NKH_GOTOPOINT1:
 
 	// v1.411 Explosive
 	if (m_pNpcList[iNpcH]->m_cSpecialAbility == 7) {
@@ -11173,7 +11249,7 @@ NKH_GOTOPOINT1:;
 	if ((m_bIsHeldenianMode == TRUE) && (m_pMapList[m_pNpcList[iNpcH]->m_cMapIndex]->m_bIsHeldenianMap == TRUE) && (m_cHeldenianModeType == 1)) {
 		iMapIndex = 0;
 		iMapIndex = m_pNpcList[m_pNpcList[iNpcH]->m_cMapIndex]->m_cMapIndex;
-		if ((m_pNpcList[iNpcH]->m_sType == 87) || (m_pNpcList[iNpcH]->m_sType == 89)) {
+		if (sType == 87 || sType == 89) {
 			if (m_pNpcList[m_pNpcList[iNpcH]->m_cMapIndex]->m_cSide == 1) {
 				m_iHeldenianAresdenLeftTower--;
 				wsprintf(G_cTxt, "Aresden Tower Broken, Left TOWER %d", m_iHeldenianAresdenLeftTower);
@@ -11920,6 +11996,16 @@ void CGame::ClientCommonHandler(int iClientH, char * pData)
 	cp += 4;
 	
 	switch (wCommand) {
+
+	case DEF_COMMONTYPE_UPGRADEENCHANT:
+		RequestEnchantUpgradeHandler(iClientH, iV1, iV2, iV3);
+		break;
+	case DEF_COMMONTYPE_ENCHANTITEM:
+		RequestItemEnchantHandler(iClientH, iV1, iV2);
+		break;
+	case DEF_COMMONTYPE_DISENCHANTITEM:
+		RequestItemDisenchantHandler(iClientH, iV1);
+		break;
 
 	// Crafting
 	case DEF_COMMONTYPE_CRAFTITEM:
@@ -14151,7 +14237,7 @@ void CGame::GiveItemHandler(int iClientH, short sItemIndex, int iAmount, short d
 			SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_GIVEITEMFIN_ERASEITEM, sItemIndex, iAmount, NULL, cCharName);
 		}
 
-REMOVE_ITEM_PROCEDURE:;
+REMOVE_ITEM_PROCEDURE:
 
 		// ³×Æ®¿öÅ© ¿À·ù·Î Ã³¸®µµÁß Å¬¶óÀÌ¾ðÆ®°¡ Á¦°ÅµÇ¾ú´Ù¸é ´õÀÌ»ó ÁøÇàÇÒ ¼ö ¾ø´Ù. 
 		if (m_pClientList[iClientH] == NULL) return;
@@ -14190,6 +14276,29 @@ void CGame::SendNotifyMsg(int iFromH, int iToH, WORD wMsgType, DWORD sV1, DWORD 
 
 	// !!! sV1, sV2, sV3´Â DWORDÇüÀÓÀ» ¸í½ÉÇÏ¶ó.
 	switch (wMsgType) {
+	case msg_shard:
+	case msg_fragment:
+		wp = (WORD*)cp;
+		*wp = (WORD)sV1;
+		cp += 2;
+
+		wp = (WORD*)cp;
+		*wp = (WORD)sV2;
+		cp += 2;
+
+		wp = (WORD*)cp;
+		*wp = (WORD)sV3;
+		cp += 2;
+
+		memcpy(cp, pString, 20);
+		cp += 20;
+
+		memcpy(cp, pString2, 10);
+		cp += 10;
+
+		iRet = m_pClientList[iToH]->m_pXSock->iSendMsg(cData, 42);
+		break;
+
 	case DEF_SEND_NPCHP: //50Cent - HP Bar
 		ip = (int*)cp;
 		*ip = (int)sV1;
@@ -16360,7 +16469,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// NPC
 					if (strlen(token) > 20)	{
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Too long Npc name.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16372,7 +16481,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sType
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16383,7 +16492,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_iHitDice
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16394,7 +16503,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_iDefenseRatio
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16405,7 +16514,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_iHitRatio
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16416,7 +16525,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_iMinBravery
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16427,7 +16536,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_iExpDiceMin
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16439,7 +16548,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_iExpDiceMax
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16451,7 +16560,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_iGoldDiceMin
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16463,7 +16572,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_iGoldDiceMax
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16475,7 +16584,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_cAttackDiceThrow
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16487,7 +16596,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_cAttackDiceRange
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16499,7 +16608,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_cSize
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16510,7 +16619,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 				case 14:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16522,7 +16631,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// ActionLimit 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16534,7 +16643,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// Action Time
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16546,7 +16655,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// ResistMagic
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16558,7 +16667,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// cMagicLevel
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16570,7 +16679,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// cGenDayWeekLimit  // Æ¯Á¤ ¿äÀÏ¿¡¸¸ »ý¼ºµÇ´Â ¸ó½ºÅÍ¿©ºÎ 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16582,7 +16691,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// cChatMsgPresence
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16600,7 +16709,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_cTargetSearchRange
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16613,7 +16722,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// Npc Àç »ý¼º±îÁöÀÇ ½Ã°£
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16626,7 +16735,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// Attribute
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16639,7 +16748,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// Absorb Magic Damage
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16652,7 +16761,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// Maximum Mana Point
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16665,7 +16774,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// MagicHitRatio
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16678,7 +16787,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 					// AttackRange
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! NPC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -16718,7 +16827,7 @@ BOOL CGame::_bDecodeNpcConfigFileContents(char * pData, DWORD dwMsgSize)
 	}	
 
 	delete pStrTok;
-	delete pContents;
+	delete[] pContents;
 
 	if ((cReadModeA != 0) || (cReadModeB != 0)) {
 		PutLogList("(!!!) CRITICAL ERROR! NPC configuration file contents error!");
@@ -19984,7 +20093,7 @@ void CGame::PlayerMagicHandler(int iClientH, int dX, int dY, short sType, BOOL b
 				}
 			}
 
-MAGIC_NOEFFECT:;
+MAGIC_NOEFFECT:
 
 		if (m_pClientList[iClientH] == NULL) return;
 		
@@ -20355,7 +20464,7 @@ void CGame::NpcMagicHandler(int iNpcH, short dX, short dY, short sType)
 
 	}
 
-NMH_NOEFFECT:;
+NMH_NOEFFECT:
 
 	// Mana�� ���ҽ�Ų��.
 	m_pNpcList[iNpcH]->m_iMana -= m_pMagicConfigList[sType]->m_sValue1; // sValue1�� Mana Cost
@@ -20664,7 +20773,7 @@ void CGame::RequestTeleportHandler(int iClientH, char * pData, char * cMapName, 
 		}
 	}
 
-RTH_NEXTSTEP:;
+RTH_NEXTSTEP:
 
 	// New 17/05/2004
 	SetPlayingStatus(iClientH);
@@ -20797,11 +20906,11 @@ RTH_NEXTSTEP:;
 	case DEF_XSOCKEVENT_SOCKETCLOSED:
 		// ë©”ì‹œì§€ë¥¼ ë³´ë‚¼ë•Œ ì—ëŸ¬ê°€ ë°œìƒí–ˆë‹¤ë©´ ì œê±°í•œë‹¤.
 		DeleteClient(iClientH, TRUE, TRUE);
-		if(pBuffer != NULL) delete pBuffer;
+		if(pBuffer != NULL) delete[] pBuffer;
 		return;
 	}
 
-	if(pBuffer != NULL) delete pBuffer;
+	if(pBuffer != NULL) delete[] pBuffer;
 
 	// ë‹¤ë¥¸ í´ë¼ì´ì–¸íŠ¸ë“¤ì—ê²Œ í”Œë ˆì´ì–´ê°€ ìƒˆë¡œìš´ ìœ„ì¹˜ì— ë‚˜íƒ€ë‚¬ìŒì„ ì•Œë¦°ë‹¤. 
 	SendEventToNearClient_TypeA(iClientH, DEF_OWNERTYPE_PLAYER, MSGID_EVENT_LOG, DEF_MSGTYPE_CONFIRM, NULL, NULL, NULL);
@@ -21043,7 +21152,7 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
 					// ¸¶¹ý ¹øÈ£ 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21051,7 +21160,7 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
 					if (m_pMagicConfigList[atoi(token)] != NULL) {
 						// ÀÌ¹Ì ÇÒ´çµÈ ¹øÈ£°¡ ÀÖ´Ù. ¿¡·¯ÀÌ´Ù.
 						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Duplicate magic number.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21072,7 +21181,7 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
 					// ¸¶¹ý Á¾·ù m_sType
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21084,7 +21193,7 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
 					// ¸¶¹ý µô·¹ÀÌ ½Ã°£ m_dwDelayTime
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21096,7 +21205,7 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
 					// ¸¶¹ý Áö¼Ó½Ã°£ m_dwLastTime
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21108,7 +21217,7 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sValue1
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21120,7 +21229,7 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sValue2
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21132,7 +21241,7 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sValue3
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21144,7 +21253,7 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sValue4
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21156,7 +21265,7 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sValue5
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21168,7 +21277,7 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sValue6
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21180,7 +21289,7 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sValue7
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21192,7 +21301,7 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sValue8
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21204,7 +21313,7 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sValue9
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21216,7 +21325,7 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sValue10
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21228,7 +21337,7 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sValue11
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21240,7 +21349,7 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sValue12
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21252,7 +21361,7 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sIntLimit
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21264,7 +21373,7 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_iGoldCost
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21277,7 +21386,7 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_cCategory
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21289,7 +21398,7 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_iAttribute
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21316,7 +21425,7 @@ BOOL CGame::_bDecodeMagicConfigFileContents(char * pData, DWORD dwMsgSize)
 	}	
 
 	delete pStrTok;
-	delete pContents;
+	delete[] pContents;
 
 	if ((cReadModeA != 0) || (cReadModeB != 0)) {
 		PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file contents error!");
@@ -21372,7 +21481,7 @@ BOOL CGame::_bDecodeSkillConfigFileContents(char * pData, DWORD dwMsgSize)
 					// ½ºÅ³ ¹øÈ£ 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! SKILL configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21380,7 +21489,7 @@ BOOL CGame::_bDecodeSkillConfigFileContents(char * pData, DWORD dwMsgSize)
 					if (m_pSkillConfigList[atoi(token)] != NULL) {
 						// ÀÌ¹Ì ÇÒ´çµÈ ¹øÈ£°¡ ÀÖ´Ù. ¿¡·¯ÀÌ´Ù.
 						PutLogList("(!!!) CRITICAL ERROR! SKILL configuration file error - Duplicate magic number.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21401,7 +21510,7 @@ BOOL CGame::_bDecodeSkillConfigFileContents(char * pData, DWORD dwMsgSize)
 					// ½ºÅ³ Á¾·ù m_sType
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! SKILL configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21413,7 +21522,7 @@ BOOL CGame::_bDecodeSkillConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sValue1
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! SKILL configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21425,7 +21534,7 @@ BOOL CGame::_bDecodeSkillConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sValue2
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! SKILL configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21437,7 +21546,7 @@ BOOL CGame::_bDecodeSkillConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sValue3
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! SKILL configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21449,7 +21558,7 @@ BOOL CGame::_bDecodeSkillConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sValue4
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! SKILL configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21461,7 +21570,7 @@ BOOL CGame::_bDecodeSkillConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sValue5
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! SKILL configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21473,7 +21582,7 @@ BOOL CGame::_bDecodeSkillConfigFileContents(char * pData, DWORD dwMsgSize)
 					// m_sValue6
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! SKILL configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21500,7 +21609,7 @@ BOOL CGame::_bDecodeSkillConfigFileContents(char * pData, DWORD dwMsgSize)
 	}	
 
 	delete pStrTok;
-	delete pContents;
+	delete[] pContents;
 
 	if ((cReadModeA != 0) || (cReadModeB != 0)) {
 		PutLogList("(!!!) CRITICAL ERROR! SKILL configuration file contents error!");
@@ -21745,7 +21854,7 @@ BOOL CGame::bPlayerItemToBank(int iClientH, short sItemIndex)
 	// ´õÀÌ»ó ÀúÀåÇÒ °ø°£ÀÌ ¾ø´Ù. 
 	return FALSE;
 
-NEXT_STEP_PLTB:;
+NEXT_STEP_PLTB:
 
 	// ¾ÆÀÌÅÛÀ» ÀúÀåÇÒ °ø°£ÀÌ ³²¾ÆÀÖ´Ù. 
 	// ¸ÕÀú ÀåÂøµÇ¾î ÀÖ´Ù¸é ÇØÁ¦½ÃÅ²´Ù.
@@ -21787,7 +21896,7 @@ BOOL CGame::bBankItemToPlayer(int iClientH, short sItemIndex)
 	// ´õÀÌ»ó °®°íÀÖÀ» °ø°£ÀÌ ¾ø´Ù. 
 	return FALSE;
 
-NEXT_STEP_PLTB:;
+NEXT_STEP_PLTB:
 
 	// ¾ÆÀÌÅÛÀ» ¼ÒÁöÇÒ °ø°£ÀÌ ³²¾ÆÀÖ´Ù. 
 	
@@ -21874,7 +21983,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// ÅÚ·¹Æ÷Æ® ¼Ò½º ÁÂÇ¥ X  
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 1 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21887,7 +21996,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// ÅÚ·¹Æ÷Æ® ¼Ò½º ÁÂÇ¥ Y 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 2 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21908,7 +22017,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// ÅÚ·¹Æ÷Æ® ¸ñÀûÁö À§Ä¡ X 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 3 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21921,7 +22030,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// ÅÚ·¹Æ÷Æ® ¸ñÀûÁö À§Ä¡ Y 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 4 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21934,7 +22043,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// ÅÚ·¹Æ÷Æ® ÈÄ ¹æÇâ  
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 5 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21953,7 +22062,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// waypoint ¹øÈ£   
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 6 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21962,7 +22071,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					if (m_pMapList[iMapIndex]->m_WaypointList[iWayPointCfgIndex].x != -1) {
 						// ÀÌ¹Ì ÇÒ´çµÇ¾îÀÖ´Â Waypoint ¹øÈ£ÀÌ´Ù.
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 7 - Duplicated waypoint");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21973,7 +22082,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// waypoint ÁýÇÕ Á¤ÀÇ X  
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 8 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -21985,7 +22094,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// waypoint ÁýÇÕ Á¤ÀÇ Y  
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 9 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22009,7 +22118,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// NpcMoveType
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 10 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22020,7 +22129,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// WayPoint0~waypoint9
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 11 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22061,7 +22170,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// Random-Mob-Generator »ç¿ë ¿©ºÎ 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 12 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22073,7 +22182,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// Mob- Level
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 13 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22088,7 +22197,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				// Maximum object
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					PutLogList("(!!!) CRITICAL ERROR! Map Info file error 14 - Wrong Data format.");
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -22105,7 +22214,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// Rect ¹øÈ£ 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 15 - Wrong Data format(MGAR num).");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22114,7 +22223,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					if (m_pMapList[iMapIndex]->m_rcMobGenAvoidRect[iMGARCfgIndex].left != -1) {
 						// ÀÌ¹Ì ÇÒ´çµÇ¾îÀÖ´Â Waypoint ¹øÈ£ÀÌ´Ù.
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 16 - Duplicated Mob Gen Rect Number!");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22126,7 +22235,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// left
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 17 - Wrong Data format(MGAR num).");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22138,7 +22247,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// top
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 18 - Wrong Data format(MGAR num).");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22150,7 +22259,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// right
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 19 - Wrong Data format(MGAR num).");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22162,7 +22271,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// bottom
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 20 - Wrong Data format(MGAR num).");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22180,7 +22289,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// Rect ¹øÈ£ m_stSpotMobGenerator[]
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 21 - Wrong Data format(MGAR num).");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22189,7 +22298,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					if (m_pMapList[iMapIndex]->m_stSpotMobGenerator[iSMGRCfgIndex].bDefined == TRUE) {
 						// ÀÌ¹Ì ÇÒ´çµÇ¾îÀÖ´Â ¸÷ Á¦³Ê·¹ÀÌÅÍ ¹øÈ£ÀÌ´Ù.
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error - ");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22200,7 +22309,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 2:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 22 - Wrong Data format(SMGAR num).");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22216,7 +22325,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// left
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 23 - Wrong Data format(SMGAR num).");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22228,7 +22337,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// top
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 24 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22240,7 +22349,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// right
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 25 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22252,7 +22361,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// bottom
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 26 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22264,7 +22373,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// spot mob type
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 27 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22276,7 +22385,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// Max Mobs
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 28 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22290,7 +22399,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// WayPoint0~waypoint9
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 29 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22302,7 +22411,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// spot mob type
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 30 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22313,7 +22422,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 20:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 31 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22339,14 +22448,14 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// Initial-Point Index
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 32:1 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
 					sIPindex = atoi(token);
 					if (m_pMapList[iMapIndex]->m_pInitialPoint[sIPindex].x != -1) {
 						PutLogList("(!!!) CRITICAL ERROR! Duplicate Initial Point Index!");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22357,7 +22466,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// Initial-Point X
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 32 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22369,7 +22478,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// Initial-Point Y
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 33 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22387,7 +22496,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 34 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22396,7 +22505,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					if (m_pMapList[iMapIndex]->m_rcNoAttackRect[iNMRCfgIndex].top != -1) {
 						// ÀÌ¹Ì ÇÒ´çµÇ¾îÀÖ´Â No-Magic-Rect ¹øÈ£ÀÌ´Ù.
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 35 - Duplicate No-Magic-Rect number");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22406,7 +22515,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 2:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 36 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22417,7 +22526,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 3:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 37 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22428,7 +22537,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 4:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 38 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22439,7 +22548,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 5:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 39 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22462,7 +22571,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 1:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 40 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22471,7 +22580,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					if (m_pMapList[iMapIndex]->m_FishPointList[iFishPointIndex].x != -1) {
 						// ÀÌ¹Ì ÇÒ´çµÇ¾îÀÖ´Â Fish Point ¹øÈ£ÀÌ´Ù.
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 41 - Duplicate FishPoint number");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22483,7 +22592,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 2:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 42 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22495,7 +22604,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 3:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 43 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22510,7 +22619,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 			case 13:
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					PutLogList("(!!!) CRITICAL ERROR! Map Info file error 44 - Wrong Data format.");
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -22522,7 +22631,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 			case 14:
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					PutLogList("(!!!) CRITICAL ERROR! Map Info file error 45 - Wrong Data format.");
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -22534,7 +22643,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 			case 15:
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					PutLogList("(!!!) CRITICAL ERROR! Map Info file error 46 - Wrong Data format.");
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -22549,7 +22658,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 1:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 47 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22560,7 +22669,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 2:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 48 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22576,7 +22685,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 1:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 49 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22585,7 +22694,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					if (m_pMapList[iMapIndex]->m_MineralPointList[iMineralPointIndex].x != -1) {
 						// ÀÌ¹Ì ÇÒ´çµÇ¾îÀÖ´Â Mineral Point ¹øÈ£ÀÌ´Ù.
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 50 - Duplicate MineralPoint number");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22597,7 +22706,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 2:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 51 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22609,7 +22718,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 3:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 52 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22624,7 +22733,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 			case 18:
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					PutLogList("(!!!) CRITICAL ERROR! Map Info file error 53 - Wrong Data format.");
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -22636,7 +22745,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 			case 19:
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					PutLogList("(!!!) CRITICAL ERROR! Map Info file error 54 - Wrong Data format.");
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -22650,7 +22759,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 1:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 55 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22659,7 +22768,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					if (m_pMapList[iMapIndex]->m_pStrategicPointList[iStrategicPointIndex] != NULL) {
 						// ÀÌ¹Ì ÇÒ´çµÇ¾îÀÖ´Â Strategic Point ¹øÈ£ÀÌ´Ù.
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 56 - Duplicate Strategic Point number");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22671,7 +22780,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 2:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 57 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22683,7 +22792,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 3:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 58 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22695,7 +22804,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 4:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 59 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22707,7 +22816,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 5:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 60 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22724,7 +22833,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 1:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 61 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22733,7 +22842,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					if (m_pMapList[iMapIndex]->m_stEnergySphereCreationList[iIndex].cType != NULL) {
 						// ÀÌ¹Ì ÇÒ´çµÇ¾îÀÖ´Â Energy-Sphere-Creation Point ¹øÈ£ÀÌ´Ù.
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 62 - Duplicate EnergySphereCreation number");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22745,7 +22854,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 2:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 63 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22757,7 +22866,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 3:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 64 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22769,7 +22878,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 4:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 65 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22786,7 +22895,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 1:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 66 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22796,7 +22905,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 						// ÀÌ¹Ì ÇÒ´çµÇ¾îÀÖ´Â Energy-Sphere-Goal Point ¹øÈ£ÀÌ´Ù.
 						wsprintf(G_cTxt, "(!!!) CRITICAL ERROR! Map Info file error 67 - Duplicate EnergySphereGoal number(%d:%d)", iIndex, m_pMapList[iMapIndex]->m_stEnergySphereGoalList[iIndex].cResult);
 						PutLogList(G_cTxt);
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22808,7 +22917,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 2:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 68 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22820,7 +22929,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 3:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 69 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22832,7 +22941,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 4:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 70 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22844,7 +22953,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 5:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 71 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22856,7 +22965,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 6:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 72 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22873,7 +22982,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 1:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 73 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22883,7 +22992,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 						// ÀÌ¹Ì ÇÒ´çµÇ¾îÀÖ´Â  Point ¹øÈ£ÀÌ´Ù.
 						wsprintf(G_cTxt, "(!!!) CRITICAL ERROR! Map Info file error 74 - Duplicate Strike Point number(%d)", iIndex);
 						PutLogList(G_cTxt);
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22894,7 +23003,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 2:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 75 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22906,7 +23015,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 3:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 76 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22918,7 +23027,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 4:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 77 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22931,7 +23040,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 5:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 77 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22943,7 +23052,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 6:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 77 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22955,7 +23064,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 7:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 77 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22967,7 +23076,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 8:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 77 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22979,7 +23088,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 9:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 77 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -22991,7 +23100,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 10:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 77 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23003,7 +23112,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 11:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 77 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23015,7 +23124,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 12:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 77 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23027,7 +23136,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 13:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 77 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23039,7 +23148,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 14:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 77 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23065,7 +23174,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 1:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 78 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23075,7 +23184,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 						// �̹� �Ҵ�Ǿ��ִ� Item-Event ��ȣ�̴�.
 						wsprintf(G_cTxt, "(!!!) CRITICAL ERROR! Map Info file error 79 - Duplicate Item-Event number(%d:%s)", iIndex, m_pMapList[iMapIndex]->m_stItemEventList[iIndex].cItemName);
 						PutLogList(G_cTxt);
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23092,7 +23201,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 3:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 81 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23104,7 +23213,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 4:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 82 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23116,7 +23225,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 5:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 83 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23128,7 +23237,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 6:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 83 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23145,7 +23254,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 1:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error 78 - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23158,7 +23267,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 			case 26: //ApocalypseMobGenType
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					PutLogList("(!!!) CRITICAL ERROR! Map Info file error ApocalypseMobGenType - Wrong Data format.");
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -23172,7 +23281,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 1: // 3CB6Ch m_pMapList[]->m_ApocalypseBossMobNpcID
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error ApocalypseBossMob - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23182,7 +23291,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 2: // 3CB70h m_pMapList[]->ApocalypseBossMobRectX1
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error ApocalypseBossMob - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23192,7 +23301,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 3: // 3CB74h m_pMapList[]->ApocalypseBossMobRectY1
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error ApocalypseBossMob - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23202,7 +23311,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 4: // 3CB78h m_pMapList[]->ApocalypseBossMobRectX2
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error ApocalypseBossMob - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23212,7 +23321,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 5: // 3CB7Ch m_pMapList[]->ApocalypseBossMobRectY2
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error ApocalypseBossMob - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23226,7 +23335,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 			case 28: //DynamicGateType // 28
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					PutLogList("(!!!) CRITICAL ERROR! Map Info file error DynamicGateType - Wrong Data format.");
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -23241,7 +23350,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 1: // 3CA20h
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error ApocalypseBossMob - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23252,7 +23361,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 2: // 3CA24h
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error ApocalypseBossMob - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23263,7 +23372,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 3: // 3CA28h
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error ApocalypseBossMob - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23274,7 +23383,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 4: // 3CA2Ch
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error ApocalypseBossMob - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23290,7 +23399,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 6: // 3CA3Ch
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error ApocalypseBossMob - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23301,7 +23410,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 7: // (ty = 3CB60h) unknown (3CA3Eh)
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error ApocalypseBossMob - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23315,7 +23424,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 			case 30: // RecallImpossible // 30
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					PutLogList("(!!!) CRITICAL ERROR! Map Info file error RecallImpossible -  Wrong Data format.");
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -23327,7 +23436,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 			case 31: // ApocalypseMap // 31
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					PutLogList("(!!!) CRITICAL ERROR! Map Info file error ApocalypseMap -  Wrong Data format.");
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -23339,7 +23448,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 			case 32: // CitizenLimit // 32
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					PutLogList("(!!!) CRITICAL ERROR! Map Info file error CitizenLimit -  Wrong Data format.");
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -23351,7 +23460,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 			case 33: // HeldenianMap
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					PutLogList("(!!!) CRITICAL ERROR! Map Info file error CitizenLimit -  Wrong Data format.");
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -23365,7 +23474,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 1: // NpcID
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error Hedenian tower type id - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23375,7 +23484,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 2: // side 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error Hedenian Tower Side - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23385,7 +23494,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 3: // sX
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error Hedenian Tower X pos - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23395,7 +23504,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 4: // sY
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error Hedenian Tower Y pos - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23409,7 +23518,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 			case 35: // HeldenianModeMap
 				if (_bGetIsStringIsNumber(token) == FALSE) {
 					PutLogList("(!!!) CRITICAL ERROR! Map Info file error Hedenian Map Mode - Wrong Data format.");
-					delete pContents;
+					delete[] pContents;
 					delete pStrTok;
 					return FALSE;
 				}
@@ -23423,7 +23532,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 1:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error Hedenian Map Mode - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23433,7 +23542,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 2:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error Hedenian Map Mode - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23443,7 +23552,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 					if (pTile == 0) {
 						wsprintf(cTxt, "(!!!) CRITICAL ERROR! Map Info file error HeldenianWinningZone - pTile is Null dx(%d), dy(%d).", dX, dY);
 						PutLogList(cTxt);
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23459,7 +23568,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 1: 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error Heldenian Door Direction - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23469,7 +23578,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 2:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error Heldenian Door X pos - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23479,7 +23588,7 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 				case 3:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! Map Info file error Heldenian Door Y pos - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -23671,10 +23780,10 @@ BOOL CGame::__bReadMapInfo(int iMapIndex)
 		token = pStrTok->pGet();
 	}	
 
-RMI_SKIPDECODING:;
+RMI_SKIPDECODING:
 
 	delete pStrTok;
-	delete pContents;
+	delete[] pContents;
 
 	if ((cReadModeA != 0) || (cReadModeB != 0)) {
 		PutLogList("(!!!) CRITICAL ERROR! map info file contents error!");
@@ -24559,7 +24668,7 @@ void CGame::RequestRetrieveItemHandler(int iClientH, char *pData)
 			goto RRIH_NOQUANTITY;
 		} 
 		else {
-RRIH_NOQUANTITY:;
+RRIH_NOQUANTITY:
 			// ¼ö·®°³³äÀÌ ¾ø´Â ¾ÆÀÌÅÛ 
 			for (i = 0; i < DEF_MAXITEMS; i++)
 			if (m_pClientList[iClientH]->m_pItemList[i] == NULL) {
@@ -25187,7 +25296,7 @@ void CGame::_PenaltyItemDrop(int iClientH, int iTotal, BOOL bIsSAattacked)
 		return;
 	}
 
-PID_DROP:;
+PID_DROP:
 
 	for (i = 1; i <= iTotal; i++) {
 		iRemainItem = 0;
@@ -25531,6 +25640,7 @@ void CGame::CalculateSSN_ItemIndex(int iClientH, short sWeaponIndex, int iValue)
 			break;
 
 		case 4:  // Magic
+		case 18: // Crafting
 		case 21: // Staff-Attack
 			if (m_pClientList[iClientH]->m_cSkillMastery[sSkillIndex] > ((m_pClientList[iClientH]->m_iMag+ m_pClientList[iClientH]->m_iAngelicMag) * 2)) {
 				m_pClientList[iClientH]->m_cSkillMastery[sSkillIndex]--;
@@ -25558,6 +25668,7 @@ void CGame::CalculateSSN_ItemIndex(int iClientH, short sWeaponIndex, int iValue)
 		case 12: // Alchemy
 		case 15: // ����óġ
 		case 19: // Pretend-Corpse
+		case 20: // Enchanting
 			if (m_pClientList[iClientH]->m_cSkillMastery[sSkillIndex] > ((m_pClientList[iClientH]->m_iInt+ m_pClientList[iClientH]->m_iAngelicInt) * 2)) {
 				m_pClientList[iClientH]->m_cSkillMastery[sSkillIndex]--;
 				m_pClientList[iClientH]->m_iSkillSSN[sSkillIndex] = iOldSSN;
@@ -25660,6 +25771,7 @@ void CGame::CalculateSSN_SkillIndex(int iClientH, short sSkillIndex, int iValue)
 			break;
 
 		case 4:
+		case 18: // Crafting
 		case 21:
 			if (m_pClientList[iClientH]->m_cSkillMastery[sSkillIndex] > ((m_pClientList[iClientH]->m_iMag+ m_pClientList[iClientH]->m_iAngelicMag) * 2)) {
 				// Á¦ÇÑÄ¡º¸´Ù Ä¿Á³´Ù. ¹«È¿ÀÌ¹Ç·Î ÀÌÀü»óÅÂ·Î µÇµ¹¸°´Ù.
@@ -25689,6 +25801,7 @@ void CGame::CalculateSSN_SkillIndex(int iClientH, short sSkillIndex, int iValue)
 		case 14:
 		case 15:
 		case 19:
+		case 20: // Enchanting
 			if (m_pClientList[iClientH]->m_cSkillMastery[sSkillIndex] > ((m_pClientList[iClientH]->m_iInt+ m_pClientList[iClientH]->m_iAngelicInt) * 2)) {
 				// Á¦ÇÑÄ¡º¸´Ù Ä¿Á³´Ù. ¹«È¿ÀÌ¹Ç·Î ÀÌÀü»óÅÂ·Î µÇµ¹¸°´Ù.
 				m_pClientList[iClientH]->m_cSkillMastery[sSkillIndex]--;
@@ -26852,7 +26965,7 @@ void CGame::CalcNextWayPointDestination(int iNpcH)
 		m_pNpcList[iNpcH]->m_tmp_iError  = 0; 
 		return;
 
-CNW_GET_VALIDLOC_SUCCESS:;
+CNW_GET_VALIDLOC_SUCCESS:
 		m_pNpcList[iNpcH]->m_dX = sX;
 		m_pNpcList[iNpcH]->m_dY = sY;
 		break;
@@ -28280,7 +28393,7 @@ void CGame::Effect_Damage_Spot(short sAttackerH, char cAttackerType, short sTarg
 				}
 
 				if (m_pClientList[sTargetH]->m_iAddChargeCritical > 0) {
-					if (iDice(1,100) < (m_pClientList[sTargetH]->m_iAddChargeCritical)) {
+					if (iDice(1,100) <= (m_pClientList[sTargetH]->m_iAddChargeCritical)) {
 						iMaxSuperAttack = (m_pClientList[sTargetH]->m_iLevel / 10);
 						if (m_pClientList[sTargetH]->m_iSuperAttackLeft < iMaxSuperAttack) m_pClientList[sTargetH]->m_iSuperAttackLeft++;
 						SendNotifyMsg(NULL, sTargetH, DEF_NOTIFY_SUPERATTACKLEFT, NULL, NULL, NULL, NULL);
@@ -28765,7 +28878,7 @@ void CGame::Effect_Damage_Spot_Type2(short sAttackerH, char cAttackerType, short
 				}
 
 				if (m_pClientList[sTargetH]->m_iAddChargeCritical > 0) {
-					if (iDice(1,100) < (m_pClientList[sTargetH]->m_iAddChargeCritical)) {
+					if (iDice(1,100) <= (m_pClientList[sTargetH]->m_iAddChargeCritical)) {
 						iMaxSuperAttack = (m_pClientList[sTargetH]->m_iLevel / 10);
 						if (m_pClientList[sTargetH]->m_iSuperAttackLeft < iMaxSuperAttack) m_pClientList[sTargetH]->m_iSuperAttackLeft++;
 						SendNotifyMsg(NULL, sTargetH, DEF_NOTIFY_SUPERATTACKLEFT, NULL, NULL, NULL, NULL);
@@ -29216,7 +29329,7 @@ void CGame::Effect_Damage_Spot_DamageMove(short sAttackerH, char cAttackerType, 
 				// v2.04 Ÿ���� �޾Ҵµ� �ʻ� ������ Ư��ġ�� �־��ٸ� 
 				if (m_pClientList[sTargetH]->m_iAddChargeCritical > 0) {
 					// Ȯ�� ��꿡 ���� �ʻ�Ⱑ �����ȴ�.
-					if (iDice(1,100) < (m_pClientList[sTargetH]->m_iAddChargeCritical)) {
+					if (iDice(1,100) <= (m_pClientList[sTargetH]->m_iAddChargeCritical)) {
 						iMaxSuperAttack = (m_pClientList[sTargetH]->m_iLevel / 10);
 						if (m_pClientList[sTargetH]->m_iSuperAttackLeft < iMaxSuperAttack) m_pClientList[sTargetH]->m_iSuperAttackLeft++;
 						// v1.12 ������ Ŭ���̾�Ʈ ���� ī��Ʈ�� ��ġ���� �ʴ� ��찡 ���� �� �����Ƿ� ������ ������� ������.
@@ -29259,7 +29372,7 @@ void CGame::Effect_Damage_Spot_DamageMove(short sAttackerH, char cAttackerType, 
 					SendNotifyMsg(NULL, sTargetH, DEF_NOTIFY_DAMAGEMOVE, cDamageMoveDir, iDamage, NULL, NULL);
 				}
 				else {
-EDSD_SKIPDAMAGEMOVE:;
+EDSD_SKIPDAMAGEMOVE:
 					// ���� ������� �뺸�Ѵ�. <- HP�� �״�� �˸���.
 					SendNotifyMsg(NULL, sTargetH, DEF_NOTIFY_HP, NULL, NULL, NULL, NULL);
 					// ����� �޾Ҵٸ� ��ݵ��� ���� 
@@ -32946,7 +33059,7 @@ void CGame::bSetNpcAttackMode(char * cName, int iTargetH, char cTargetType, BOOL
 	// °°Àº ÀÌ¸§À» °¡Áø NPC°¡ ¾ø´Ù.
 	return;
 
-NEXT_STEP_SNAM1:;
+NEXT_STEP_SNAM1:
 
 	switch (cTargetType) {
 	case DEF_OWNERTYPE_PLAYER:
@@ -33274,7 +33387,7 @@ BOOL CGame::bReadNotifyMsgListFile(char * cFn)
 						m_iTotalNoticeMsg++;
 						goto LNML_NEXTSTEP1;
 					}
-LNML_NEXTSTEP1:;					
+LNML_NEXTSTEP1:	
 					cReadMode = 0;
 					break;
 				}
@@ -35832,7 +35945,7 @@ RCPH_LOOPBREAK:;
 //					// ���� ��ȣ 
 //					if (_bGetIsStringIsNumber(token) == FALSE) {
 //						PutLogList("(!!!) CRITICAL ERROR! POTION configuration file error - Wrong Data format(1).");
-//						delete pContents;
+//						delete[] pContents;
 //						delete pStrTok;
 //						return FALSE;
 //					}
@@ -35840,7 +35953,7 @@ RCPH_LOOPBREAK:;
 //					if (m_pPortionConfigList[atoi(token)] != NULL) {
 //						// �̹� �Ҵ�� ��ȣ�� �ִ�. �����̴�.
 //						PutLogList("(!!!) CRITICAL ERROR! POTION configuration file error - Duplicate portion number.");
-//						delete pContents;
+//						delete[] pContents;
 //						delete pStrTok;
 //						return FALSE;
 //					}
@@ -35861,7 +35974,7 @@ RCPH_LOOPBREAK:;
 //					// ���� ���� m_sArray[0~10]
 //					if (_bGetIsStringIsNumber(token) == FALSE) {
 //						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-//						delete pContents;
+//						delete[] pContents;
 //						delete pStrTok;
 //						return FALSE;
 //					}
@@ -35873,7 +35986,7 @@ RCPH_LOOPBREAK:;
 //					// ������ m_sArray[11]
 //					if (_bGetIsStringIsNumber(token) == FALSE) {
 //						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-//						delete pContents;
+//						delete[] pContents;
 //						delete pStrTok;
 //						return FALSE;
 //					}
@@ -35885,7 +35998,7 @@ RCPH_LOOPBREAK:;
 //					// ��ų ����ġ 
 //					if (_bGetIsStringIsNumber(token) == FALSE) {
 //						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-//						delete pContents;
+//						delete[] pContents;
 //						delete pStrTok;
 //						return FALSE;
 //					}
@@ -35897,7 +36010,7 @@ RCPH_LOOPBREAK:;
 //					// ���̵�
 //					if (_bGetIsStringIsNumber(token) == FALSE) {
 //						PutLogList("(!!!) CRITICAL ERROR! MAGIC configuration file error - Wrong Data format.");
-//						delete pContents;
+//						delete[] pContents;
 //						delete pStrTok;
 //						return FALSE;
 //					}
@@ -35923,7 +36036,7 @@ RCPH_LOOPBREAK:;
 //	}	
 //
 //	delete pStrTok;
-//	delete pContents;
+//	delete[] pContents;
 //
 //	if ((cReadModeA != 0) || (cReadModeB != 0)) {
 //		PutLogList("(!!!) CRITICAL ERROR! POTION configuration file contents error!");
@@ -35978,12 +36091,12 @@ BOOL CGame::_bDecodePortionConfigFileContents(char* pData, DWORD dwMsgSize)
 					if (_bGetIsStringIsNumber(token) == FALSE)
 					{
 						PutLogList("(!!!) CRITICAL ERROR! POTION configuration file error - Wrong Data format(1).");
-						delete pContents; delete pStrTok; return FALSE;
+						delete[] pContents; delete pStrTok; return FALSE;
 					}
 					if (m_pPortionConfigList[atoi(token)] != NULL)
 					{
 						PutLogList("(!!!) CRITICAL ERROR! POTION configuration file error - Duplicate portion number.");
-						delete pContents; delete pStrTok; return FALSE;
+						delete[] pContents; delete pStrTok; return FALSE;
 					}
 					m_pPortionConfigList[atoi(token)] = new class CPortion;
 					iPortionConfigListIndex = atoi(token);
@@ -36000,7 +36113,7 @@ BOOL CGame::_bDecodePortionConfigFileContents(char* pData, DWORD dwMsgSize)
 					if (_bGetIsStringIsNumber(token) == FALSE)
 					{
 						PutLogList("(!!!) CRITICAL ERROR! POTION configuration file error - Wrong Data format.");
-						delete pContents; delete pStrTok; return FALSE;
+						delete[] pContents; delete pStrTok; return FALSE;
 					}
 					m_pPortionConfigList[iPortionConfigListIndex]->m_sArray[cReadModeB - 3] = atoi(token);
 					cReadModeB++;
@@ -36010,7 +36123,7 @@ BOOL CGame::_bDecodePortionConfigFileContents(char* pData, DWORD dwMsgSize)
 					if (_bGetIsStringIsNumber(token) == FALSE)
 					{
 						PutLogList("(!!!) CRITICAL ERROR! POTION configuration file error - Wrong Data format.");
-						delete pContents; delete pStrTok; return FALSE;
+						delete[] pContents; delete pStrTok; return FALSE;
 					}
 					m_pPortionConfigList[iPortionConfigListIndex]->m_sArray[11] = atoi(token);
 					cReadModeB = 15;
@@ -36020,7 +36133,7 @@ BOOL CGame::_bDecodePortionConfigFileContents(char* pData, DWORD dwMsgSize)
 					if (_bGetIsStringIsNumber(token) == FALSE)
 					{
 						PutLogList("(!!!) CRITICAL ERROR! POTION configuration file error - Wrong Data format.");
-						delete pContents; delete pStrTok; return FALSE;
+						delete[] pContents; delete pStrTok; return FALSE;
 					}
 					m_pPortionConfigList[iPortionConfigListIndex]->m_iSkillLimit = atoi(token);
 					cReadModeB = 16;
@@ -36030,7 +36143,7 @@ BOOL CGame::_bDecodePortionConfigFileContents(char* pData, DWORD dwMsgSize)
 					if (_bGetIsStringIsNumber(token) == FALSE)
 					{
 						PutLogList("(!!!) CRITICAL ERROR! POTION configuration file error - Wrong Data format.");
-						delete pContents; delete pStrTok; return FALSE;
+						delete[] pContents; delete pStrTok; return FALSE;
 					}
 					m_pPortionConfigList[iPortionConfigListIndex]->m_iDifficulty = atoi(token);
 					cReadModeA = 0;
@@ -36045,12 +36158,12 @@ BOOL CGame::_bDecodePortionConfigFileContents(char* pData, DWORD dwMsgSize)
 					if (_bGetIsStringIsNumber(token) == FALSE)
 					{
 						PutLogList("(!!!) CRITICAL ERROR! CRAFTING configuration file error - Wrong Data format(1).");
-						delete pContents; delete pStrTok; return FALSE;
+						delete[] pContents; delete pStrTok; return FALSE;
 					}
 					if (m_pCraftingConfigList[atoi(token)] != NULL)
 					{
 						PutLogList("(!!!) CRITICAL ERROR! CRAFTING configuration file error - Duplicate crafting number.");
-						delete pContents; delete pStrTok; return FALSE;
+						delete[] pContents; delete pStrTok; return FALSE;
 					}
 					m_pCraftingConfigList[atoi(token)] = new class CPortion;
 					iCraftingConfigListIndex = atoi(token);
@@ -36067,7 +36180,7 @@ BOOL CGame::_bDecodePortionConfigFileContents(char* pData, DWORD dwMsgSize)
 					if (_bGetIsStringIsNumber(token) == FALSE)
 					{
 						PutLogList("(!!!) CRITICAL ERROR! CRAFTING configuration file error - Wrong Data format.");
-						delete pContents; delete pStrTok; return FALSE;
+						delete[] pContents; delete pStrTok; return FALSE;
 					}
 					m_pCraftingConfigList[iCraftingConfigListIndex]->m_sArray[cReadModeB - 3] = atoi(token);
 					cReadModeB++;
@@ -36077,7 +36190,7 @@ BOOL CGame::_bDecodePortionConfigFileContents(char* pData, DWORD dwMsgSize)
 					if (_bGetIsStringIsNumber(token) == FALSE)
 					{
 						PutLogList("(!!!) CRITICAL ERROR! CRAFTING configuration file error - Wrong Data format.");
-						delete pContents; delete pStrTok; return FALSE;
+						delete[] pContents; delete pStrTok; return FALSE;
 					}
 					m_pCraftingConfigList[iCraftingConfigListIndex]->m_sArray[11] = atoi(token);
 					cReadModeB = 15;
@@ -36087,7 +36200,7 @@ BOOL CGame::_bDecodePortionConfigFileContents(char* pData, DWORD dwMsgSize)
 					if (_bGetIsStringIsNumber(token) == FALSE)
 					{
 						PutLogList("(!!!) CRITICAL ERROR! CRAFTING configuration file error - Wrong Data format.");
-						delete pContents; delete pStrTok; return FALSE;
+						delete[] pContents; delete pStrTok; return FALSE;
 					}
 					m_pCraftingConfigList[iCraftingConfigListIndex]->m_iSkillLimit = atoi(token);
 					cReadModeB = 16;
@@ -36097,7 +36210,7 @@ BOOL CGame::_bDecodePortionConfigFileContents(char* pData, DWORD dwMsgSize)
 					if (_bGetIsStringIsNumber(token) == FALSE)
 					{
 						PutLogList("(!!!) CRITICAL ERROR! CRAFTING configuration file error - Wrong Data format.");
-						delete pContents; delete pStrTok; return FALSE;
+						delete[] pContents; delete pStrTok; return FALSE;
 					}
 					m_pCraftingConfigList[iCraftingConfigListIndex]->m_iDifficulty = atoi(token);
 					cReadModeA = 0;
@@ -36126,7 +36239,7 @@ BOOL CGame::_bDecodePortionConfigFileContents(char* pData, DWORD dwMsgSize)
 		token = pStrTok->pGet();
 	}
 	delete pStrTok;
-	delete pContents;
+	delete[] pContents;
 	if ((cReadModeA != 0) || (cReadModeB != 0))
 	{
 		PutLogList("(!!!) CRITICAL ERROR! POTION configuration file contents error!");
@@ -36202,7 +36315,7 @@ void CGame::ReqCreateCraftingHandler(int iClientH, char* pData)
 						sItemNumber[j]++;
 						goto RCPH_LOOPBREAK;
 					}
-			RCPH_LOOPBREAK:;
+RCPH_LOOPBREAK:;
 			}
 		}
 
@@ -36369,7 +36482,7 @@ void CGame::ReqCreateCraftingHandler(int iClientH, char* pData)
 		iPurity = 0;						// Necks require contribution but no purity/completion
 		bNeedLog = TRUE;
 	}
-	//CalculateSSN_SkillIndex(iClientH, 12, 1);
+	CalculateSSN_SkillIndex(iClientH, 18, 1);
 
 	if (strlen(cCraftingName) != 0)
 	{
@@ -37446,7 +37559,7 @@ void CGame::SetSummonMobAction(int iClientH, int iMode, DWORD dwMsgSize, char *p
 			}
 		}
 
-SSMA_SKIPSEARCH:;
+SSMA_SKIPSEARCH:
 
 		if ( (iTargetIndex != 0) && (m_pClientList[iTargetIndex]->m_cSide != 0) && 
 			 (m_pClientList[iTargetIndex]->m_cSide != m_pClientList[iClientH]->m_cSide) ) {
@@ -37862,7 +37975,7 @@ BOOL CGame::_bDecodeOccupyFlagSaveFileContents(char * pData, DWORD dwMsgSize)
 					// Side
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! OccupyFlag save file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -37875,7 +37988,7 @@ BOOL CGame::_bDecodeOccupyFlagSaveFileContents(char * pData, DWORD dwMsgSize)
 					// X ÁÂÇ¥ 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! OccupyFlag save file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -37888,7 +38001,7 @@ BOOL CGame::_bDecodeOccupyFlagSaveFileContents(char * pData, DWORD dwMsgSize)
 					// Y ÁÂÇ¥  
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! OccupyFlag save file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -37901,7 +38014,7 @@ BOOL CGame::_bDecodeOccupyFlagSaveFileContents(char * pData, DWORD dwMsgSize)
 					// EKNum
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! OccupyFlag save file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -37931,7 +38044,7 @@ BOOL CGame::_bDecodeOccupyFlagSaveFileContents(char * pData, DWORD dwMsgSize)
 	}	
 
 	delete pStrTok;
-	delete pContents;
+	delete[] pContents;
 
 	if ((cReadModeA != 0) || (cReadModeB != 0)) {
 		PutLogList("(!!!) CRITICAL ERROR! OccupyFlag save file contents error!");
@@ -38972,7 +39085,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 					// Äù½ºÆ® ¹øÈ£ 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -38980,7 +39093,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 					if (m_pQuestConfigList[atoi(token)] != NULL) {
 						// ÀÌ¹Ì ÇÒ´çµÈ ¹øÈ£°¡ ÀÖ´Ù. ¿¡·¯ÀÌ´Ù.
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Duplicate quest number.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -38994,7 +39107,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 					// Äù½ºÆ® »çÀÌµå  
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39006,7 +39119,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 					// Äù½ºÆ® Á¾·ù  
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39018,7 +39131,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 					// TargetType
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39030,7 +39143,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 					// MaxCount
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39042,7 +39155,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39054,7 +39167,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39066,7 +39179,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39078,7 +39191,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39090,7 +39203,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39102,7 +39215,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39114,7 +39227,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39126,7 +39239,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39138,7 +39251,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39150,7 +39263,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39162,7 +39275,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39174,7 +39287,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39186,7 +39299,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39198,7 +39311,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39210,7 +39323,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39222,7 +39335,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39239,7 +39352,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 				case 23:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39250,7 +39363,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 				case 24:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39261,7 +39374,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 				case 25:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39272,7 +39385,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 				case 26:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39283,7 +39396,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 				case 27:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -39309,7 +39422,7 @@ BOOL CGame::_bDecodeQuestConfigFileContents(char * pData, DWORD dwMsgSize)
 	}	
 
 	delete pStrTok;
-	delete pContents;
+	delete[] pContents;
 
 	if ((cReadModeA != 0) || (cReadModeB != 0)) {
 		PutLogList("(!!!) CRITICAL ERROR! QUEST configuration file contents error!");
@@ -40021,7 +40134,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 					// ½ºÅ³ Á¦ÇÑÄ¡ 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file error - Wrong Data format(1).");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40034,7 +40147,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40046,7 +40159,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 				case 4:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40058,7 +40171,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 				case 5:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40071,7 +40184,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40083,7 +40196,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 				case 7:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40095,7 +40208,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 				case 8:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40108,7 +40221,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40120,7 +40233,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 				case 10:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40132,7 +40245,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 				case 11:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40146,7 +40259,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40158,7 +40271,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 				case 13:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40170,7 +40283,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 				case 14:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40183,7 +40296,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40195,7 +40308,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 				case 16:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40207,7 +40320,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 				case 17:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40222,7 +40335,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 					// 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40234,7 +40347,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 				case 19:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40246,7 +40359,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 				case 20:
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40262,7 +40375,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 					// m_iAverageValue
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40276,7 +40389,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 					// m_iMaxSkill
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40290,7 +40403,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 					// m_wAttribute
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40319,7 +40432,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 						delete m_pBuildItemList[iIndex];
 						m_pBuildItemList[iIndex] = NULL;
 						
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -40344,7 +40457,7 @@ BOOL CGame::_bDecodeBuildItemConfigFileContents(char *pData, DWORD dwMsgSize)
 	}	
 
 	delete pStrTok;
-	delete pContents;
+	delete[] pContents;
 
 	if ((cReadModeA != 0) || (cReadModeB != 0)) {
 		PutLogList("(!!!) CRITICAL ERROR! BuildItem configuration file contents error!");
@@ -41144,7 +41257,7 @@ BOOL CGame::_bDecodeDupItemIDFileContents(char *pData, DWORD dwMsgSize)
 					// ��ų ��ȣ 
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) ERROR! DupItemID configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -41152,7 +41265,7 @@ BOOL CGame::_bDecodeDupItemIDFileContents(char *pData, DWORD dwMsgSize)
 					if (m_pDupItemIDList[atoi(token)] != NULL) {
 						// �̹� �Ҵ�� ��ȣ�� �ִ�. �����̴�.
 						PutLogList("(!!!) ERROR! DupItemID configuration file error - Duplicate magic number.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -41166,7 +41279,7 @@ BOOL CGame::_bDecodeDupItemIDFileContents(char *pData, DWORD dwMsgSize)
 					// m_sTouchEffectType
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) ERROR! DupItemID configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -41178,7 +41291,7 @@ BOOL CGame::_bDecodeDupItemIDFileContents(char *pData, DWORD dwMsgSize)
 					// m_sTouchEffectValue1
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) ERROR! DupItemID configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -41190,7 +41303,7 @@ BOOL CGame::_bDecodeDupItemIDFileContents(char *pData, DWORD dwMsgSize)
 					// m_sTouchEffectValue2
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) ERROR! DupItemID configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -41202,7 +41315,7 @@ BOOL CGame::_bDecodeDupItemIDFileContents(char *pData, DWORD dwMsgSize)
 					// m_sTouchEffectValue3
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) ERROR! DupItemID configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -41214,7 +41327,7 @@ BOOL CGame::_bDecodeDupItemIDFileContents(char *pData, DWORD dwMsgSize)
 					// m_wPrice
 					if (_bGetIsStringIsNumber(token) == FALSE) {
 						PutLogList("(!!!) ERROR! DupItemID configuration file error - Wrong Data format.");
-						delete pContents;
+						delete[] pContents;
 						delete pStrTok;
 						return FALSE;
 					}
@@ -41244,7 +41357,7 @@ BOOL CGame::_bDecodeDupItemIDFileContents(char *pData, DWORD dwMsgSize)
 	}	
 
 	delete pStrTok;
-	delete pContents;
+	delete[] pContents;
 
 	if ((cReadModeA != 0) || (cReadModeB != 0)) {
 		PutLogList("(!!!) ERROR! DupItemID configuration file contents error!");
@@ -43216,7 +43329,7 @@ void CGame::RequestSummonWarUnitHandler(int iClientH, int dX, int dY, char cType
 				break;
 			}
 			
-RSWU_LOOPBREAK:;
+RSWU_LOOPBREAK:
 
 			// ¸¸¾à ÀüÀï °ÇÃà¹°Áß °¡µåÅ¸¿ö°°ÀÌ °ø°ÝÇüÀÌ¶ó¸é ³Ê¹« ÀÎÁ¢ÇØ¼­ °Ç¼³ÇÒ ¼ö ¾ø´Ù.
 			bRet = FALSE;
@@ -43461,7 +43574,7 @@ void CGame::_SendMapStatus(int iClientH)
 	SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_MAPSTATUSNEXT, iDataSize +13, NULL, NULL, cData);
 	return;
 
-SMS_ENDOFDATA:;
+SMS_ENDOFDATA:
 
 	// µ¥ÀÌÅÍ°¡ ´Ù Àü¼Û µÇ¾úÀ½À» ÀÇ¹Ì.
 	cp = (char *)(cData + 12);
@@ -44392,7 +44505,7 @@ void CGame::RemoveClientShortCut(int iClientH)
 		goto RCSC_LOOPBREAK;
 	}
 
-RCSC_LOOPBREAK:;
+RCSC_LOOPBREAK:
 
 	// ºó ¿©¹éÀ» ¸Þ²Û´Ù.
 	//m_iClientShortCut[i] = m_iClientShortCut[m_iTotalClients+1];
@@ -51175,7 +51288,7 @@ void CGame::PartyOperationResultHandler(char *pData)
 				PutLogList(G_cTxt);
 				goto PORH_LOOPBREAK1;
 			}
-PORH_LOOPBREAK1:;
+PORH_LOOPBREAK1:
 
 				for (i = 0; i < DEF_MAXPARTYMEMBERS-1; i++)
 				if ((m_stPartyInfo[m_pClientList[iClientH]->m_iPartyID].iIndex[i] == 0) && (m_stPartyInfo[m_pClientList[iClientH]->m_iPartyID].iIndex[i+1] != 0)) {
@@ -51297,7 +51410,7 @@ void CGame::PartyOperationResult_Create(int iClientH, char *pName, int iResult, 
 				PutLogList(G_cTxt);
 				goto PORC_LOOPBREAK1;
 			}
-PORC_LOOPBREAK1:;
+PORC_LOOPBREAK1:
 
 			// ¸¸¾à ÆÄÆ¼ °¡ÀÔÀ» ½ÅÃ»ÇÑ ÇÃ·¹ÀÌ¾î°¡ ÀÖ´Ù¸é 
 			if ((m_pClientList[iClientH]->m_iReqJoinPartyClientH != NULL) && (strlen(m_pClientList[iClientH]->m_cReqJoinPartyName) != NULL)) {
@@ -51366,7 +51479,7 @@ void CGame::PartyOperationResult_Join(int iClientH, char *pName, int iResult, in
 				PutLogList(G_cTxt);
 				goto PORC_LOOPBREAK1;
 			}
-PORC_LOOPBREAK1:;
+PORC_LOOPBREAK1:
 
 			for (i = 1; i < DEF_MAXCLIENTS; i++)
 				if ((i != iClientH) && (m_pClientList[i] != NULL) && (m_pClientList[i]->m_iPartyID != NULL) && (m_pClientList[i]->m_iPartyID == iPartyID)) {
@@ -51393,7 +51506,7 @@ void CGame::PartyOperationResult_Dismiss(int iClientH, char *pName, int iResult,
 					iClientH = i;
 					goto PORD_LOOPBREAK;
 				}
-PORD_LOOPBREAK:;
+PORD_LOOPBREAK:
 
 				// °ÔÀÓ ¼­¹öÀÇ ÆÄÆ¼ ¸®½ºÆ®¿¡¼­ ÇØÁ¦.
 				for (i = 0; i < DEF_MAXPARTYMEMBERS; i++)
@@ -51405,7 +51518,7 @@ PORD_LOOPBREAK:;
 						PutLogList(G_cTxt);
 						goto PORC_LOOPBREAK1;
 					}
-PORC_LOOPBREAK1:;
+PORC_LOOPBREAK1:
 					// ¸®½ºÆ® ÀÎµ¦½ºÀÇ ºó°ø°£À» Á¦°ÅÇÑ´Ù.
 					for (i = 0; i < DEF_MAXPARTYMEMBERS-1; i++)
 						if ((m_stPartyInfo[iPartyID].iIndex[i] == 0) && (m_stPartyInfo[iPartyID].iIndex[i+1] != 0)) {
@@ -51446,7 +51559,7 @@ PORC_LOOPBREAK1:;
 					PutLogList(G_cTxt);
 					goto PORC_LOOPBREAK2;
 				}
-PORC_LOOPBREAK2:;
+PORC_LOOPBREAK2:
 				// ¸®½ºÆ® ÀÎµ¦½ºÀÇ ºó°ø°£À» Á¦°ÅÇÑ´Ù.
 				for (i = 0; i < DEF_MAXPARTYMEMBERS-1; i++)
 					if ((m_stPartyInfo[iPartyID].iIndex[i] == 0) && (m_stPartyInfo[iPartyID].iIndex[i+1] != 0)) {
@@ -54142,7 +54255,7 @@ DWORD CGame::iCalculateAttackEffect(short sTargetH, char cTargetType, short sAtt
 							if (m_pClientList[sTargetH]->m_iMP > iTemp) m_pClientList[sTargetH]->m_iMP = iTemp;
 						}
 						if (m_pClientList[sTargetH]->m_iAddChargeCritical > 0) {
-							if (iDice(1,100) < (m_pClientList[sTargetH]->m_iAddChargeCritical)) {
+							if (iDice(1,100) <= (m_pClientList[sTargetH]->m_iAddChargeCritical)) {
 								iMaxSuperAttack = (m_pClientList[sTargetH]->m_iLevel / 10);
 								if (m_pClientList[sTargetH]->m_iSuperAttackLeft < iMaxSuperAttack) m_pClientList[sTargetH]->m_iSuperAttackLeft++;
 									SendNotifyMsg(NULL, sTargetH, DEF_NOTIFY_SUPERATTACKLEFT, NULL, NULL, NULL, NULL);
@@ -54180,7 +54293,7 @@ DWORD CGame::iCalculateAttackEffect(short sTargetH, char cTargetType, short sAtt
 							SendNotifyMsg(NULL, sTargetH, DEF_NOTIFY_DAMAGEMOVE, cDamageMoveDir, iAP_SM, sAttackerWeapon, NULL);
 						}
 						else {
-CAE_SKIPDAMAGEMOVE:;
+CAE_SKIPDAMAGEMOVE:
 							int iProb;
 							if (cAttackerType == DEF_OWNERTYPE_PLAYER) {
 								switch (m_pClientList[sAttackerH]->m_sUsingWeaponSkill) {
@@ -54370,7 +54483,7 @@ CAE_SKIPDAMAGEMOVE:;
 					}
 				}
 
-CAE_SKIPCOUNTERATTACK:;
+CAE_SKIPCOUNTERATTACK:
 
 				if ((iDice(1,3) == 2) && (m_pNpcList[sTargetH]->m_cActionLimit == 0))
 					m_pNpcList[sTargetH]->m_dwTime = dwTime;
@@ -57012,4 +57125,388 @@ void CGame::GetAngelHandler(int iClientH, char* pData, DWORD dwMsgSize)
 		delete pItem;
 		pItem = NULL;
 	}
+}
+
+void CGame::RequestEnchantUpgradeHandler(int client, DWORD type, DWORD lvl, int iType)
+{
+	auto& player = m_pClientList[client];
+	if (player == NULL || type == NULL) return;
+
+	if (lvl < 2 || lvl >= 17) return; // nivel mayor a 1 y menor a 17
+
+	int req = GetRequiredLevelForUpgrade(lvl);
+
+	switch (iType) {
+		// Upgrade one
+	case UPGRADEONE_SHARD:
+		// descuenta los shards necesarios
+		if (player->m_pShards[type][lvl] != NULL && player->m_pShards[type][lvl]->iCount >= req)
+		{
+			player->m_pShards[type][lvl]->iCount -= req;
+			SendNotifyMsg(NULL, client, msg_shard, type, lvl + 1, player->m_pShards[type][lvl]->iCount, player->m_pShards[type][lvl]->cName, NULL, NULL, NULL, NULL, NULL, NULL, player->m_pShards[type][lvl]->cDesc);
+
+			// agrego uno al nivel siguiente
+			if (player->m_pShards[type][lvl + 1] == NULL)
+			{
+				player->m_pShards[type][lvl + 1] = new class CEnchanting;
+
+				strcpy(player->m_pShards[type][lvl + 1]->cName, GetShardName(type));
+				strcpy(player->m_pShards[type][lvl + 1]->cDesc, GetShardDesc(type));
+				player->m_pShards[type][lvl + 1]->dwType = type;
+				player->m_pShards[type][lvl + 1]->dwValue = lvl + 2;
+			}
+
+			player->m_pShards[type][lvl + 1]->iCount++;
+
+			SendNotifyMsg(NULL, client, msg_shard, type, lvl + 2, player->m_pShards[type][lvl + 1]->iCount, player->m_pShards[type][lvl + 1]->cName, NULL, NULL, NULL, NULL, NULL, NULL, player->m_pShards[type][lvl + 1]->cDesc);
+		}
+		break;
+	case UPGRADEONE_FRAGMENT:
+		// descuenta los fragments necesarios
+		if (player->m_pFragments[type][lvl] != NULL && player->m_pFragments[type][lvl]->iCount >= req)
+		{
+			player->m_pFragments[type][lvl]->iCount -= req;
+			SendNotifyMsg(NULL, client, msg_fragment, type, lvl + 1, player->m_pFragments[type][lvl]->iCount, player->m_pFragments[type][lvl]->cName, NULL, NULL, NULL, NULL, NULL, NULL, player->m_pFragments[type][lvl]->cDesc);
+
+			// agrego uno al nivel siguiente
+			if (player->m_pFragments[type][lvl + 1] == NULL)
+			{
+				player->m_pFragments[type][lvl + 1] = new class CEnchanting;
+
+				strcpy(player->m_pFragments[type][lvl + 1]->cName, GetFragmentName(type));
+				strcpy(player->m_pFragments[type][lvl + 1]->cDesc, GetFragmentDesc(type));
+				player->m_pFragments[type][lvl + 1]->dwType = type;
+				player->m_pFragments[type][lvl + 1]->dwValue = lvl + 2;
+			}
+
+			player->m_pFragments[type][lvl + 1]->iCount++;
+
+			SendNotifyMsg(NULL, client, msg_fragment, type, lvl + 2, player->m_pFragments[type][lvl + 1]->iCount, player->m_pFragments[type][lvl + 1]->cName, NULL, NULL, NULL, NULL, NULL, NULL, player->m_pFragments[type][lvl + 1]->cDesc);
+		}
+		break;
+
+		// Upgrade all
+	case UPGRADEALL_SHARD:
+		// descuenta los shards necesarios
+		if (player->m_pShards[type][lvl] != NULL)
+		{
+			while (player->m_pShards[type][lvl]->iCount >= req)
+			{
+				player->m_pShards[type][lvl]->iCount -= req;
+				SendNotifyMsg(NULL, client, msg_shard, type, lvl + 1, player->m_pShards[type][lvl]->iCount, player->m_pShards[type][lvl]->cName, NULL, NULL, NULL, NULL, NULL, NULL, player->m_pShards[type][lvl]->cDesc);
+
+				// agrego uno al nivel siguiente
+				if (player->m_pShards[type][lvl + 1] == NULL)
+				{
+					player->m_pShards[type][lvl + 1] = new class CEnchanting;
+
+					strcpy(player->m_pShards[type][lvl + 1]->cName, GetShardName(type));
+					strcpy(player->m_pShards[type][lvl + 1]->cDesc, GetShardDesc(type));
+					player->m_pShards[type][lvl + 1]->dwType = type;
+					player->m_pShards[type][lvl + 1]->dwValue = lvl + 2;
+				}
+
+				player->m_pShards[type][lvl + 1]->iCount++;
+
+				SendNotifyMsg(NULL, client, msg_shard, type, lvl + 2, player->m_pShards[type][lvl + 1]->iCount, player->m_pShards[type][lvl + 1]->cName, NULL, NULL, NULL, NULL, NULL, NULL, player->m_pShards[type][lvl + 1]->cDesc);
+			}
+		}
+		break;
+	case UPGRADEALL_FRAGMENT:
+		// descuenta los fragments necesarios
+		if (player->m_pFragments[type][lvl] != NULL)
+		{
+			while (player->m_pFragments[type][lvl]->iCount >= req)
+			{
+				player->m_pFragments[type][lvl]->iCount -= req;
+				SendNotifyMsg(NULL, client, msg_fragment, type, lvl + 1, player->m_pFragments[type][lvl]->iCount, player->m_pFragments[type][lvl]->cName, NULL, NULL, NULL, NULL, NULL, NULL, player->m_pFragments[type][lvl]->cDesc);
+
+				// agrego uno al nivel siguiente
+				if (player->m_pFragments[type][lvl + 1] == NULL)
+				{
+					player->m_pFragments[type][lvl + 1] = new class CEnchanting;
+
+					strcpy(player->m_pFragments[type][lvl + 1]->cName, GetFragmentName(type));
+					strcpy(player->m_pFragments[type][lvl + 1]->cDesc, GetFragmentDesc(type));
+					player->m_pFragments[type][lvl + 1]->dwType = type;
+					player->m_pFragments[type][lvl + 1]->dwValue = lvl + 2;
+				}
+
+				player->m_pFragments[type][lvl + 1]->iCount++;
+
+				SendNotifyMsg(NULL, client, msg_fragment, type, lvl + 2, player->m_pFragments[type][lvl + 1]->iCount, player->m_pFragments[type][lvl + 1]->cName, NULL, NULL, NULL, NULL, NULL, NULL, player->m_pFragments[type][lvl + 1]->cDesc);
+			}
+		}
+		break;
+	}
+}
+int CGame::GetRequiredLevelForUpgrade(DWORD value)
+{
+	if (value >= 1 && value <= 5)
+	{
+		return 4;
+	}
+	else if (value > 5 && value <= 10)
+	{
+		return 3;
+	}
+
+	return 2;
+
+}
+void CGame::RequestItemEnchantHandler(int iClientH, int sDestItemID, int iType)
+{
+	auto player = m_pClientList[iClientH];
+
+	if (sDestItemID < 0 || sDestItemID > DEF_MAXITEMS) return;
+	if (player == NULL || player->m_pItemList[sDestItemID] == NULL) return;
+
+	auto& dst_attr = player->m_pItemList[sDestItemID]->m_dwAttribute;
+
+	auto dst_dwType1 = (dst_attr & 0x00F00000) >> 20;
+	auto dst_dwValue1 = (dst_attr & 0x000F0000) >> 16;
+	auto dst_dwType2 = (dst_attr & 0x0000F000) >> 12;
+	auto dst_dwValue2 = (dst_attr & 0x00000F00) >> 8;
+
+	for (int i = 0; i < 13; i++)
+	{
+		for (int x = 0; x < 17; x++)
+		{
+			if (iType == 0)
+			{
+				if (player->m_pShards[i][x] == NULL || player->m_pShards[i][x]->iCount == 0) continue;
+				if (dst_dwType1 == NULL || dst_dwType1 != player->m_pShards[i][x]->dwType) continue; // no es del mismo tipo
+				if (dst_dwValue1 != player->m_pShards[i][x]->dwValue) continue; // no es del mismo level
+
+				auto dst_value = dst_dwValue1 + 1;
+
+				dst_attr = NULL;
+				dst_dwType1 = dst_dwType1 << 20;
+				dst_dwValue1 = dst_value << 16;
+				dst_attr = dst_attr | dst_dwType1 | dst_dwValue1;
+
+				if (dst_dwType2 != NULL) // mantengo los mismos stats
+				{
+					dst_dwType2 = dst_dwType2 << 12;
+					dst_dwValue2 = dst_dwValue2 << 8;
+					dst_attr = dst_attr | dst_dwType2 | dst_dwValue2;
+				}
+
+				player->m_pShards[i][x]->iCount--;
+				SendNotifyMsg(NULL, iClientH, msg_shard, player->m_pShards[i][x]->dwType, player->m_pShards[i][x]->dwValue, player->m_pShards[i][x]->iCount, player->m_pShards[i][x]->cName, NULL, NULL, NULL, NULL, NULL, NULL, player->m_pShards[i][x]->cDesc);
+			}
+			else
+			{
+				if (player->m_pFragments[i][x] == NULL || player->m_pFragments[i][x]->iCount == 0) continue;
+				if (dst_dwType2 == NULL || dst_dwType2 != player->m_pFragments[i][x]->dwType) continue; // no es del mismo tipo
+				if (dst_dwValue2 != player->m_pFragments[i][x]->dwValue) continue; // no es del mismo level
+
+				auto dst_value = dst_dwValue2 + 1;
+
+				dst_attr = NULL;
+				dst_dwType1 = dst_dwType1 << 20;
+				dst_dwValue1 = dst_dwValue1 << 16;
+				dst_dwType2 = dst_dwType2 << 12;
+				dst_dwValue2 = dst_value << 8;
+				dst_attr = dst_attr | dst_dwType1 | dst_dwValue1;
+				dst_attr = dst_attr | dst_dwType2 | dst_dwValue2;
+
+				player->m_pFragments[i][x]->iCount--;
+				SendNotifyMsg(NULL, iClientH, msg_fragment, player->m_pFragments[i][x]->dwType, player->m_pFragments[i][x]->dwValue, player->m_pFragments[i][x]->iCount, player->m_pFragments[i][x]->cName, NULL, NULL, NULL, NULL, NULL, NULL, player->m_pFragments[i][x]->cDesc);
+			}
+
+			CalculateSSN_SkillIndex(iClientH, 20, 1);
+			goto BREAK_LOOP;
+		}
+	}
+	return;
+BREAK_LOOP:
+	SendNotifyMsg(NULL, iClientH, DEF_NOTIFY_ITEMATTRIBUTECHANGE, sDestItemID, player->m_pItemList[sDestItemID]->m_dwAttribute, NULL, NULL);
+}
+
+void CGame::RequestItemDisenchantHandler(int iClientH, int iItemIndex)
+{
+	auto player = m_pClientList[iClientH];
+
+	if (player == NULL) return;
+	if ((iItemIndex < 0) || (iItemIndex >= DEF_MAXITEMS)) return;
+	if (player->m_pItemList[iItemIndex] == NULL) return;
+
+	if ((player->m_pItemList[iItemIndex]->m_sTouchEffectValue1 == player->m_sCharIDnum1)
+		&& (player->m_pItemList[iItemIndex]->m_sTouchEffectValue2 == player->m_sCharIDnum2)
+		&& (player->m_pItemList[iItemIndex]->m_sTouchEffectValue3 == player->m_sCharIDnum3))
+	{
+		return; // si es un item unico no se puede
+	}
+
+	auto attr = player->m_pItemList[iItemIndex]->m_dwAttribute;
+	auto dwType1 = (attr & 0x00F00000) >> 20;
+	auto dwValue1 = (attr & 0x000F0000) >> 16;
+	auto dwType2 = (attr & 0x0000F000) >> 12;
+	auto dwValue2 = (attr & 0x00000F00) >> 8;
+
+	if (dwType1 != NULL)
+	{
+		DWORD type = dwType1;
+		DWORD value = dwValue1 - 1;
+		if (player->m_pShards[type][value] == NULL)
+		{
+			player->m_pShards[type][value] = new class CEnchanting;
+
+			strcpy(player->m_pShards[type][value]->cName, GetShardName(dwType1));
+			strcpy(player->m_pShards[type][value]->cDesc, GetShardDesc(dwType1));
+			player->m_pShards[type][value]->dwType = dwType1;
+			player->m_pShards[type][value]->dwValue = dwValue1;
+		}
+
+		player->m_pShards[type][value]->iCount++;
+
+		SendNotifyMsg(NULL, iClientH, msg_shard, dwType1, dwValue1, player->m_pShards[type][value]->iCount, player->m_pShards[type][value]->cName, NULL, NULL, NULL, NULL, NULL, NULL, player->m_pShards[type][value]->cDesc);
+	}
+
+	if (dwType2 != NULL)
+	{
+		DWORD type = dwType2;
+		DWORD value = dwValue2 - 1;
+		if (player->m_pFragments[type][value] == NULL)
+		{
+			player->m_pFragments[type][value] = new class CEnchanting;
+
+			strcpy(player->m_pFragments[type][value]->cName, GetFragmentName(dwType2));
+			strcpy(player->m_pFragments[type][value]->cDesc, GetFragmentDesc(dwType2));
+			player->m_pFragments[type][value]->dwType = dwType2;
+			player->m_pFragments[type][value]->dwValue = dwValue2;
+		}
+
+		player->m_pFragments[type][value]->iCount++;
+
+		SendNotifyMsg(NULL, iClientH, msg_fragment, dwType2, dwValue2, player->m_pFragments[type][value]->iCount, player->m_pFragments[type][value]->cName, NULL, NULL, NULL, NULL, NULL, NULL, player->m_pFragments[type][value]->cDesc);
+	}
+
+	ItemDepleteHandler(iClientH, iItemIndex, TRUE); // destruye el item
+}
+
+
+char* CGame::GetShardDesc(DWORD dwType)
+{
+	switch (dwType) {
+	case SHARD_CRITICAL:
+	case SHARD_CRITICAL2:
+		return "crit";
+	case SHARD_POISONING:
+		return "pd";
+	case SHARD_RIGHTEOUS:
+		return "right";
+	case SHARD_AGILE:
+		return "agile";
+	case SHARD_LIGHT:
+		return "light";
+	case SHARD_SHARP:
+		return "sharp";
+	case SHARD_STRONG:
+		return "str";
+	case SHARD_ANCIENT:
+		return "anc";
+	case SHARD_CASTPROB:
+		return "cp";
+	case SHARD_MANACONV:
+		return "mana";
+	}
+
+	return "";
+}
+
+char* CGame::GetFragmentDesc(DWORD dwType)
+{
+	switch (dwType) {
+	case FRAGMENT_PSNRES:
+		return "pr";
+	case FRAGMENT_HITPROB:
+		return "hr";
+	case FRAGMENT_DEF:
+		return "dr";
+	case FRAGMENT_HPREC:
+		return "hp";
+	case FRAGMENT_SPREC:
+		return "sp";
+	case FRAGMENT_MPREC:
+		return "mp";
+	case FRAGMENT_MR:
+		return "mr";
+	case FRAGMENT_PA:
+		return "pa";
+	case FRAGMENT_MA:
+		return "ma";
+	case FRAGMENT_CAD:
+		return "cad";
+	case FRAGMENT_EXP:
+		return "exp";
+	case FRAGMENT_GOLD:
+		return "gold";
+	}
+
+	return "";
+}
+
+
+char* CGame::GetShardName(DWORD dwType)
+{
+	switch (dwType) {
+	case SHARD_CRITICAL:
+		return "Critical Hit Damage";
+	case SHARD_CRITICAL2:
+		return "Crit. Increase Chance";
+	case SHARD_POISONING:
+		return "Poisoning";
+	case SHARD_RIGHTEOUS:
+		return "Righteous";
+	case SHARD_AGILE:
+		return "Agile";
+	case SHARD_LIGHT:
+		return "Light";
+	case SHARD_SHARP:
+		return "Sharp";
+	case SHARD_STRONG:
+		return "Endurance";
+	case SHARD_ANCIENT:
+		return "Ancient";
+	case SHARD_CASTPROB:
+		return "Magic Casting Probability";
+	case SHARD_MANACONV:
+		return "Mana Converting";
+	}
+
+	return "";
+}
+
+char* CGame::GetFragmentName(DWORD dwType)
+{
+	switch (dwType) {
+	case FRAGMENT_PSNRES:
+		return "Poison Resistance";
+	case FRAGMENT_HITPROB:
+		return "Hitting Probability";
+	case FRAGMENT_DEF:
+		return "Defense Ratio";
+	case FRAGMENT_HPREC:
+		return "HP Recovery";
+	case FRAGMENT_SPREC:
+		return "SP Recovery";
+	case FRAGMENT_MPREC:
+		return "MP Recovery";
+	case FRAGMENT_MR:
+		return "Magic Resistance";
+	case FRAGMENT_PA:
+		return "Physical Absorption";
+	case FRAGMENT_MA:
+		return "Magic Absorption";
+	case FRAGMENT_CAD:
+		return "Consecutive Attack Damage";
+	case FRAGMENT_EXP:
+		return "Experience";
+	case FRAGMENT_GOLD:
+		return "Gold";
+	}
+
+	return "";
 }

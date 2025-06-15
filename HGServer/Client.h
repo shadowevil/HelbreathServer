@@ -18,6 +18,12 @@
 #include "GuildsMan.h"
 #include "Magic.h"
 #include "GlobalDef.h"
+#include "Enchanting.h"
+#include "MobCounter.h"
+#include <fstream>
+#include <vector>
+#include <string>
+using namespace std;
 
 #define DEF_CLIENTSOCKETBLOCKLIMIT	15
 
@@ -121,6 +127,22 @@ public:
 	int m_iGizonItemUpgradeLeft;
 
 	int m_iAddTransMana, m_iAddChargeCritical;
+
+	string getvalue(string val, char* fileName);
+
+	CEnchanting* m_pShards[13][17];
+	CEnchanting* m_pFragments[13][17];
+
+	void read_shards_data();
+	void save_shards_data();
+
+	void read_fragments_data();
+	void save_fragments_data();
+
+	class CMobCounter* m_pMobKillCount[100];
+
+	void read_mobs_data();
+	void save_mobs_data();
 
 	DWORD m_iRewardGold;
 	int  m_iEnemyKillCount, m_iPKCount;
