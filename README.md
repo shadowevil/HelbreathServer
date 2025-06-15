@@ -7,7 +7,7 @@
 
 New Features:
 - Enchanting (90% done, to-do withdraw)
-- Haste
+- Magic 'Haste'
 - Monster's Kill Counter
 - Item's descriptions in floor
 - Monster's HP bar
