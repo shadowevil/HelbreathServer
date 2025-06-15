@@ -16091,6 +16091,10 @@ int CGame::_iCheckDlgBoxFocus(short msX, short msY, char cButtonSide)
 				case 67:
 				case 68:
 				case 69:
+				case 44:
+				case 49:
+				case 54:
+				case 58:
 					m_stMCursor.cSelectedObjectType	= DEF_SELECTEDOBJTYPE_DLGBOX;
 					m_stMCursor.sSelectedObjectID   = cDlgID;
 					break;
@@ -16742,6 +16746,18 @@ void CGame::DrawDialogBoxs(short msX, short msY, short msZ, char cLB)
 			break;
 		case 51: // Gail
 			DrawDialogBox_CMDHallMenu(msX, msY);
+			break;
+		case 58:
+			DrawDialogBox_Enchanting(msX, msY);
+			break;
+		case 54:
+			DrawDialogBox_EnchantingBag(msX, msY);
+			break;
+		case 44:
+			DrawDialogBox_EnchantingUpgrade(msX, msY);
+			break;
+		case 49:
+			DrawDialogBox_EnchantingUpgradeAll(msX, msY);
 			break;
 		}
 	}
@@ -24994,6 +25010,22 @@ void CGame::OnKeyUp(WPARAM wParam)
  DWORD dwTime = timeGetTime();
 
 	switch (wParam) {
+	case VK_SHIFT:
+		m_bShiftPressed = FALSE;
+		break;
+	case VK_CONTROL:
+		m_bCtrlPressed = FALSE;
+		break;
+	case 65://'A'
+		if (m_bCtrlPressed && m_cGameMode == DEF_GAMEMODE_ONMAINGAME && (!m_bInputStatus) )
+		{	if( m_bForceAttack )
+			{	m_bForceAttack = FALSE;
+				AddEventList( DEF_MSG_FORCEATTACK_OFF, 10 );
+			}else
+			{	m_bForceAttack = TRUE;
+				AddEventList( DEF_MSG_FORCEATTACK_ON, 10 );
+		}	}
+		break;
 	case 69://'E'
 		if (m_cGameMode == DEF_GAMEMODE_ONMAINGAME)
 		{
@@ -25011,23 +25043,6 @@ void CGame::OnKeyUp(WPARAM wParam)
 			}
 		}
 		break;
-	case VK_SHIFT:
-		m_bShiftPressed = FALSE;
-		break;
-	case VK_CONTROL:
-		m_bCtrlPressed = FALSE;
-		break;
-	case 65://'A'
-		if (m_bCtrlPressed && m_cGameMode == DEF_GAMEMODE_ONMAINGAME && (!m_bInputStatus) )
-		{	if( m_bForceAttack )
-			{	m_bForceAttack = FALSE;
-				AddEventList( DEF_MSG_FORCEATTACK_OFF, 10 );
-			}else
-			{	m_bForceAttack = TRUE;
-				AddEventList( DEF_MSG_FORCEATTACK_ON, 10 );
-		}	}
-		break;
-
 	case 68://'D'
 		if (m_bCtrlPressed == TRUE && m_cGameMode == DEF_GAMEMODE_ONMAINGAME && (!m_bInputStatus) )
 		{	m_cDetailLevel++;
