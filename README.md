@@ -6,9 +6,16 @@
 - Helbreath USA 3.72 installer
 
 New Features:
-- Enchanting (90% done, to-do withdraw)
+- Enchanting
 - Magic 'Haste'
 - Monster's Kill Counter
 - Item's descriptions in floor
 - Monster's HP bar
 - Repair All
+
+To-Do:
+- Rebirth System
+- Guild System
+- Shards/Fragments withdraw
+- Magic 'Hell-Fire'
+- Cast Spell ally/enemy colours
