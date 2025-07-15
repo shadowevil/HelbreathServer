@@ -130,6 +130,7 @@
     <ClInclude Include="DelayEvent.h" />
     <ClInclude Include="DynamicObject.h" />
     <ClInclude Include="DynamicObjectID.h" />
+    <ClInclude Include="Enchanting.h" />
     <ClInclude Include="Fish.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GlobalDef.h" />
@@ -141,6 +142,7 @@
     <ClInclude Include="MessageIndex.h" />
     <ClInclude Include="Mineral.h" />
     <ClInclude Include="Misc.h" />
+    <ClInclude Include="MobCounter.h" />
     <ClInclude Include="Msg.h" />
     <ClInclude Include="NetMessages.h" />
     <ClInclude Include="Npc.h" />
@@ -167,6 +169,7 @@
     <ClCompile Include="DebugDialog.cpp" />
     <ClCompile Include="DelayEvent.cpp" />
     <ClCompile Include="DynamicObject.cpp" />
+    <ClCompile Include="Enchanting.cpp" />
     <ClCompile Include="Fish.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GuildsMan.cpp" />
@@ -176,6 +179,7 @@
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Mineral.cpp" />
     <ClCompile Include="Misc.cpp" />
+    <ClCompile Include="MobCounter.cpp" />
     <ClCompile Include="Msg.cpp" />
     <ClCompile Include="Npc.cpp" />
     <ClCompile Include="OccupyFlag.cpp" />

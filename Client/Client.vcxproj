@@ -95,6 +95,7 @@
     <ClInclude Include="Magic.h" />
     <ClInclude Include="MapData.h" />
     <ClInclude Include="Misc.h" />
+    <ClInclude Include="MobCounter.h" />
     <ClInclude Include="MouseInterface.h" />
     <ClInclude Include="Msg.h" />
     <ClInclude Include="Mydib.h" />
@@ -126,6 +127,7 @@
     <ClCompile Include="Magic.cpp" />
     <ClCompile Include="MapData.cpp" />
     <ClCompile Include="Misc.cpp" />
+    <ClCompile Include="MobCounter.cpp" />
     <ClCompile Include="MouseInterface.cpp" />
     <ClCompile Include="Msg.cpp" />
     <ClCompile Include="Mydib.cpp" />

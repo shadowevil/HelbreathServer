@@ -57,6 +57,13 @@ CClient::CClient(HWND hWnd)
 
 	m_bIsSafeAttackMode  = FALSE;
 
+	//50Cent - Repair All
+	totalItemRepair = 0;
+	for (i = 0; i < DEF_MAXITEMS; i++) {
+		m_stRepairAll[i].index = 0;
+		m_stRepairAll[i].price = 0;
+	}
+
 	// 아이템 장착 상태 초기화한 후 설정한다.
 	for (i = 0; i < DEF_MAXITEMEQUIPPOS; i++) 
 		m_sItemEquipmentStatus[i] = -1;

@@ -810,6 +810,8 @@
 #define	GET_ITEM_NAME34	"Experience+%d%%"
 #define	GET_ITEM_NAME35	"Gold+%d%%"
 
+//50Cent - Repair all
+#define DRAW_DIALOGBOX_NPCACTION_QUERY49    "Repair All"
 
 #define	CALC_SOCKET_CLOSED1	"Game exits because paying sockect disconnected."
 

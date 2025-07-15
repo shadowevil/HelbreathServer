@@ -708,6 +708,19 @@ public:
 	void DrawAngel(int iSprite, short sX, short sY, char cFrame, DWORD dwTime);
 
 
+	//50Cent - Repair All
+	void DrawDialogBox_RepairAll(short msX, short msY, short msZ);
+	void DlgBoxClick_RepairAll(short msX, short msY);
+	void NotifyMsg_RepairAllPrices(char* pData);
+	short totalItemRepair;
+	int totalPrice;
+	struct
+	{
+		char index;
+		short price;
+	} m_stRepairAll[DEF_MAXITEMS];
+
+
 	BOOL _ItemDropHistory(char * ItemName);
 	CGame();
 	virtual ~CGame();

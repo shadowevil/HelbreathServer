@@ -11997,6 +11997,17 @@ void CGame::ClientCommonHandler(int iClientH, char * pData)
 	
 	switch (wCommand) {
 
+	//50Cent - Repair All
+	case DEF_COMMONTYPE_REQ_REPAIRALL:
+		RequestRepairAllItemsHandler(iClientH);
+		break;
+	case DEF_COMMONTYPE_REQ_REPAIRALLDELETE:
+		RequestRepairAllItemsDeleteHandler(iClientH, iV1);
+		break;
+	case DEF_COMMONTYPE_REQ_REPAIRALLCONFIRM:
+		RequestRepairAllItemsConfirmHandler(iClientH);
+		break;
+
 	case DEF_COMMONTYPE_UPGRADEENCHANT:
 		RequestEnchantUpgradeHandler(iClientH, iV1, iV2, iV3);
 		break;
@@ -57509,4 +57520,107 @@ char* CGame::GetFragmentName(DWORD dwType)
 	}
 
 	return "";
+}
+
+//50Cent - Repair All
+void CGame::RequestRepairAllItemsHandler(int iClientH)
+{
+	int i, price;
+	double d1, d2, d3;
+	if (m_pClientList[iClientH] == 0) return;
+	if (m_pClientList[iClientH]->m_bIsInitComplete == false) return;
+
+	m_pClientList[iClientH]->totalItemRepair = 0;
+
+	for (i = 0; i < DEF_MAXITEMS; i++) {
+		if (m_pClientList[iClientH]->m_pItemList[i] != 0) {
+			
+			if (((m_pClientList[iClientH]->m_pItemList[i]->m_cCategory >= 1) && (m_pClientList[iClientH]->m_pItemList[i]->m_cCategory <= 12)) ||
+				((m_pClientList[iClientH]->m_pItemList[i]->m_cCategory >= 43) && (m_pClientList[iClientH]->m_pItemList[i]->m_cCategory <= 50)))
+			{
+				if (m_pClientList[iClientH]->m_pItemList[i]->m_wCurLifeSpan == m_pClientList[iClientH]->m_pItemList[i]->m_wMaxLifeSpan)
+					continue;
+				if (m_pClientList[iClientH]->m_pItemList[i]->m_wCurLifeSpan <= 0)
+					price = (m_pClientList[iClientH]->m_pItemList[i]->m_wPrice / 2);
+				else
+				{
+					d1 = (double)(m_pClientList[iClientH]->m_pItemList[i]->m_wCurLifeSpan);
+					if (m_pClientList[iClientH]->m_pItemList[i]->m_wMaxLifeSpan != 0)
+						d2 = (double)(m_pClientList[iClientH]->m_pItemList[i]->m_wMaxLifeSpan);
+					else
+						d2 = (double)1.0f;
+					d3 = (double)((d1 / d2) * 0.5f);
+					d2 = (double)(m_pClientList[iClientH]->m_pItemList[i]->m_wPrice);
+					d3 = (d3 * d2);
+					price = ((m_pClientList[iClientH]->m_pItemList[i]->m_wPrice / 2) - (short)(d3));
+				}
+				m_pClientList[iClientH]->m_stRepairAll[m_pClientList[iClientH]->totalItemRepair].index = i;
+				m_pClientList[iClientH]->m_stRepairAll[m_pClientList[iClientH]->totalItemRepair].price = price;
+				m_pClientList[iClientH]->totalItemRepair++;
+			}
+		}
+	}
+	SendNotifyMsg(0, iClientH, DEF_NOTIFY_REPAIRALLPRICES, 0, 0, 0, 0);
+}
+
+void CGame::RequestRepairAllItemsDeleteHandler(int iClientH, int index)
+{
+	int i;
+	if (m_pClientList[iClientH] == 0) return;
+	if (m_pClientList[iClientH]->m_bIsInitComplete == false) return;
+
+	for (i = index; i < m_pClientList[iClientH]->totalItemRepair; i++) {
+		m_pClientList[iClientH]->m_stRepairAll[i] = m_pClientList[iClientH]->m_stRepairAll[i + 1];
+	}
+	m_pClientList[iClientH]->totalItemRepair--;
+	SendNotifyMsg(0, iClientH, DEF_NOTIFY_REPAIRALLPRICES, 0, 0, 0, 0);
+}
+
+void CGame::RequestRepairAllItemsConfirmHandler(int iClientH)
+{
+	char* cp, cData[120];
+	DWORD* dwp;
+	WORD* wp;
+	int      iRet, i, totalPrice = 0;
+
+	if (m_pClientList[iClientH] == 0) return;
+	if (m_pClientList[iClientH]->m_bIsInitComplete == false) return;
+	if (m_pClientList[iClientH]->m_pIsProcessingAllowed == false) return;
+
+	for (i = 0; i < m_pClientList[iClientH]->totalItemRepair; i++) {
+		totalPrice += m_pClientList[iClientH]->m_stRepairAll[i].price;
+	}
+
+	if (dwGetItemCount(iClientH, "Gold") < (DWORD)totalPrice)
+	{
+		dwp = (DWORD*)(cData + DEF_INDEX4_MSGID);
+		*dwp = MSGID_NOTIFY;
+		wp = (WORD*)(cData + DEF_INDEX2_MSGTYPE);
+		*wp = DEF_NOTIFY_NOTENOUGHGOLD;
+		cp = (char*)(cData + DEF_INDEX2_MSGTYPE + 2);
+		*cp = 0;
+		cp++;
+
+		iRet = m_pClientList[iClientH]->m_pXSock->iSendMsg(cData, 7);
+		switch (iRet) {
+		case DEF_XSOCKEVENT_QUENEFULL:
+		case DEF_XSOCKEVENT_SOCKETERROR:
+		case DEF_XSOCKEVENT_CRITICALERROR:
+		case DEF_XSOCKEVENT_SOCKETCLOSED:
+			DeleteClient(iClientH, true, true);
+			break;
+		}
+
+	}
+	else
+	{
+		for (i = 0; i < m_pClientList[iClientH]->totalItemRepair; i++)
+		{
+			if (m_pClientList[iClientH]->m_pItemList[m_pClientList[iClientH]->m_stRepairAll[i].index] != 0) {
+				m_pClientList[iClientH]->m_pItemList[m_pClientList[iClientH]->m_stRepairAll[i].index]->m_wCurLifeSpan = m_pClientList[iClientH]->m_pItemList[m_pClientList[iClientH]->m_stRepairAll[i].index]->m_wMaxLifeSpan;
+				SendNotifyMsg(0, iClientH, DEF_NOTIFY_ITEMREPAIRED, m_pClientList[iClientH]->m_stRepairAll[i].index, m_pClientList[iClientH]->m_pItemList[m_pClientList[iClientH]->m_stRepairAll[i].index]->m_wCurLifeSpan, 0, 0);
+			}
+		}
+		iCalcTotalWeight(SetItemCount(iClientH, "Gold", dwGetItemCount(iClientH, "Gold") - totalPrice));
+	}
 }

@@ -1208,6 +1208,12 @@ public:
 	char* GetFragmentDesc(DWORD dwType);
 	char* GetShardName(DWORD dwType);
 	char* GetFragmentName(DWORD dwType);
+
+	//50Cent - Repair All
+	void RequestRepairAllItemsHandler(int iClientH);
+	void RequestRepairAllItemsDeleteHandler(int iClientH, int index);
+	void RequestRepairAllItemsConfirmHandler(int iClientH);
+
 };
 
 #endif // !defined(AFX_GAME_H__C3D29FC5_755B_11D2_A8E6_00001C7030A6__INCLUDED_)

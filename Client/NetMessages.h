@@ -16,6 +16,12 @@
 #define msg_shard 0x0A71
 #define msg_fragment 0x0A72
 
+//50Cent - Repair All
+#define DEF_COMMONTYPE_REQ_REPAIRALL            0x0F10
+#define DEF_NOTIFY_REPAIRALLPRICES                0x0F11
+#define DEF_COMMONTYPE_REQ_REPAIRALLDELETE        0x0F12
+#define DEF_COMMONTYPE_REQ_REPAIRALLCONFIRM        0x0F13
+
 //50Cent - HP Bar
 #define DEF_COMMONTYPE_REQ_GETNPCHP					0x1F12
 #define DEF_SEND_NPCHP								0x1F13

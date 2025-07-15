@@ -152,6 +152,14 @@ public:
 	
 	BOOL m_bInhibition;
 
+	//50Cent - Repair All
+	short totalItemRepair;
+	struct
+	{
+		char index;
+		short price;
+	} m_stRepairAll[DEF_MAXITEMS];
+
 	char m_cAttackDiceThrow_SM;	// 공격치 주사위 던지는 회수 
 	char m_cAttackDiceRange_SM;	// 공격치 주사위 범위 
 	char m_cAttackDiceThrow_L;	// 공격치 주사위 던지는 회수 

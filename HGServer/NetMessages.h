@@ -25,6 +25,12 @@
 
 #define DEF_NOTIFY_MOBKILLS 0x0A68
 
+//50Cent - Repair All
+#define DEF_COMMONTYPE_REQ_REPAIRALL            0x0F10
+#define DEF_NOTIFY_REPAIRALLPRICES                0x0F11
+#define DEF_COMMONTYPE_REQ_REPAIRALLDELETE        0x0F12
+#define DEF_COMMONTYPE_REQ_REPAIRALLCONFIRM        0x0F13
+
 // Reversed by Snoopy from real 3.72 client
 #define DEF_REQUEST_ANGEL				0x0FC9421E
 

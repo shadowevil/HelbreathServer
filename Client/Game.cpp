@@ -524,6 +524,12 @@ CGame::CGame()
 	m_stDialogBoxInfo[51].sSizeX = 258;
 	m_stDialogBoxInfo[51].sSizeY = 339;
 
+	//50Cent - Repair All
+	m_stDialogBoxInfo[52].sX = 337 + SCREENX;
+	m_stDialogBoxInfo[52].sY = 57 + SCREENY;
+	m_stDialogBoxInfo[52].sSizeX = 258;
+	m_stDialogBoxInfo[52].sSizeY = 339;
+
 	// Enchanting Bag
 	m_stDialogBoxInfo[54].sX = 140;
 	m_stDialogBoxInfo[54].sY = 110;
@@ -4316,7 +4322,9 @@ BOOL CGame::_bCheckDlgBoxClick(short msX, short msY)
 			case 51:
 				DlgBoxClick_CMDHallMenu(msX, msY);
 				break;
-
+			case 52://50Cent Repair All
+				DlgBoxClick_RepairAll(msX, msY);
+				break;
 			case 58:
 				DlgBoxClick_Enchanting(msX, msY);
 				break;
@@ -16747,6 +16755,9 @@ void CGame::DrawDialogBoxs(short msX, short msY, short msZ, char cLB)
 		case 51: // Gail
 			DrawDialogBox_CMDHallMenu(msX, msY);
 			break;
+		case 52: //50Cent - Repair All
+			DrawDialogBox_RepairAll(msX, msY, msZ); //@@@
+			break;
 		case 58:
 			DrawDialogBox_Enchanting(msX, msY);
 			break;
@@ -16803,6 +16814,9 @@ void CGame::EnableDialogBox(int iBoxID, int cType, int sV1, int sV2, char * pStr
  short sX, sY;
 
 	switch (iBoxID) {
+	case 52: //50Cent - Repair all
+		m_stDialogBoxInfo[52].cMode = cType;
+		break;
 		// Enchanting
 	case 58:
 	case 54:
@@ -27627,6 +27641,11 @@ NMH_LOOPBREAK2:;
 		NotifyMsg_CannotSellItem(pData);
 		break;
 
+		//50Cent - Repair All
+	case DEF_NOTIFY_REPAIRALLPRICES:
+		NotifyMsg_RepairAllPrices(pData);
+		break;
+
 	case DEF_NOTIFY_REPAIRITEMPRICE:
 		NotifyMsg_RepairItemPrice(pData);
 		break;
@@ -34957,6 +34976,17 @@ void CGame::DrawDialogBox_NpcActionQuery(short msX, short msY)
 		case 24:
 			PutString(sX +33, sY +23, NPC_NAME_BLACKSMITH_KEEPER, RGB(45,25,25));//"BlackSmith Keeper"
 			PutString(sX +33 -1, sY +23 -1, NPC_NAME_BLACKSMITH_KEEPER, RGB(255,255,255));//"
+			//50Cent - Repair All
+			if ((msX > sX + 155) && (msX < sX + 210) && (msY > sY + 22) && (msY < sY + 37))
+			{
+				PutString(sX + 155, sY + 22, DRAW_DIALOGBOX_NPCACTION_QUERY49, RGB(255, 255, 255));//"Repair All"
+				PutString(sX + 156, sY + 22, DRAW_DIALOGBOX_NPCACTION_QUERY49, RGB(255, 255, 255));
+			}
+			else
+			{
+				PutString(sX + 155, sY + 22, DRAW_DIALOGBOX_NPCACTION_QUERY49, RGB(4, 0, 50));
+				PutString(sX + 156, sY + 22, DRAW_DIALOGBOX_NPCACTION_QUERY49, RGB(4, 0, 50));
+			}
 			break;
 		}
 
@@ -37558,6 +37588,13 @@ void CGame::DlgBoxClick_NpcActionQuery(short msX, short msY)
 			}
 			DisableDialogBox(20);
 		}
+		//50Cent - Repair All
+		if ((msX > sX + 155) && (msX < sX + 210) && (msY > sY + 22) && (msY < sY + 37))
+			if (m_stDialogBoxInfo[20].sV3 == 24)
+			{
+				bSendCommand(MSGID_COMMAND_COMMON, DEF_COMMONTYPE_REQ_REPAIRALL, 0, 0, 0, 0, 0, 0); // v1.4
+				DisableDialogBox(20);
+			}
 		break;
 
 	case 6: // Snoopy: Added Gail
@@ -44308,4 +44345,157 @@ void CGame::DlgBoxClick_EnchantingBag(int msX, int msY)
 		}
 		break;
 	}
+}
+
+
+//50Cent - Repair All
+void CGame::NotifyMsg_RepairAllPrices(char* pData)
+{
+	short* sp;
+	char* cp;
+	int i;
+
+	totalPrice = 0;
+	cp = (char*)(pData + DEF_INDEX2_MSGTYPE + 2);
+	sp = (short*)cp;
+	totalItemRepair = *sp;
+	cp += 2;
+
+	for (i = 0; i < totalItemRepair; i++)
+	{
+		m_stRepairAll[i].index = *cp;
+		cp++;
+
+		sp = (short*)cp;
+		m_stRepairAll[i].price = *sp;
+		cp += 2;
+
+		totalPrice += m_stRepairAll[i].price;
+	}
+	if (totalItemRepair == 0)
+		EnableDialogBox(52, 1, 0, 0);
+	else
+		EnableDialogBox(52, 0, 0, 0);
+}
+
+void CGame::DrawDialogBox_RepairAll(short msX, short msY, short msZ) //4LifeX Modified - 50Cent - Repair All
+{
+	short sX, sY, szX;
+	char cTxt[120];
+	int i, iTotalLines, iPointerLoc;
+	double d1, d2, d3;
+
+	sX = m_stDialogBoxInfo[52].sX;
+	sY = m_stDialogBoxInfo[52].sY;
+	szX = m_stDialogBoxInfo[52].sSizeX;
+
+	DrawNewDialogBox(DEF_SPRID_INTERFACE_ND_GAME2, sX, sY, 2);
+	DrawNewDialogBox(DEF_SPRID_INTERFACE_ND_TEXT, sX, sY, 10);
+
+	for (i = 0; i < 15; i++)
+		if ((i + m_stDialogBoxInfo[52].sView) < totalItemRepair)
+		{
+			ZeroMemory(cTxt, sizeof(cTxt));
+			wsprintf(cTxt, "%s - Cost: %d", m_pItemList[m_stRepairAll[i + m_stDialogBoxInfo[52].sView].index]->m_cName, m_stRepairAll[i + m_stDialogBoxInfo[52].sView].price);
+
+			PutString(sX + 30, sY + 45 + i * 15, cTxt, RGB(5, 5, 5));
+			m_bIsItemDisabled[m_stRepairAll[i + m_stDialogBoxInfo[52].sView].index] = true;
+		}
+
+
+	iTotalLines = totalItemRepair;
+	if (iTotalLines > 15)
+	{
+		d1 = (double)m_stDialogBoxInfo[52].sView;
+		d2 = (double)(iTotalLines - 15);
+		d3 = (274.0f * d1) / d2;
+		iPointerLoc = (int)d3;
+	}
+	else iPointerLoc = 0;
+
+	if (iTotalLines > 15)
+	{
+		DrawNewDialogBox(DEF_SPRID_INTERFACE_ND_GAME2, sX, sY, 1);
+		DrawNewDialogBox(DEF_SPRID_INTERFACE_ND_GAME2, sX + 242, sY + iPointerLoc + 35, 7);
+	}
+
+	if (iTotalLines > 15)
+	{
+		if (iGetTopDialogBoxIndex() == 52 && msZ != 0)
+		{
+			if (msZ > 0) m_stDialogBoxInfo[52].sView--;
+			if (msZ < 0) m_stDialogBoxInfo[52].sView++;
+			m_DInput.m_sZ = 0;
+		}
+
+		if (m_stDialogBoxInfo[52].sView < 0)
+			m_stDialogBoxInfo[52].sView = 0;
+
+		if (iTotalLines > 15 && m_stDialogBoxInfo[52].sView > iTotalLines - 15)
+			m_stDialogBoxInfo[52].sView = iTotalLines - 15;
+	}
+
+	if (totalItemRepair > 0)
+	{
+		if ((msX >= sX + DEF_LBTNPOSX) && (msX <= sX + DEF_LBTNPOSX + DEF_BTNSZX) && (msY >= sY + DEF_BTNPOSY) && (msY <= sY + DEF_BTNPOSY + DEF_BTNSZY))
+		{
+			DrawNewDialogBox(DEF_SPRID_INTERFACE_ND_BUTTON, sX + DEF_LBTNPOSX, sY + DEF_BTNPOSY, 43);
+		}
+		else
+		{
+			DrawNewDialogBox(DEF_SPRID_INTERFACE_ND_BUTTON, sX + DEF_LBTNPOSX, sY + DEF_BTNPOSY, 42);
+		}
+
+		if ((msX >= sX + DEF_RBTNPOSX) && (msX <= sX + DEF_RBTNPOSX + DEF_BTNSZX) && (msY >= sY + DEF_BTNPOSY) && (msY <= sY + DEF_BTNPOSY + DEF_BTNSZY))
+		{
+			DrawNewDialogBox(DEF_SPRID_INTERFACE_ND_BUTTON, sX + DEF_RBTNPOSX, sY + DEF_BTNPOSY, 17);
+		}
+		else
+		{
+			DrawNewDialogBox(DEF_SPRID_INTERFACE_ND_BUTTON, sX + DEF_RBTNPOSX, sY + DEF_BTNPOSY, 16);
+		}
+		ZeroMemory(cTxt, sizeof(cTxt));
+		wsprintf(cTxt, "Total cost : %d", totalPrice);
+		PutString(sX + 30, sY + 270, cTxt, RGB(5, 5, 5));
+	}
+	else
+	{
+		PutAlignedString(sX, sX + szX, sY + 140, "There are no items to repair.", 5, 5, 5);
+		if ((msX >= sX + DEF_RBTNPOSX) && (msX <= sX + DEF_RBTNPOSX + DEF_BTNSZX) && (msY >= sY + DEF_BTNPOSY) && (msY <= sY + DEF_BTNPOSY + DEF_BTNSZY))
+		{
+			DrawNewDialogBox(DEF_SPRID_INTERFACE_ND_BUTTON, sX + DEF_RBTNPOSX, sY + DEF_BTNPOSY, 17);
+		}
+		else
+		{
+			DrawNewDialogBox(DEF_SPRID_INTERFACE_ND_BUTTON, sX + DEF_RBTNPOSX, sY + DEF_BTNPOSY, 16);
+		}
+	}
+}
+
+//4LifeX Modified - 50Cent - Repair All
+void CGame::DlgBoxClick_RepairAll(short msX, short msY)
+{
+	short sX, sY;
+	int i;
+
+	sX = m_stDialogBoxInfo[52].sX;
+	sY = m_stDialogBoxInfo[52].sY;
+
+	for (i = 0; i < 15; i++)
+		if ((i + m_stDialogBoxInfo[52].sView) < totalItemRepair)
+		{
+			if ((msX >= sX + 30) && (msX <= sX + 30 + DEF_BTNSZX) && (msY >= sY + DEF_BTNPOSY) && (msY <= sY + DEF_BTNPOSY + DEF_BTNSZY))
+			{
+				bSendCommand(MSGID_COMMAND_COMMON, DEF_COMMONTYPE_REQ_REPAIRALLCONFIRM, 0, 0, 0, 0, 0);
+				DisableDialogBox(52);
+			}
+
+			if ((msX >= sX + 154) && (msX <= sX + 154 + DEF_BTNSZX) && (msY >= sY + DEF_BTNPOSY) && (msY <= sY + DEF_BTNPOSY + DEF_BTNSZY))
+				DisableDialogBox(52);
+		}
+		else
+		{
+			if ((msX >= sX + 154) && (msX <= sX + 154 + DEF_BTNSZX) && (msY >= sY + DEF_BTNPOSY) && (msY <= sY + DEF_BTNPOSY + DEF_BTNSZY))
+				DisableDialogBox(52);
+		}
 }
