@@ -11,3 +11,4 @@ New Features:
 - Monster's Kill Counter
 - Item's descriptions in floor
 - Monster's HP bar
+- Repair All
