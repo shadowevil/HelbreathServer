@@ -1,4 +1,4 @@
-# Helbreath Server 3.82
+# Helbreath Server 3.82 (Visual Studio 2022 recommended)
 
 - Client 3.82 default with 800x600 resolution and Windows 10/11 compatibility.
 - HGServer 2.24b modified to work with the client resolution.
