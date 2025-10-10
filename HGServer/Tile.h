@@ -33,7 +33,7 @@ public:
 	short m_sDynamicObjectType;
 	DWORD m_dwDynamicObjectRegisterTime;
 
-	BOOL  m_bIsMoveAllowed, m_bIsTeleport, m_bIsWater, m_bIsFarm, m_bIsTempMoveAllowed;
+	bool  m_bIsMoveAllowed, m_bIsTeleport, m_bIsWater, m_bIsFarm, m_bIsTempMoveAllowed;
 
 	// 점령지 표시용 
 	int   m_iOccupyStatus;    // Aresden이면 -값으로, Elvine이면 +로 더해진다. 총 합이 이 지역의 경향성 

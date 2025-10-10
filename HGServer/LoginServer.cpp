@@ -48,7 +48,7 @@ void LoginServer::Activated()
 
 void LoginServer::RequestLogin(int h, char* pData)
 {
-	if (G_pGame->_lclients[h] == NULL)
+	if (G_pGame->_lclients[h] == 0)
 		return;
 
 	char cName[11] = {};
@@ -116,16 +116,16 @@ void LoginServer::GetCharList(string acc, char*& cp2, std::vector<string> chars)
 		strcat(cFileName, ".txt");
 
 		DWORD lpNumberOfBytesRead;
-		HANDLE  hFile = CreateFile(cFileName, GENERIC_READ, NULL, NULL, OPEN_EXISTING, NULL, NULL);
+		HANDLE  hFile = CreateFile(cFileName, GENERIC_READ, 0, 0, OPEN_EXISTING, 0, 0);
 		if (hFile == INVALID_HANDLE_VALUE)
 		{
 			CloseHandle(hFile);
 			return;
 		}
-		auto dwFileSize = GetFileSize(hFile, NULL);
+		auto dwFileSize = GetFileSize(hFile, 0);
 		auto cp = new char[dwFileSize + 1];
 		ZeroMemory(cp, dwFileSize + 1);
-		ReadFile(hFile, cp, dwFileSize, &lpNumberOfBytesRead, NULL);
+		ReadFile(hFile, cp, dwFileSize, &lpNumberOfBytesRead, 0);
 		CloseHandle(hFile);
 		auto pStrTok = new class CStrTok(cp, seps);
 		int cReadModeA = 0;
@@ -138,7 +138,7 @@ void LoginServer::GetCharList(string acc, char*& cp2, std::vector<string> chars)
 		DWORD iApprColor = 0; // Antes tenías u64, pero el cliente espera DWORD (4 bytes)
 		char cMapName[11] = {}; // Siempre tamaño 11 para forzar terminador
 
-		while (token != NULL)
+		while (token != 0)
 		{
 			if (cReadModeA != 0)
 			{
@@ -226,7 +226,7 @@ LogIn LoginServer::AccountLogIn(string acc, string pass, std::vector<string>& ch
 	strcat(file_name, ".txt");
 
 
-	HANDLE file_handle = CreateFile(file_name, GENERIC_READ, NULL, NULL, OPEN_EXISTING, NULL, NULL);
+	HANDLE file_handle = CreateFile(file_name, GENERIC_READ, 0, 0, OPEN_EXISTING, 0, 0);
 	DWORD file_sz = 0;
 	if (file_handle == INVALID_HANDLE_VALUE)
 	{
@@ -236,7 +236,7 @@ LogIn LoginServer::AccountLogIn(string acc, string pass, std::vector<string>& ch
 		return LogIn::NoAcc;
 	}
 
-	file_sz = GetFileSize(file_handle, NULL);
+	file_sz = GetFileSize(file_handle, 0);
 	CloseHandle(file_handle);
 
 	if (file_sz == 0)
@@ -247,7 +247,7 @@ LogIn LoginServer::AccountLogIn(string acc, string pass, std::vector<string>& ch
 	}
 
 	auto file = fopen(file_name, "rt");
-	if (file == NULL)
+	if (file == 0)
 	{
 		wsprintf(G_cTxt, "(!) Account Does not Exist (%s)", file_name);
 		PutLogList(G_cTxt);
@@ -265,7 +265,7 @@ LogIn LoginServer::AccountLogIn(string acc, string pass, std::vector<string>& ch
 	fread(cp, file_sz, 1, file);
 	pStrTok = new class CStrTok(cp, seps);
 	token = pStrTok->pGet();
-	while (token != NULL)
+	while (token != 0)
 	{
 		if (cReadModeA != 0)
 		{
@@ -418,8 +418,8 @@ void LoginServer::ResponseCharacter(int h, char* pData)
 	//wsprintf(G_cTxt, "(!) Getting character file %s", cFileName);
 	//PutLogList(G_cTxt);
 
-	HANDLE  hFile = CreateFile(cFileName, GENERIC_READ, NULL, NULL, OPEN_EXISTING, NULL, NULL);
-	auto dwFileSize = GetFileSize(hFile, NULL);
+	HANDLE  hFile = CreateFile(cFileName, GENERIC_READ, 0, 0, OPEN_EXISTING, 0, 0);
+	auto dwFileSize = GetFileSize(hFile, 0);
 
 	CloseHandle(hFile);
 
@@ -782,7 +782,7 @@ void LoginServer::DeleteCharacter(int h, char* pData)
 	}
 	/*
 
-		if (SaveAccountInfo(0, cAcc, nullptr, cName, 3, h) == true)
+		if (SaveAccountInfo(0, cAcc, nullptr, cName, 3, h) )
 		{
 
 		}*/
@@ -823,14 +823,14 @@ void LoginServer::ChangePassword(int h, char* pData)
 	char cTxt2[1024] = {};
 	int iTest = -1;
 	wsprintf(cTmp, "Accounts\\AscII%d\\%s.txt", cAcc[0], cAcc);
-	HANDLE  hFile = CreateFile(cTmp, GENERIC_READ, NULL, NULL, OPEN_EXISTING, NULL, NULL);
+	HANDLE  hFile = CreateFile(cTmp, GENERIC_READ, 0, 0, OPEN_EXISTING, 0, 0);
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
 		SendLoginMsg(DEF_LOGRESMSGTYPE_PASSWORDCHANGEFAIL, DEF_LOGRESMSGTYPE_PASSWORDCHANGEFAIL, 0, 0, h);
 		CloseHandle(hFile);
 		return;
 	}
-	auto iSize = GetFileSize(hFile, NULL);
+	auto iSize = GetFileSize(hFile, 0);
 	CloseHandle(hFile);
 
 	char cFileName[512] = {};
@@ -936,7 +936,7 @@ void LoginServer::CreateNewAccount(int h, char* pData)
 	char cQuiz[47] = {};
 	char cAnswer[27] = {};
 
-	if (G_pGame->_lclients[h] == NULL)
+	if (G_pGame->_lclients[h] == 0)
 		return;
 
 	GetLocalTime(&SysTime);
@@ -961,8 +961,8 @@ void LoginServer::CreateNewAccount(int h, char* pData)
 
 	ZeroMemory(cFn, sizeof(cFn));
 	wsprintf(cFn, "Accounts\\AscII%d\\%s.txt", cName[0], cName);
-	hFile = CreateFile(cFn, GENERIC_READ, NULL, NULL, OPEN_EXISTING, NULL, NULL);
-	dwFileSize = GetFileSize(hFile, NULL);
+	hFile = CreateFile(cFn, GENERIC_READ, 0, 0, OPEN_EXISTING, 0, 0);
+	dwFileSize = GetFileSize(hFile, 0);
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
 		CloseHandle(hFile);
@@ -985,7 +985,7 @@ void LoginServer::CreateNewAccount(int h, char* pData)
 	ZeroMemory(cFn, sizeof(cFn));
 	wsprintf(cFn, "Accounts\\AscII%d\\%s.txt", Aux, cName);
 	pFile = fopen(cFn, "wt");
-	if (pFile == NULL)
+	if (pFile == 0)
 	{
 		SendLoginMsg(DEF_LOGRESMSGTYPE_NEWACCOUNTFAILED, DEF_LOGRESMSGTYPE_NEWACCOUNTFAILED, 0, 0, h);
 		return;
@@ -1087,8 +1087,8 @@ bool LoginServer::SaveAccountInfo(int iAccount, char* cAccountName, char* cTemp,
 	strcat(cFileName, cAccountName);
 	strcat(cFileName, ".txt");
 
-	hFile = CreateFile(cFileName, GENERIC_READ, NULL, NULL, OPEN_EXISTING, NULL, NULL);
-	iSize = GetFileSize(hFile, NULL);
+	hFile = CreateFile(cFileName, GENERIC_READ, 0, 0, OPEN_EXISTING, 0, 0);
+	iSize = GetFileSize(hFile, 0);
 	if (hFile != INVALID_HANDLE_VALUE) CloseHandle(hFile);
 
 	//char cTxt3[112] = {};
@@ -1096,7 +1096,7 @@ bool LoginServer::SaveAccountInfo(int iAccount, char* cAccountName, char* cTemp,
 	switch (cMode) {
 	case 1: //save new character
 		pFile = fopen(cFileName, "at");
-		if (pFile == NULL) {
+		if (pFile == 0) {
 			wsprintf(g_txt, "(X) Account none exist: Name(%s)", cAccountName);
 			PutLogList(g_txt);
 			return false;
@@ -1111,7 +1111,7 @@ bool LoginServer::SaveAccountInfo(int iAccount, char* cAccountName, char* cTemp,
 		PutLogList(g_txt);
 		wsprintf(cTxt, "account-password = %s", cTemp);
 		pFile = fopen(cFileName, "rt");
-		if (pFile == NULL) {
+		if (pFile == 0) {
 			SendLoginMsg(DEF_LOGRESMSGTYPE_NOTEXISTINGACCOUNT, DEF_LOGRESMSGTYPE_NOTEXISTINGACCOUNT, 0, 0, h);
 			return false;
 		}
@@ -1149,7 +1149,7 @@ bool LoginServer::SaveAccountInfo(int iAccount, char* cAccountName, char* cTemp,
 		wsprintf(cTxt, "account-character = %s", cCharName);
 		//wsprintf(cTxt3, "account-character = %s", cCharName);
 		pFile = fopen(cFileName, "rt");
-		if (pFile == NULL) {
+		if (pFile == 0) {
 			SendLoginMsg(DEF_LOGRESMSGTYPE_NOTEXISTINGACCOUNT, DEF_LOGRESMSGTYPE_NOTEXISTINGACCOUNT, 0, 0, h);
 			return false;
 		}
@@ -1191,7 +1191,7 @@ void LoginServer::SaveInfo(char cFileName[255], char* pData, DWORD dwStartSize)
 	FILE* pFile;
 
 	pFile = fopen(cFileName, "wt");
-	if (pFile != NULL)
+	if (pFile != 0)
 	{
 		if (sizeof(pData) > 0) fwrite(pData, dwStartSize, strlen(pData), pFile);
 		fclose(pFile);
@@ -1239,7 +1239,7 @@ void LoginServer::SendLoginMsg(DWORD msg_id, WORD msg_type, char* data, int sz, 
 			wsprintf(G_cTxt, "(!) Login Connection Lost on Send (%d)", index);
 			PutLogList(G_cTxt);
 			delete G_pGame->_lclients[index];
-			G_pGame->_lclients[index] = NULL;
+			G_pGame->_lclients[index] = 0;
 			return;
 		}
 	}
@@ -1321,7 +1321,7 @@ void LoginServer::LocalSavePlayerData(int h)
 	SYSTEMTIME SysTime;
 
 
-	if (G_pGame->m_pClientList[h] == NULL) return;
+	if (G_pGame->m_pClientList[h] == 0) return;
 
 	pData = new char[30000];
 	ZeroMemory(pData, 30000);
@@ -1357,7 +1357,7 @@ void LoginServer::LocalSavePlayerData(int h)
 	}
 
 	pFile = fopen(cFn, "wt");
-	if (pFile != NULL) {
+	if (pFile != 0) {
 		fwrite(cp, iSize, 1, pFile);
 		fclose(pFile);
 	}

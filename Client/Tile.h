@@ -15,7 +15,7 @@
 class CTile  
 {
 public:
-	BOOL  m_bSpriteOmit;
+	bool  m_bSpriteOmit;
 
 	void Clear();
 	

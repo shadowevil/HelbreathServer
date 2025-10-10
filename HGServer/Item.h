@@ -118,7 +118,7 @@ public:
 	short m_sRelatedSkill;
 	
 	char  m_cCategory;
-	BOOL  m_bIsForSale;
+	bool  m_bIsForSale;
 
 	DWORD m_dwCount;
 	short m_sTouchEffectType;

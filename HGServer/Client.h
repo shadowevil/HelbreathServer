@@ -51,19 +51,19 @@ public:
 	short m_sV1;
 	char m_cHeroArmourBonus;
 
-	BOOL bCreateNewParty();
+	bool bCreateNewParty();
 
 	// Hack Checkers
 	DWORD m_dwMagicFreqTime, m_dwMoveFreqTime, m_dwAttackFreqTime;
-	BOOL m_bIsMoveBlocked, m_bMagicItem;
+	bool m_bIsMoveBlocked, m_bMagicItem;
 	DWORD dwClientTime;
-	BOOL m_bMagicConfirm;
+	bool m_bMagicConfirm;
 	int m_iSpellCount;
-	BOOL m_bMagicPauseTime;
+	bool m_bMagicPauseTime;
 	//int m_iUninteruptibleCheck;
 	//char m_cConnectionCheck;
 
-	BOOL m_bIsClientConnected;
+	bool m_bIsClientConnected;
 
 	CClient(HWND hWnd);
 	virtual ~CClient();
@@ -72,8 +72,8 @@ public:
 	char m_cAccountName[11];
 	char m_cAccountPassword[11];
 
-	BOOL  m_bIsInitComplete;
-	BOOL  m_bIsMsgSendAvailable;
+	bool  m_bIsInitComplete;
+	bool  m_bIsMsgSendAvailable;
 
 	char  m_cMapName[11];
 	char  m_cMapIndex;
@@ -105,7 +105,7 @@ public:
 	int  m_iSP;
 	DWORD  m_iExp;
 	DWORD m_iNextLevelExp;
-	BOOL m_bIsKilled;
+	bool m_bIsKilled;
 
 	int  m_iDefenseRatio;		// Defense Ratio
 	int  m_iHitRatio;			// Hit Ratio
@@ -150,7 +150,7 @@ public:
 
 	char m_cSide;				// 플레이어의 편 
 	
-	BOOL m_bInhibition;
+	bool m_bInhibition;
 
 	//50Cent - Repair All
 	short totalItemRepair;
@@ -171,7 +171,7 @@ public:
 	POINT m_ItemPosList[DEF_MAXITEMS];
 	class CItem * m_pItemInBankList[DEF_MAXBANKITEMS];
 	
-	BOOL  m_bIsItemEquipped[DEF_MAXITEMS];
+	bool  m_bIsItemEquipped[DEF_MAXITEMS];
 	short m_sItemEquipmentStatus[DEF_MAXITEMEQUIPPOS];
 	char  m_cArrowIndex;		// 플레이어가 활을 사용할때 화살 아이템 인덱스. 초기값은 -1(할당 안됨)
 
@@ -179,7 +179,7 @@ public:
 	unsigned char  m_cSkillMastery[DEF_MAXSKILLTYPE]; // v1.4
 
 	int   m_iSkillSSN[DEF_MAXSKILLTYPE];
-	BOOL  m_bSkillUsingStatus[DEF_MAXSKILLTYPE];
+	bool  m_bSkillUsingStatus[DEF_MAXSKILLTYPE];
 	int   m_iSkillUsingTimeID[DEF_MAXSKILLTYPE]; //v1.12
 
 	char  m_cMagicEffectStatus[DEF_MAXMAGICEFFECTS];
@@ -190,9 +190,9 @@ public:
 	int   m_iHungerStatus;		// 배고픔 포인트. 이게 0이되면 스태미너가 오르지 않으며 체력도 절반이상 차지 않습니다. 
 
 	DWORD m_dwWarBeginTime;		// 적국에 들어가는 순간에 기록되는 시간. 
-	BOOL  m_bIsWarLocation;		// 현재 적국에 있는지를 표시 
+	bool  m_bIsWarLocation;		// 현재 적국에 있는지를 표시 
 
-	BOOL  m_bIsPoisoned;		// 중독되었는지의 여부 
+	bool  m_bIsPoisoned;		// 중독되었는지의 여부 
 	int   m_iPoisonLevel;       // 독의 강도 
 	DWORD m_dwPoisonTime;		// 중독 시간.
 	
@@ -211,10 +211,10 @@ public:
 	int   m_iTimeLeft_ForceRecall;  // 강제 리콜되기 위해 남아있는 시간틱 
 	int   m_iTimeLeft_FirmStaminar; // 스태미너가 달아 없어지지 않는 시간 텀 
 
-	BOOL isForceSet;   //hbest
+	bool isForceSet;   //hbest
 	time_t m_iForceStart;
 
-	BOOL  m_bIsOnServerChange;     // 이 값이 활성화 되어 있으면 삭제시 데이터 저장 및 카운팅을 하지 않는다.
+	bool  m_bIsOnServerChange;     // 이 값이 활성화 되어 있으면 삭제시 데이터 저장 및 카운팅을 하지 않는다.
 
 	DWORD   m_iExpStock;			 // 쌓여있는 경험치 
 	DWORD m_dwExpStockTime;		 // ExpStock 계산 시간.
@@ -228,9 +228,9 @@ public:
 	int   m_iFishChance;		 // 현재 낚을 상태 
 	
 	char  m_cIPaddress[21];		 // 클라이언트의 IP address
-	BOOL  m_bIsSafeAttackMode;
+	bool  m_bIsSafeAttackMode;
 
-	BOOL  m_bIsOnWaitingProcess; // 텔레포트등 처리를 기다리는 상태라면 
+	bool  m_bIsOnWaitingProcess; // 텔레포트등 처리를 기다리는 상태라면 
 	
 	int   m_iSuperAttackLeft;	 // v1.2 필살기 사용 가능 횟수 
 	int   m_iSuperAttackCount;   // v1.2 필살기 사용 가능 카운트. 이 카운트가 다 차면 필살기 사용 횟수가 늘어난다. 
@@ -239,7 +239,7 @@ public:
 
 	int   m_iManaSaveRatio;		 // v1.2 마나 절약 포인트 
 	
-	BOOL  m_bIsLuckyEffect;		 // v1.2 행운 효과 
+	bool  m_bIsLuckyEffect;		 // v1.2 행운 효과 
 	int   m_iSideEffect_MaxHPdown; // v1.4 최대 HP 절감 효과 
 
 	int   m_iComboAttackCount;   // v1.3 연타 공격 카운트 
@@ -251,17 +251,17 @@ public:
 
 	int   m_iAbuseCount;		// 해킹 용의자 파악용 
 	
-	BOOL  m_bIsBWMonitor;		// BadWord 모니터인가?
+	bool  m_bIsBWMonitor;		// BadWord 모니터인가?
 
-	//BOOL  m_bIsExchangeMode;		// 현재 아이템 교환 모드인가? 
+	//bool  m_bIsExchangeMode;		// 현재 아이템 교환 모드인가? 
 	//int   m_iExchangeH;				// 교환할 대상의 인덱스 
 	//char  m_cExchangeName[11];		// 교환할 대상의 이름 
 	//char  m_cExchangeItemName[21];	// 교환하고자 하는 아이템 이름 
 	//char  m_cExchangeItemIndex;  // 교환할 아이템 인덱스 
 	//int   m_iExchangeItemAmount; // 교환할 아이템 갯수 
-	//BOOL  m_bIsExchangeConfirm;  // 교환 확인 
+	//bool  m_bIsExchangeConfirm;  // 교환 확인 
 
-	BOOL  m_bIsExchangeMode;			// Is In Exchange Mode? 
+	bool  m_bIsExchangeMode;			// Is In Exchange Mode? 
 	int   m_iExchangeH;					// Client ID to Exchanging with 
 	char  m_cExchangeName[11];			// Name of Client to Exchanging with 
 	char  m_cExchangeItemName[4][21];	// Name of Item to exchange 
@@ -269,7 +269,7 @@ public:
 	char  m_cExchangeItemIndex[4];		// ItemID to Exchange
 	int   m_iExchangeItemAmount[4];		// Ammount to exchange with
 
-	BOOL  m_bIsExchangeConfirm;			// Has the user hit confirm? 
+	bool  m_bIsExchangeConfirm;			// Has the user hit confirm? 
 	int	  iExchangeCount;				//Keeps track of items which are on list
 
 	int   m_iQuest;				 // 현재 할당된 Quest 
@@ -282,8 +282,8 @@ public:
 
 	int   m_iContribution;		 // 도시에 대한 공헌도. 
 
-	BOOL  m_bQuestMatchFlag_Loc; // 퀘스트 수행 조건을 판단하기 위함.
-	BOOL  m_bIsQuestCompleted;   // 퀘스트가 완료되었는가? 
+	bool  m_bQuestMatchFlag_Loc; // 퀘스트 수행 조건을 판단하기 위함.
+	bool  m_bIsQuestCompleted;   // 퀘스트가 완료되었는가? 
 
 	int   m_iCustomItemValue_Attack;
 	int   m_iCustomItemValue_Defense;
@@ -294,8 +294,8 @@ public:
 	int   m_iMaxAP_SM;			// Custom-Item의 효과로 인한 최대 AP
 	int   m_iMaxAP_L;
 
-	BOOL  m_bIsNeutral;			// v1.5 중립여부를 판별하기 위한 플래그. 처리 속도를 높이기 위함이다.
-	BOOL  m_bIsObserverMode;	// v1.5 관람자 모드인지 판별 
+	bool  m_bIsNeutral;			// v1.5 중립여부를 판별하기 위한 플래그. 처리 속도를 높이기 위함이다.
+	bool  m_bIsObserverMode;	// v1.5 관람자 모드인지 판별 
 
 	int   m_iSpecialEventID;	// 특수 행사 참가확인용 플래그 
 
@@ -326,7 +326,7 @@ public:
 	DWORD m_dwMoveLAT, m_dwRunLAT, m_dwAttackLAT;
 
 	int   m_iSpecialAbilityTime;				// 특수 능력을 사용하기 위해서는 이 값이 0이 되어야 한다. 
-	BOOL  m_bIsSpecialAbilityEnabled;			// 특수 능력이 활성화 된 상태인가?
+	bool  m_bIsSpecialAbilityEnabled;			// 특수 능력이 활성화 된 상태인가?
 	DWORD m_dwSpecialAbilityStartTime;			// 특수 능력을 사용하기 시작한 시간
 	int   m_iSpecialAbilityLastSec;				// 특수 능력 지속 시간.
 
@@ -336,7 +336,7 @@ public:
 												// 방어형
 												// 50: 무기 수명 0로 만듬. 51:해당 부위 대미지 무효화  52: 모5든 부위 대미지 무효화
 	int   m_iSpecialAbilityEquipPos;			// 방어구인 경우 특수효과가 적용되는 부위를 의미함.
-	BOOL  m_bIsAdminCommandEnabled;
+	bool  m_bIsAdminCommandEnabled;
 	int   m_iAlterItemDropIndex;				// 아이템 대신 떨어지는 아이템 인덱스 
 
 	int   m_iWarContribution;					// 전쟁 공헌도 
@@ -354,7 +354,7 @@ public:
 	int   m_iCrusadeDuty;						// 크루세이드에서 맡은 역할: 1-용병. 2-건설자. 3-지휘관
 	DWORD m_dwCrusadeGUID;						// 크루세이드 GUID
 	DWORD m_dwHeldenianGUID;
-	BOOL m_bInRecallImpossibleMap;
+	bool m_bInRecallImpossibleMap;
 
 	// 이 스트럭쳐는 맵의 내용을 복사하는 것이다. 한번에 보내 줄 수 없기 때문에 여러번에 걸쳐 나누어 전송한다.
 	struct {
@@ -365,7 +365,7 @@ public:
 	int m_iCSIsendPoint;
 
 	char m_cSendingMapName[11];
-	BOOL m_bIsSendingMapStatus;
+	bool m_bIsSendingMapStatus;
 
 	// 지휘관이 건설할 수 있는 포인트. 일반 플레이어라면 자신의 행동에 대한 누적값이다.
 	int  m_iConstructionPoint;
@@ -374,8 +374,8 @@ public:
 	int  m_iConstructLocX, m_iConstructLocY;
 	
 	// 2.06
-	BOOL m_bIsPlayerCivil;
-	BOOL m_bIsAttackModeChange;
+	bool m_bIsPlayerCivil;
+	bool m_bIsAttackModeChange;
 
 	// New 06/05/2004
 	// Party Stuff
@@ -398,19 +398,19 @@ public:
 
 	// New 16/05/2004
 	char m_cWhisperPlayerName[11];
-	BOOL m_bIsAdminOrderGoto;
-	BOOL m_bIsInsideWarehouse;
-	BOOL m_bIsInsideWizardTower;
-	BOOL m_bIsInsideOwnTown;
-	BOOL m_bIsCheckingWhisperPlayer;
-	BOOL m_bIsOwnLocation;
-	BOOL m_pIsProcessingAllowed;
+	bool m_bIsAdminOrderGoto;
+	bool m_bIsInsideWarehouse;
+	bool m_bIsInsideWizardTower;
+	bool m_bIsInsideOwnTown;
+	bool m_bIsCheckingWhisperPlayer;
+	bool m_bIsOwnLocation;
+	bool m_pIsProcessingAllowed;
 
 	// Updated 10/11/2004 - 24/05/2004
 	char m_cHeroArmorBonus;
 
 	// New 25/05/2004
-	BOOL m_bIsBeingResurrected;
+	bool m_bIsBeingResurrected;
 
 	DWORD m_dwFightzoneDeadTime;
 	char m_cSaveCount;

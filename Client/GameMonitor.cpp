@@ -13,7 +13,7 @@ CGameMonitor::CGameMonitor()
  int i;
 
 	for (i = 0 ; i < DEF_MAXBADWORD; i++)
-		m_pWordList[i] = NULL;
+		m_pWordList[i] = 0;
 }
 
 CGameMonitor::~CGameMonitor()
@@ -21,7 +21,7 @@ CGameMonitor::~CGameMonitor()
  int i;
 
 	for (i = 0 ; i < DEF_MAXBADWORD; i++)
-	if (m_pWordList[i] != NULL) delete m_pWordList[i];
+	if (m_pWordList[i] != 0) delete m_pWordList[i];
 }
 
 int CGameMonitor::iReadBadWordFileList(char *pFn)
@@ -34,12 +34,12 @@ int CGameMonitor::iReadBadWordFileList(char *pFn)
  FILE * pFile;
  DWORD  dwFileSize;
 
-	hFile = CreateFile(pFn, GENERIC_READ, NULL, NULL, OPEN_EXISTING, NULL, NULL);
-	dwFileSize = GetFileSize(hFile, NULL);
+	hFile = CreateFile(pFn, GENERIC_READ, 0, 0, OPEN_EXISTING, 0, 0);
+	dwFileSize = GetFileSize(hFile, 0);
 	if (hFile != INVALID_HANDLE_VALUE) CloseHandle(hFile);
 
 	pFile = fopen(pFn, "rt");
-	if (pFile == NULL) return 0;
+	if (pFile == 0) return 0;
 	else 
 	{	pContents = new char[dwFileSize+1];
 		ZeroMemory(pContents, dwFileSize+1);
@@ -48,8 +48,8 @@ int CGameMonitor::iReadBadWordFileList(char *pFn)
 	}	
 	pStrTok = new class CStrTok(pContents, seps);
 	token = pStrTok->pGet();
-	while( token != NULL ) 
-	{	m_pWordList[iIndex] = new class CMsg(NULL, token, NULL);
+	while( token != 0 ) 
+	{	m_pWordList[iIndex] = new class CMsg(0, token, 0);
 		iIndex++;
 		if (iIndex >= DEF_MAXBADWORD) break;
 		token = pStrTok->pGet();
@@ -59,17 +59,17 @@ int CGameMonitor::iReadBadWordFileList(char *pFn)
 	return iIndex;
 }
 
-BOOL CGameMonitor::bCheckBadWord(char *pWord)
+bool CGameMonitor::bCheckBadWord(char *pWord)
 {int i;
  char cBuffer[500];
 	ZeroMemory(cBuffer, sizeof(cBuffer));
 	strcpy(cBuffer, pWord);
 	i = 0;
-	while ((m_pWordList[i] != NULL) && (strlen(m_pWordList[i]->m_pMsg) != 0)) 
+	while ((m_pWordList[i] != 0) && (strlen(m_pWordList[i]->m_pMsg) != 0)) 
 	{	if (memcmp(cBuffer, m_pWordList[i]->m_pMsg, strlen(m_pWordList[i]->m_pMsg)) == 0) 
-		{	return TRUE;
+		{	return true;
 		}
 		i++;
 	}
-	return FALSE;
+	return false;
 }

@@ -11,9 +11,9 @@ CMobCounter::CMobCounter(char* cName)
 CMobCounter::CMobCounter()
 {
 	ZeroMemory(cNpcName, sizeof(cNpcName));
-	iKillCount = NULL;
-	iLevel = NULL;
-	iNextCount = NULL;
+	iKillCount = 0;
+	iLevel = 0;
+	iNextCount = 0;
 }
 
 

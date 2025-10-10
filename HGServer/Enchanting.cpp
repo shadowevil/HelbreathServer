@@ -4,9 +4,9 @@ CEnchanting::CEnchanting()
 {
 	ZeroMemory(cName, sizeof(cName));
 	ZeroMemory(cDesc, sizeof(cDesc));
-	iCount = NULL;
-	dwType = NULL;
-	dwValue = NULL;
+	iCount = 0;
+	dwType = 0;
+	dwValue = 0;
 }
 
 CEnchanting::~CEnchanting()

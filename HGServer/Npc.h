@@ -98,7 +98,7 @@ public:
 
 	int   m_iFollowOwnerIndex;		// NPC가 따라가고 있는 객체 인덱스 
 	char  m_cFollowOwnerType;		// 따라가는 객체의 종류 (NPC or Player)
-	BOOL  m_bIsSummoned;            // 소환된 NPC라면 HP가 오르지 않는다. 
+	bool  m_bIsSummoned;            // 소환된 NPC라면 HP가 오르지 않는다. 
 	DWORD m_dwSummonedTime;			// 소환몹이 생성시간 
 
 	int   m_iTargetIndex;			// NPC의 공격목표 인덱스
@@ -110,7 +110,7 @@ public:
 	int   m_iWayPointIndex[DEF_MAXWAYPOINTS+1];
 	char  m_cMagicEffectStatus[DEF_MAXMAGICEFFECTS];
 
-	BOOL  m_bIsPermAttackMode;		// 이 플래그가 활성화 되어 있으면 공격도중 목표를 바꾸지 않는다.
+	bool  m_bIsPermAttackMode;		// 이 플래그가 활성화 되어 있으면 공격도중 목표를 바꾸지 않는다.
    	DWORD   m_iNoDieRemainExp;		// 죽지 않고 명중시에 얻을 수 있는 경험치 
 	int   m_iAttackStrategy; 		// 전투 교리 인공지능 타입  
 	int   m_iAILevel;				// 지능 레벨 
@@ -123,8 +123,8 @@ public:
 			3: 마법 보호중인 목표물 마법 공격대상에서 제외 
 	*/
 	int   m_iAttackCount;			// 연속 공격 동작 횟수 카운트 
-	BOOL  m_bIsKilled;
-	BOOL  m_bIsUnsummoned;
+	bool  m_bIsKilled;
+	bool  m_bIsUnsummoned;
 
 	int   m_iLastDamage;			// 마지막 죽기 전에 얻은 대미지. 대미지가 너무 크면 연금술 재료가 떨어지지 않는다.
 	int   m_iSummonControlMode;		// 소환몹 조정 모드: 0이면 Free, 1 Hold 2 Tgt 
@@ -153,7 +153,7 @@ case 8:  "Hi-Explosive"
 	int	  m_iBuildCount;			// 가드 타워등 구조물인 경우 완성될 때까지 남은 곡괭이질 횟수를 의미. 초기값은 m_iMinBravery이다.
 									// 이 값이 0이어야만 동작을 한다.
 	int   m_iManaStock;				// 그랜드 매직 제네레이터의 경우 마나축적량 
-	BOOL  m_bIsMaster;				// 마스터 몹인지의 여부 
+	bool  m_bIsMaster;				// 마스터 몹인지의 여부 
 	int   m_iGuildGUID;				// 전쟁용 유니트인 경우 소환자의 길드 아이디가 입력된다.
 	
 	char m_cCropType;

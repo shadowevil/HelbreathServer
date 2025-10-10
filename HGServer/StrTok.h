@@ -22,7 +22,7 @@ public:
 	int    m_iDataLength, m_iCurLoc;
 	
 private:
-	BOOL _bIsSeperator(char cData, char cNextData);
+	bool _bIsSeperator(char cData, char cNextData);
 };
 
 #endif // !defined(AFX_STRTOK_H__A9554BE2_A96B_11D2_B143_00001C7030A6__INCLUDED_)

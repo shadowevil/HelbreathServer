@@ -111,20 +111,20 @@ void CMisc::GetDirPoint(char cDir, int * pX, int * pY)
 	}
 }
 
-BOOL CMisc::bCheckValidString(char * str)
+bool CMisc::bCheckValidString(char * str)
 {	int len = strlen(str);
 	for (int i = 0; i < len; i++)
-	{	if(str[i] == ' ') return FALSE;
+	{	if(str[i] == ' ') return false;
 	}
-	return TRUE;
+	return true;
 }
 
-BOOL CMisc::bCheckIMEString(char * str)
+bool CMisc::bCheckIMEString(char * str)
 {	int len = strlen(str);
 	for (int i = 0; i < len; i++)
-	{	if(str[i] < 0) return FALSE;
+	{	if(str[i] < 0) return false;
 	}
-	return TRUE;
+	return true;
 }
 
 void CMisc::ReplaceString(char * pStr, char cFrom, char cTo)
@@ -214,40 +214,40 @@ void CMisc::ColorTransfer(char cPixelFormat, COLORREF fcolor, WORD * wR, WORD * 
 }
 
 
-BOOL CMisc::bEncode(char cKey, char *pStr)
+bool CMisc::bEncode(char cKey, char *pStr)
 {	int iLen = strlen(pStr);
 	for (int i = 0; i <= iLen-1; i++)
 	{	pStr[i] += i;
 		pStr[i]  = pStr[i] ^ (cKey ^ (iLen - i));
 	}
-	return TRUE;
+	return true;
 }
 
 
-BOOL CMisc::bDecode(char cKey, char *pStr)
+bool CMisc::bDecode(char cKey, char *pStr)
 {int iLen = strlen(pStr);
 	for (int i = 0; i <= iLen-1; i++)
 	{	pStr[i]  = pStr[i] ^ (cKey ^ (iLen - i));
 		pStr[i] -= i;
 	}
-	return TRUE;
+	return true;
 }
 
 
-BOOL CMisc::bCheckValidName(char *pStr)
+bool CMisc::bCheckValidName(char *pStr)
 {int i, iLen;
  iLen = strlen(pStr);
 	for (i = 0; i < iLen; i++)
-	{	if ( pStr[i] < 0 )	return FALSE;
+	{	if ( pStr[i] < 0 )	return false;
 		if ( (pStr[i] == ',')  || (pStr[i] == '=') || (pStr[i] == ' ')  || (pStr[i] == '\n') ||
 			 (pStr[i] == '\t') || (pStr[i] == '.') || (pStr[i] == '\\') || (pStr[i] == '/')  ||
 			 (pStr[i] == ':')  || (pStr[i] == '*') || (pStr[i] == '?')  || (pStr[i] == '<')  ||
 			 (pStr[i] == '>')  || (pStr[i] == '|') || (pStr[i] == '"')  || (pStr[i] == '`')  ||
 			 (pStr[i] == ';')  || (pStr[i] == '=') || (pStr[i] == '@')  || (pStr[i] == '[')  ||
-			 (pStr[i] == ']')  || (pStr[i] == '^') || (pStr[i] == '_')  || (pStr[i] == '\'') ) return FALSE;
-		if( (pStr[i] < '0') || (pStr[i] > 'z')) return FALSE;
+			 (pStr[i] == ']')  || (pStr[i] == '^') || (pStr[i] == '_')  || (pStr[i] == '\'') ) return false;
+		if( (pStr[i] < '0') || (pStr[i] > 'z')) return false;
 	}
-	return TRUE;
+	return true;
 }
 
 
@@ -262,17 +262,17 @@ int CMisc::_iGetFileCheckSum(char * pFn)
 	ZeroMemory(cRealFn, sizeof(cRealFn));
 	strcpy(cRealFn, pFn);
 	for (i = 0; i < strlen(cRealFn); i++)
-	if (cRealFn[i] != NULL)	cRealFn[i]++;
+	if (cRealFn[i] != 0)	cRealFn[i]++;
 
-	hFile = CreateFile(cRealFn, GENERIC_READ, NULL, NULL, OPEN_EXISTING, NULL, NULL);//CreateFile(cRealFn, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, NULL);
-	dwFileSize = GetFileSize(hFile, NULL);
+	hFile = CreateFile(cRealFn, GENERIC_READ, 0, 0, OPEN_EXISTING, 0, 0);//CreateFile(cRealFn, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, 0);
+	dwFileSize = GetFileSize(hFile, 0);
 	CloseHandle(hFile);
 	if (hFile == INVALID_HANDLE_VALUE) {
 		return 0;
 	}
 
 	pFile = fopen(cRealFn, "rb");
-	if (pFile == NULL) return 0;
+	if (pFile == 0) return 0;
 	else {
 		pContents = new char[dwFileSize+1];
 		ZeroMemory(pContents, dwFileSize+1);
@@ -292,7 +292,7 @@ int CMisc::_iGetFileCheckSum(char * pFn)
 	return abs(iCheckSum);
 }
 
-BOOL CMisc::_iConvertFileXor(char *pFn, char * pDestFn, char cKey)
+bool CMisc::_iConvertFileXor(char *pFn, char * pDestFn, char cKey)
 {
  HANDLE hFile;
  DWORD  dwFileSize;
@@ -302,12 +302,12 @@ BOOL CMisc::_iConvertFileXor(char *pFn, char * pDestFn, char cKey)
  //	.mando
  char pHeader[10];
  char cHeaderKey = 20;
-	hFile = CreateFile(pFn, GENERIC_READ, NULL, NULL, OPEN_EXISTING, NULL, NULL);
-	dwFileSize = GetFileSize(hFile, NULL) - 10;
+	hFile = CreateFile(pFn, GENERIC_READ, 0, 0, OPEN_EXISTING, 0, 0);
+	dwFileSize = GetFileSize(hFile, 0) - 10;
 	if (hFile != INVALID_HANDLE_VALUE) CloseHandle(hFile);
 	pFile = fopen(pFn, "rt");
-	if (pFile == NULL)
-		return FALSE;
+	if (pFile == 0)
+		return false;
 
 	pContents = new char[dwFileSize+1];
 	ZeroMemory(pContents, dwFileSize+1);
@@ -318,9 +318,9 @@ BOOL CMisc::_iConvertFileXor(char *pFn, char * pDestFn, char cKey)
 	for (i = 0; i < (int)(dwFileSize); i++)
 		pContents[i] = pContents[i] ^ cKey;
 	pFile = fopen(pDestFn, "wt");
-	if (pFile == NULL) {
+	if (pFile == 0) {
 		delete[] pContents;
-		return FALSE;
+		return false;
 	}
 	//=======================================	mando..
 	i = 0;
@@ -329,37 +329,37 @@ BOOL CMisc::_iConvertFileXor(char *pFn, char * pDestFn, char cKey)
 		i++;
 	}
 	if(atoi(pHeader) != (int)(dwFileSize))
-		return FALSE;
+		return false;
 	fwrite(pContents, dwFileSize, 1, pFile);
 	fclose(pFile);
 
 	delete[] pContents;
 
-	return TRUE;
+	return true;
 }
 
 int CMisc::iGetTextLengthLoc(HDC hDC, char *pStr, int iLength)
 {
  int i;
- BOOL bFlag;
+ bool bFlag;
  SIZE Size;
  int len = strlen(pStr);
 
 	i = 0;
-	bFlag = FALSE;
-	while (bFlag == FALSE) {
+	bFlag = false;
+	while (bFlag == false) {
 		if (i > len) return 0;
 		i++;
 		GetTextExtentPoint32(hDC, pStr, i, &Size);
-		if (Size.cx > iLength) bFlag = TRUE;
+		if (Size.cx > iLength) bFlag = true;
 	}
 	return i;
 }
 
 
-BOOL CMisc::bIsValidSSN(char *pStr)
+bool CMisc::bIsValidSSN(char *pStr)
 {int a, b, c, d, e, f, g, h, i, j, k, l, m, X, Y;
-	if (strlen(pStr) < 14) return FALSE;
+	if (strlen(pStr) < 14) return false;
 	a = pStr[0] - 48;
 	b = pStr[1] - 48;
 	c = pStr[2] - 48;
@@ -377,29 +377,29 @@ BOOL CMisc::bIsValidSSN(char *pStr)
 	Y = X % 11;
 	Y = 11 - Y;
 	if (Y >= 10) Y = Y - 10;
-	if (Y != m) return FALSE;
-	return TRUE;
+	if (Y != m) return false;
+	return true;
 }
 
-BOOL CMisc::bIsValidEmail(char *pStr)
+bool CMisc::bIsValidEmail(char *pStr)
 {
 	int len = strlen( pStr );
-	if( len < 7 ) return FALSE;
+	if( len < 7 ) return false;
 	char cEmail[52];
 	ZeroMemory( cEmail, sizeof(cEmail) );
 	memcpy( cEmail, pStr, len );
-	BOOL bFlag = FALSE;
+	bool bFlag = false;
 	for( int i=0 ; i<len ; i++ )
 	{
-		if( cEmail[i] == '@' ) bFlag = TRUE;
+		if( cEmail[i] == '@' ) bFlag = true;
 	}
-	if( bFlag == FALSE ) return FALSE;
-	bFlag = FALSE;
+	if( bFlag == false ) return false;
+	bFlag = false;
 	for( int i=0 ; i<len ; i++ )
 	{
-		if( cEmail[i] == '.' ) bFlag = TRUE;
+		if( cEmail[i] == '.' ) bFlag = true;
 	}
-	if( bFlag == FALSE ) return FALSE;
-	return TRUE;
+	if( bFlag == false ) return false;
+	return true;
 }
 // v351 codded by D.u.u.u.d.e.&.S.n.o.o.p.y.8.1

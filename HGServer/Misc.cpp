@@ -57,8 +57,8 @@ char CMisc::cGetNextMoveDir(short sX, short sY, short dX, short dY)
 
 void CMisc::GetPoint(int x0, int y0, int x1, int y1, int * pX, int * pY, int * pError)
 {
- register int dx, dy, x_inc, y_inc, error, index;
- register int iResultX, iResultY, iDstCnt;
+ int dx, dy, x_inc, y_inc, error, index;
+ int iResultX, iResultY, iDstCnt;
 
 	if ((x0 == x1) && (y0 == y1)) {
 		*pX = x0;
@@ -134,8 +134,8 @@ CALC_OK:;
 
 void CMisc::GetPoint2(int x0, int y0, int x1, int y1, int * pX, int * pY, int * pError, int iCount)
 {
- register int dx, dy, x_inc, y_inc, error, index;
- register int iResultX, iResultY, iCnt = 0;
+ int dx, dy, x_inc, y_inc, error, index;
+ int iResultX, iResultY, iCnt = 0;
 
 
 	if ((x0 == x1) && (y0 == y1)) {
@@ -229,41 +229,41 @@ void CMisc::GetDirPoint(char cDir, int * pX, int * pY)
 }
 
 
-BOOL CMisc::bEncode(char cKey, char *pStr)
+bool CMisc::bEncode(char cKey, char *pStr)
 {
  int i, iLen;
 
 	// !!
-	return TRUE;
+	return true;
 
 	iLen = strlen(pStr);
 	for (i = 0; i <= iLen-1; i++) {
 		pStr[i]  = pStr[i] ^ (cKey);
 	}
 
-	return TRUE;
+	return true;
 }
 
 
-BOOL CMisc::bDecode(char cKey, char *pStr)
+bool CMisc::bDecode(char cKey, char *pStr)
 {
  int i, iLen;
 
 	// !!
-	return TRUE;
+	return true;
 
 	iLen = strlen(pStr);
 	for (i = 0; i <= iLen-1; i++) {
 		pStr[i]  = pStr[i] ^ (cKey);
 	}
 
-	return TRUE;
+	return true;
 }
 
 
-BOOL CMisc::bCheckValidName(char *pStr)
+bool CMisc::bCheckValidName(char *pStr)
 {
- register int i, iLen;
+ int i, iLen;
  
 	iLen = strlen(pStr);
 	for (i = 0; i < iLen; i++) {
@@ -272,7 +272,7 @@ BOOL CMisc::bCheckValidName(char *pStr)
 			 (pStr[i] == '\n') || (pStr[i] == '\t') || /*(pStr[i] == '.') ||*/
 			 (pStr[i] == '\\') || (pStr[i] == '/')  || (pStr[i] == ':') || 
 			 (pStr[i] == '*')  || (pStr[i] == '?')  || (pStr[i] == '<') || 
-			 (pStr[i] == '>')  || (pStr[i] == '|')  || (pStr[i] == '"') ) return FALSE;
+			 (pStr[i] == '>')  || (pStr[i] == '|')  || (pStr[i] == '"') ) return false;
 
 		if ((i <= iLen-2) && ((unsigned char)pStr[i] >= 128)) {
 			if (((unsigned char)pStr[i] == 164) && ((unsigned char)pStr[i+1] >= 161) && 
@@ -286,12 +286,12 @@ BOOL CMisc::bCheckValidName(char *pStr)
 				// 적합 
 				
 			}
-			else return FALSE;
+			else return false;
 			i++; // !!! 증가시켜야만 맞다.
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 

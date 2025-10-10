@@ -36,15 +36,15 @@ long    G_lTransG25[64][64], G_lTransRB25[64][64];
 long    G_lTransG2[64][64], G_lTransRB2[64][64];
 
 char			szAppClass[32];
-HWND			G_hWnd = NULL;
-HWND			G_hEditWnd = NULL;
-HINSTANCE       G_hInstance = NULL;
+HWND			G_hWnd = 0;
+HWND			G_hEditWnd = 0;
+HINSTANCE       G_hInstance = 0;
 MMRESULT		G_mmTimer;
 char   G_cSpriteAlphaDegree;
 class CGame * G_pGame;
-class XSocket * G_pCalcSocket = NULL;
-BOOL  G_bIsCalcSocketConnected = TRUE;
-DWORD G_dwCalcSocketTime = NULL, G_dwCalcSocketSendTime = NULL;
+class XSocket * G_pCalcSocket = 0;
+bool  G_bIsCalcSocketConnected = true;
+DWORD G_dwCalcSocketTime = 0, G_dwCalcSocketSendTime = 0;
 
 char G_cCmdLine[256], G_cCmdLineTokenA[120], G_cCmdLineTokenA_Lowercase[120], G_cCmdLineTokenB[120], G_cCmdLineTokenC[120], G_cCmdLineTokenD[120], G_cCmdLineTokenE[120];
 
@@ -61,7 +61,7 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT message,WPARAM wParam, LPARAM lParam)
 		break;
 	
 	case WM_CLOSE:
-		if ( (G_pGame->m_cGameMode == DEF_GAMEMODE_ONMAINGAME) && ( G_pGame->m_bForceDisconn == FALSE ) )
+		if ( (G_pGame->m_cGameMode == DEF_GAMEMODE_ONMAINGAME) && ( G_pGame->m_bForceDisconn == false ) )
 		{
 
 #ifdef _DEBUG
@@ -71,8 +71,8 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT message,WPARAM wParam, LPARAM lParam)
 #endif
 
 		}
-			else if (G_pGame->m_cGameMode == DEF_GAMEMODE_ONLOADING) return (DefWindowProc(hWnd, message, wParam, lParam));
-			else if (G_pGame->m_cGameMode == DEF_GAMEMODE_ONMAINMENU) G_pGame->ChangeGameMode(DEF_GAMEMODE_ONQUIT);
+		else if (G_pGame->m_cGameMode == DEF_GAMEMODE_ONLOADING) return (DefWindowProc(hWnd, message, wParam, lParam));
+		else if (G_pGame->m_cGameMode == DEF_GAMEMODE_ONMAINMENU) G_pGame->ChangeGameMode(DEF_GAMEMODE_ONQUIT);
 		break;
 	
 	case WM_SYSCOMMAND:
@@ -104,30 +104,30 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT message,WPARAM wParam, LPARAM lParam)
 
 	case WM_ACTIVATEAPP:
 		if( wParam == 0 ) 
-		{	G_pGame->m_bIsProgramActive = FALSE;
-			G_pGame->m_DInput.SetAcquire(FALSE);
+		{	G_pGame->m_bIsProgramActive = false;
+			G_pGame->m_DInput.SetAcquire(false);
 		}else 
-		{	G_pGame->m_bIsProgramActive = TRUE;
-			G_pGame->m_DInput.SetAcquire(TRUE);
-			G_pGame->m_bCtrlPressed = FALSE;
+		{	G_pGame->m_bIsProgramActive = true;
+			G_pGame->m_DInput.SetAcquire(true);
+			G_pGame->m_bCtrlPressed = false;
 			
-			G_pGame->m_bIsRedrawPDBGS = TRUE;
+			G_pGame->m_bIsRedrawPDBGS = true;
 			G_pGame->m_DDraw.ChangeDisplayMode(G_hWnd);
 
-			if (G_pGame->bCheckImportantFile() == FALSE) 
+			if (G_pGame->bCheckImportantFile() == false) 
 			{	MessageBox(G_pGame->m_hWnd, "File checksum error! Get Update again please!", "ERROR1", MB_ICONEXCLAMATION | MB_OK);
 				PostQuitMessage(0);
 				return 0;
 			}			
 			if (__FindHackingDll__("CRCCHECK") != 1) 
 			{	G_pGame->ChangeGameMode(DEF_GAMEMODE_ONQUIT);
-				return NULL;
+				return 0;
 		}	}
 		return DefWindowProc(hWnd, message, wParam, lParam);
 
 	case WM_SETCURSOR:
-		SetCursor(NULL);
-		return TRUE;
+		SetCursor(0);
+		return true;
 
 	case WM_DESTROY:
 		OnDestroy();
@@ -145,7 +145,7 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT message,WPARAM wParam, LPARAM lParam)
 	default: 
 		return (DefWindowProc(hWnd, message, wParam, lParam));
 	}	
-	return NULL;
+	return 0;
 }
 
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
@@ -154,17 +154,17 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
  char cSearchDll[] = "rd`qbg-ckk";
  char cRealName[12];
 
-	srand((unsigned)time(NULL));
+	srand((unsigned)time(0));
 	char *pJammer = new char[(rand() % 100) +1];
 	G_pGame = new class CGame;
 	ZeroMemory(cRealName, sizeof(cRealName));
 	strcpy(cRealName, cSearchDll);
 	for (WORD i = 0; i < strlen(cRealName); i++)
-	if (cRealName[i] != NULL) cRealName[i]++;
+	if (cRealName[i] != 0) cRealName[i]++;
 
 	hDll = LoadLibrary(cRealName);
-	if( hDll == NULL ) 
-	{	MessageBox(NULL, "don't find search.dll", "ERROR!", MB_OK);
+	if( hDll == 0 ) 
+	{	MessageBox(0, "don't find search.dll", "ERROR!", MB_OK);
 		return 0;
 	}
 
@@ -176,25 +176,25 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	MYPROC *pFindHook; 
 	pFindHook = (MYPROC *) GetProcAddress(hDll, "__FindHackingDll__") ;
 
-	if (pFindHook== NULL) 
-	{	MessageBox(NULL, "can't find search.dll", "ERROR!", MB_OK);
+	if (pFindHook== 0) 
+	{	MessageBox(0, "can't find search.dll", "ERROR!", MB_OK);
 		return 0 ;
 	}else if ((*pFindHook)("CRCCHECK") != 1) 
 	{	return 0 ;
 	}
 	FreeLibrary(hDll);
 	sprintf( szAppClass, "Client-I%d", hInstance);
-	if (!InitApplication( hInstance))		return (FALSE);
-    if (!InitInstance(hInstance, nCmdShow)) return (FALSE);
+	if (!InitApplication( hInstance))		return (false);
+    if (!InitInstance(hInstance, nCmdShow)) return (false);
 
 	Initialize((char *)lpCmdLine);
 
 #ifndef _DEBUG
-	if (OpenMutex(MUTEX_ALL_ACCESS, FALSE, "0543kjg3j31%") != NULL) {
-		MessageBox(NULL, "Only one Helbreath client program allowed!", "ERROR!", MB_OK);
+	if (OpenMutex(MUTEX_ALL_ACCESS, false, "0543kjg3j31%") != 0) {
+		MessageBox(0, "Only one Helbreath client program allowed!", "ERROR!", MB_OK);
 		return 0;
 	}
-	HANDLE hMutex = CreateMutex(NULL, FALSE, "0543kjg3j31%");
+	HANDLE hMutex = CreateMutex(0, false, "0543kjg3j31%");
 #endif
 	
 	EventLoop();
@@ -221,44 +221,44 @@ BOOL InitApplication( HINSTANCE hInstance)
 	wc.cbClsExtra    = 0;                            
 	wc.cbWndExtra    = sizeof (int);
 	wc.hInstance     = hInstance;
-	wc.hIcon         = NULL;
-	wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
+	wc.hIcon         = 0;
+	wc.hCursor       = LoadCursor(0, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
-	wc.lpszMenuName  = NULL;
+	wc.lpszMenuName  = 0;
 	wc.lpszClassName = szAppClass;        
 	return (RegisterClass(&wc));
 }
 
-BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
+bool InitInstance( HINSTANCE hInstance, int nCmdShow )
 {	int cx = GetSystemMetrics(SM_CXFULLSCREEN)/2;
 	int cy = GetSystemMetrics(SM_CYFULLSCREEN)/2;
 	if(cy> 340) cy -= 40;
-	G_hWnd = CreateWindowEx(NULL, szAppClass, "Helbreath", WS_POPUP, cx- 400, cy- 300,
-							800, 600, NULL, NULL, hInstance, NULL);  
-    if (!G_hWnd) return FALSE;
+	G_hWnd = CreateWindowEx(0, szAppClass, "Helbreath", WS_POPUP, cx- 400, cy- 300,
+							800, 600, 0, 0, hInstance, 0);  
+    if (!G_hWnd) return false;
     G_hInstance	= hInstance;
 	ShowWindow(G_hWnd, SW_SHOWDEFAULT);
 	UpdateWindow(G_hWnd);
-	return TRUE;
+	return true;
 }
 
 
 void EventLoop()
-{ register MSG msg;
-	while( 1 ) 
-	{	if( PeekMessage( &msg, NULL, 0, 0, PM_NOREMOVE ) ) 
-		{	if( !GetMessage( &msg, NULL, 0, 0 ) ) return;// msg.wParam;
+{ MSG msg;
+	while( true ) 
+	{	if( PeekMessage( &msg, 0, 0, 0, PM_NOREMOVE ) ) 
+		{	if( !GetMessage( &msg, 0, 0, 0 ) ) return;// msg.wParam;
             TranslateMessage(&msg);
             DispatchMessage(&msg);
 		}
 		else if (G_pGame->m_bIsProgramActive) G_pGame->UpdateScreen();
-		else if (G_pGame->m_cGameMode == DEF_GAMEMODE_ONLOADING) G_pGame->UpdateScreen_OnLoading( FALSE );
+		else if (G_pGame->m_cGameMode == DEF_GAMEMODE_ONLOADING) G_pGame->UpdateScreen_OnLoading( false );
 		else WaitMessage();
 	}
 }
 
 void OnDestroy()
-{	G_pGame->m_bIsProgramActive = FALSE;		
+{	G_pGame->m_bIsProgramActive = false;		
 	_StopTimer(G_mmTimer);
 	G_pGame->Quit();
 	WSACleanup();
@@ -266,7 +266,7 @@ void OnDestroy()
 }
 
 void CALLBACK _TimerFunc(UINT wID, UINT wUser, DWORD dwUSer, DWORD dw1, DWORD dw2)
-{	PostMessage(G_hWnd, WM_USER_TIMERSIGNAL, wID, NULL);
+{	PostMessage(G_hWnd, WM_USER_TIMERSIGNAL, wID, 0);
 }
 
 
@@ -301,7 +301,7 @@ void Initialize(char * pCmdLine)
 		PostQuitMessage(0);
 		return;
 	}
-	if (G_pGame->bInit(G_hWnd, G_hInstance, pCmdLine) == FALSE) 
+	if (G_pGame->bInit(G_hWnd, G_hInstance, pCmdLine) == false) 
 	{	PostQuitMessage(0);
 		return;
 	}	
@@ -331,7 +331,7 @@ LONG GetRegKey(HKEY key, LPCTSTR subkey, LPTSTR retdata)
     if (retval == ERROR_SUCCESS) 
 	{	long datasize = MAX_PATH;
         TCHAR data[MAX_PATH];
-        RegQueryValue(hkey, NULL, data, &datasize);
+        RegQueryValue(hkey, 0, data, &datasize);
         lstrcpy(retdata,data);
         RegCloseKey(hkey);
     }
@@ -348,7 +348,7 @@ void GoHomepage()
 	int		showcmd = SW_SHOW;
 	char	key[MAX_PATH + MAX_PATH];	
     // First try ShellExecute()
-    HINSTANCE result = ShellExecute(NULL, "open", url, NULL,NULL, showcmd);
+    HINSTANCE result = ShellExecute(0, "open", url, 0,0, showcmd);
 
     // If it failed, get the .htm regkey and lookup the program
     if ((UINT)result <= HINSTANCE_ERROR) 
@@ -357,9 +357,9 @@ void GoHomepage()
             if (GetRegKey(HKEY_CLASSES_ROOT,key,key) == ERROR_SUCCESS)
 			{   char *pos;
                 pos = strstr(key, "\"%1\"");
-                if (pos == NULL) {                     // No quotes found
+                if (pos == 0) {                     // No quotes found
                     pos = strstr(key, "%1");           // Check for %1, without quotes 
-                    if (pos == NULL)                   // No parameter at all...
+                    if (pos == 0)                   // No parameter at all...
                           pos = key+lstrlen(key)-1;
                     else *pos = '\0';                   // Remove the parameter
                 }else    *pos = '\0';                   // Remove the parameter
