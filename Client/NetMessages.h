@@ -16,6 +16,8 @@
 #define msg_shard 0x0A71
 #define msg_fragment 0x0A72
 
+#define DEF_NOTIFY_CURLIFESPAN 0x0BF3
+
 //50Cent - Repair All
 #define DEF_COMMONTYPE_REQ_REPAIRALL            0x0F10
 #define DEF_NOTIFY_REPAIRALLPRICES                0x0F11
@@ -300,7 +302,7 @@
 
 
   #define DEF_NOTIFY_ANGELIC_STATS					0x0BF2 // Sends m_iAngelicStr, Int, Dex, Mag to client
-  #define DEF_NOTIFY_ITEM_CANT_RELEASE				0x0BF3 // "Item cannot be released"
+
   #define DEF_NOTIFY_ANGEL_FAILED					0x0BF4 // Failed receiving an Angel pandent
   #define DEF_NOTIFY_ANGEL_RECEIVED					0x0BF5 // "You have received the Tutelary Angel"
 

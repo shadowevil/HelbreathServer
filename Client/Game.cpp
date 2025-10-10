@@ -26244,10 +26244,8 @@ void CGame::NotifyMsgHandler(char * pData)
 		m_iAngelicMag = *ip;  // m_iAngelicMag
 		break;
 
-	case DEF_NOTIFY_ITEM_CANT_RELEASE:	// reversed by Snoopy: 0x0BF3
-		AddEventList(DEF_MSG_NOTIFY_NOT_RELEASED , 10 );//"Item cannot be released"
-		cp = (char *)(pData	+ DEF_INDEX2_MSGTYPE + 2);
-		ItemEquipHandler(*cp);
+	case DEF_NOTIFY_CURLIFESPAN:
+		NotifyMsg_CurLifeSpan(pData);
 		break;
 
 	case DEF_NOTIFY_ANGEL_FAILED:		// reversed by Snoopy: 0x0BF4
@@ -27894,6 +27892,22 @@ void CGame::ReserveFightzoneResponseHandler(char * pData)
 		}
 		break;
 	}
+}
+
+void CGame::NotifyMsg_CurLifeSpan(char* pData)
+{
+	char* cp;
+	int* ip, iItemIndex;
+
+	cp = (char*)(pData + DEF_INDEX2_MSGTYPE + 2);
+
+	ip = (int*)cp;
+	iItemIndex = *ip;
+	cp += 4;
+
+	ip = (int*)cp;
+	m_pItemList[iItemIndex]->m_wCurLifeSpan = (WORD)*ip;
+	cp += 4;
 }
 
 void CGame::UpdateScreen_OnLogResMsg()
@@ -30808,7 +30822,7 @@ void CGame::UpdateScreen_OnGame()
 			iLoc += 15;
 		}
 		if (m_pItemList[m_stMCursor.sSelectedObjectID]->m_cEquipPos != DEF_EQUIPPOS_NONE)
-		{	wsprintf(G_cTxt, UPDATE_SCREEN_ONGAME10, m_pItemList[m_stMCursor.sSelectedObjectID]->m_wCurLifeSpan);
+		{	wsprintf(G_cTxt, UPDATE_SCREEN_ONGAME10, m_pItemList[m_stMCursor.sSelectedObjectID]->m_wCurLifeSpan, m_pItemList[m_stMCursor.sSelectedObjectID]->m_wMaxLifeSpan);
 			PutString(msX, msY +25 +iLoc, G_cTxt, RGB(150,150,150), FALSE, 1);
 			iLoc += 15;
 		}

@@ -23,6 +23,8 @@
 #define msg_shard 0x0A71
 #define msg_fragment 0x0A72
 
+#define DEF_NOTIFY_CURLIFESPAN 0x0BF3
+
 #define DEF_NOTIFY_MOBKILLS 0x0A68
 
 //50Cent - Repair All

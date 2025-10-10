@@ -247,6 +247,8 @@ public:
 	void DrawDialogBox_ChangeStatsMajestic(short msX, short msY);		// Change stats using majestic - Alastor
 	void DlgBoxClick_ChangeStatsMajestic(short msX, short msY);			// Change stats using majestic - Alastor
 
+	void NotifyMsg_CurLifeSpan(char* pData);
+
 	// MJ Stats Change Related vars - Alastor
 	char cStateChange1;
 	char cStateChange2;
