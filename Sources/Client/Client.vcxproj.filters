@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="ActionID.h" />
+    <ClInclude Include="BuildItem.h" />
+    <ClInclude Include="CharInfo.h" />
+    <ClInclude Include="Cint.h" />
+    <ClInclude Include="CNTREVNT.H" />
+    <ClInclude Include="Curse.h" />
+    <ClInclude Include="DDRAW.H" />
+    <ClInclude Include="DINPUT.H" />
+    <ClInclude Include="DSOUND.H" />
+    <ClInclude Include="DXC_ddraw.h" />
+    <ClInclude Include="DXC_dinput.h" />
+    <ClInclude Include="DXC_dsound.h" />
+    <ClInclude Include="DynamicObjectID.h" />
+    <ClInclude Include="Effect.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameMonitor.h" />
+    <ClInclude Include="GlobalDef.h" />
+    <ClInclude Include="GlobalVal.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="ItemName.h" />
+    <ClInclude Include="JPEGLIB.H" />
+    <ClInclude Include="LAN_ENG.H" />
+    <ClInclude Include="Magic.h" />
+    <ClInclude Include="MapData.h" />
+    <ClInclude Include="Misc.h" />
+    <ClInclude Include="MobCounter.h" />
+    <ClInclude Include="MouseInterface.h" />
+    <ClInclude Include="Msg.h" />
+    <ClInclude Include="Mydib.h" />
+    <ClInclude Include="NetMessages.h" />
+    <ClInclude Include="RESOURCE.H" />
+    <ClInclude Include="Skill.h" />
+    <ClInclude Include="SoundBuffer.h" />
+    <ClInclude Include="SoundID.h" />
+    <ClInclude Include="Sprite.h" />
+    <ClInclude Include="SpriteID.h" />
+    <ClInclude Include="StrTok.h" />
+    <ClInclude Include="Tile.h" />
+    <ClInclude Include="TileSpr.h" />
+    <ClInclude Include="Winmain.h" />
+    <ClInclude Include="XSocket.h" />
+    <ClInclude Include="YWSound.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BuildItem.cpp" />
+    <ClCompile Include="CharInfo.cpp" />
+    <ClCompile Include="Curse.cpp" />
+    <ClCompile Include="DXC_ddraw.cpp" />
+    <ClCompile Include="DXC_dinput.cpp" />
+    <ClCompile Include="DXC_dsound.cpp" />
+    <ClCompile Include="Effect.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameMonitor.cpp" />
+    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="ItemName.cpp" />
+    <ClCompile Include="Magic.cpp" />
+    <ClCompile Include="MapData.cpp" />
+    <ClCompile Include="Misc.cpp" />
+    <ClCompile Include="MobCounter.cpp" />
+    <ClCompile Include="MouseInterface.cpp" />
+    <ClCompile Include="Msg.cpp" />
+    <ClCompile Include="Mydib.cpp" />
+    <ClCompile Include="Skill.cpp" />
+    <ClCompile Include="SoundBuffer.cpp" />
+    <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="StrTok.cpp" />
+    <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="TileSpr.cpp" />
+    <ClCompile Include="Wmain.cpp" />
+    <ClCompile Include="XSocket.cpp" />
+    <ClCompile Include="YWSound.cpp" />
+  </ItemGroup>
+</Project>

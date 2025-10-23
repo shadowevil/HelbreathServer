@@ -1,0 +1,298 @@
+﻿  BuildItem.cpp
+  CharInfo.cpp
+  Curse.cpp
+  DXC_ddraw.cpp
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Curse.cpp(35,16): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Curse.cpp(40,13): error C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Curse.cpp(155,3): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Curse.cpp(167,17): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Curse.cpp(168,17): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Curse.cpp(172,5): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Curse.cpp(173,5): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Curse.cpp(174,5): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Curse.cpp(177,4): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Curse.cpp(181,5): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\DXC_ddraw.cpp(172,17): error C2664: 'HFONT CreateFontW(int,int,int,int,int,DWORD,DWORD,DWORD,DWORD,DWORD,DWORD,DWORD,DWORD,LPCWSTR)': cannot convert argument 14 from 'const char [7]' to 'LPCWSTR'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\DXC_ddraw.cpp(172,167):
+      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\wingdi.h(3905,26):
+      see declaration of 'CreateFontW'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\DXC_ddraw.cpp(172,17):
+      while trying to match the argument list '(int, int, int, int, int, bool, bool, bool, int, int, int, int, int, const char [7])'
+  
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\DXC_ddraw.cpp(402,4): error C2664: 'BOOL TextOutW(HDC,int,int,LPCWSTR,int)': cannot convert argument 4 from 'char *' to 'LPCWSTR'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\DXC_ddraw.cpp(402,25):
+      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\wingdi.h(5225,25):
+      see declaration of 'TextOutW'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\DXC_ddraw.cpp(402,4):
+      while trying to match the argument list '(HDC, int, int, char *, size_t)'
+  
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\DXC_ddraw.cpp(597,4): error C2664: 'int DrawTextW(HDC,LPCWSTR,int,LPRECT,UINT)': cannot convert argument 2 from 'const char *' to 'LPCWSTR'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\DXC_ddraw.cpp(597,20):
+      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(8257,1):
+      see declaration of 'DrawTextW'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\DXC_ddraw.cpp(597,4):
+      while trying to match the argument list '(HDC, const char *, size_t, LPRECT, int)'
+  
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\DXC_ddraw.cpp(795,2): error C2664: 'void OutputDebugStringW(LPCWSTR)': cannot convert argument 1 from 'const char [21]' to 'LPCWSTR'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\DXC_ddraw.cpp(795,20):
+      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\debugapi.h(61,1):
+      see declaration of 'OutputDebugStringW'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\DXC_ddraw.cpp(795,2):
+      while trying to match the argument list '(const char [21])'
+  
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\DXC_ddraw.cpp(801,5): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [100]' to 'LPWSTR'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\DXC_ddraw.cpp(801,14):
+      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
+      see declaration of 'wsprintfW'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\DXC_ddraw.cpp(801,5):
+      while trying to match the argument list '(char [100], const char [23], int)'
+  
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\DXC_ddraw.cpp(802,5): error C2664: 'void OutputDebugStringW(LPCWSTR)': cannot convert argument 1 from 'char [100]' to 'LPCWSTR'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\DXC_ddraw.cpp(802,23):
+      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\debugapi.h(61,1):
+      see declaration of 'OutputDebugStringW'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\DXC_ddraw.cpp(802,5):
+      while trying to match the argument list '(char [100])'
+  
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\DXC_ddraw.cpp(806,5): error C2664: 'void OutputDebugStringW(LPCWSTR)': cannot convert argument 1 from 'const char [19]' to 'LPCWSTR'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\DXC_ddraw.cpp(806,23):
+      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\debugapi.h(61,1):
+      see declaration of 'OutputDebugStringW'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\DXC_ddraw.cpp(806,5):
+      while trying to match the argument list '(const char [19])'
+  
+  DXC_dinput.cpp
+  DXC_dsound.cpp
+  Effect.cpp
+  Game.cpp
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Game.h(63,10): error C1083: Cannot open include file: 'cximage/ximage.h': No such file or directory
+  (compiling source file 'Game.cpp')
+  
+  GameMonitor.cpp
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\GameMonitor.cpp(37,10): error C2664: 'HANDLE CreateFileW(LPCWSTR,DWORD,DWORD,LPSECURITY_ATTRIBUTES,DWORD,DWORD,HANDLE)': cannot convert argument 1 from 'char *' to 'LPCWSTR'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\GameMonitor.cpp(37,21):
+      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\fileapi.h(93,1):
+      see declaration of 'CreateFileW'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\GameMonitor.cpp(37,10):
+      while trying to match the argument list '(char *, unsigned long, int, int, int, int, int)'
+  
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\GameMonitor.cpp(41,10): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\GameMonitor.cpp(66,2): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  Item.cpp
+  ItemName.cpp
+  Magic.cpp
+  MapData.cpp
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Game.h(63,10): error C1083: Cannot open include file: 'cximage/ximage.h': No such file or directory
+  (compiling source file 'MapData.cpp')
+  
+  Misc.cpp
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Misc.cpp(115,11): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Misc.cpp(123,11): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Misc.cpp(131,11): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Misc.cpp(218,12): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Misc.cpp(228,11): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Misc.cpp(239,15): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Misc.cpp(267,10): error C2664: 'HANDLE CreateFileW(LPCWSTR,DWORD,DWORD,LPSECURITY_ATTRIBUTES,DWORD,DWORD,HANDLE)': cannot convert argument 1 from 'char [512]' to 'LPCWSTR'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Misc.cpp(267,21):
+      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\fileapi.h(93,1):
+      see declaration of 'CreateFileW'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Misc.cpp(267,10):
+      while trying to match the argument list '(char [512], unsigned long, int, int, int, int, int)'
+  
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Misc.cpp(263,2): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Misc.cpp(274,10): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Misc.cpp(305,10): error C2664: 'HANDLE CreateFileW(LPCWSTR,DWORD,DWORD,LPSECURITY_ATTRIBUTES,DWORD,DWORD,HANDLE)': cannot convert argument 1 from 'char *' to 'LPCWSTR'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Misc.cpp(305,21):
+      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\fileapi.h(93,1):
+      see declaration of 'CreateFileW'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Misc.cpp(305,10):
+      while trying to match the argument list '(char *, unsigned long, int, int, int, int, int)'
+  
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Misc.cpp(308,10): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Misc.cpp(320,10): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Misc.cpp(346,10): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Misc.cpp(353,3): error C2664: 'BOOL GetTextExtentPoint32W(HDC,LPCWSTR,int,LPSIZE)': cannot convert argument 2 from 'char *' to 'LPCWSTR'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Misc.cpp(353,29):
+      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\wingdi.h(4343,1):
+      see declaration of 'GetTextExtentPoint32W'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Misc.cpp(353,3):
+      while trying to match the argument list '(HDC, char *, int, SIZE *)'
+  
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Misc.cpp(386,10): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  MobCounter.cpp
+  MouseInterface.cpp
+  Msg.cpp
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Msg.cpp(18,2): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  Mydib.cpp
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Mydib.cpp(15,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [28]' to 'LPWSTR'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Mydib.cpp(15,12):
+      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
+      see declaration of 'wsprintfW'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Mydib.cpp(15,2):
+      while trying to match the argument list '(char [28], const char [15], char *)'
+  
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Mydib.cpp(16,14): error C2664: 'HANDLE CreateFileW(LPCWSTR,DWORD,DWORD,LPSECURITY_ATTRIBUTES,DWORD,DWORD,HANDLE)': cannot convert argument 1 from 'char [28]' to 'LPCWSTR'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Mydib.cpp(16,25):
+      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\fileapi.h(93,1):
+      see declaration of 'CreateFileW'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Mydib.cpp(16,14):
+      while trying to match the argument list '(char [28], unsigned long, int, int, int, int, int)'
+  
+  Skill.cpp
+  SoundBuffer.cpp
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\SoundBuffer.cpp(41,2): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\SoundBuffer.cpp(112,10): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  Generating Code...
+  Compiling...
+  Sprite.cpp
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(110,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(111,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(129,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(130,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(201,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(202,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(220,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(221,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(282,12): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(283,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(297,12): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(298,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(363,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(364,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(382,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(383,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(449,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(450,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(468,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(469,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(552,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(553,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(571,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(572,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(737,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(738,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(756,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(757,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(836,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(837,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(855,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(856,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(962,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(963,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(981,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(982,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1083,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1084,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1102,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1103,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1211,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1212,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1230,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1231,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1332,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1333,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1351,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1352,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1460,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1461,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1479,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1480,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1580,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1581,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1599,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1600,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1708,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1709,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1727,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1728,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1829,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1830,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1848,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1849,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1948,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1949,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1967,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(1968,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2066,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2067,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2085,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2086,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2178,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2179,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2197,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2198,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2319,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2320,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2338,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2339,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2449,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2450,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2468,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2469,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2580,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2581,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2599,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2600,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2706,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2707,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2725,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2726,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2869,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2870,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2888,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2889,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2955,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2956,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2974,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Sprite.cpp(2975,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+  StrTok.cpp
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\StrTok.cpp(16,24): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  Tile.cpp
+  TileSpr.cpp
+  Wmain.cpp
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\Game.h(63,10): error C1083: Cannot open include file: 'cximage/ximage.h': No such file or directory
+  (compiling source file 'Wmain.cpp')
+  
+  XSocket.cpp
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\XSocket.cpp(150,2): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\XSocket.cpp(195,2): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\XSocket.cpp(560,2): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  YWSound.cpp
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\YWSound.cpp(36,3): error C2664: 'void OutputDebugStringW(LPCWSTR)': cannot convert argument 1 from 'const char [28]' to 'LPCWSTR'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\YWSound.cpp(36,21):
+      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\debugapi.h(61,1):
+      see declaration of 'OutputDebugStringW'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\YWSound.cpp(36,3):
+      while trying to match the argument list '(const char [28])'
+  
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\YWSound.cpp(43,3): error C2664: 'void OutputDebugStringW(LPCWSTR)': cannot convert argument 1 from 'const char [28]' to 'LPCWSTR'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\YWSound.cpp(43,21):
+      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\debugapi.h(61,1):
+      see declaration of 'OutputDebugStringW'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\YWSound.cpp(43,3):
+      while trying to match the argument list '(const char [28])'
+  
+C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\YWSound.cpp(69,3): error C2664: 'void OutputDebugStringW(LPCWSTR)': cannot convert argument 1 from 'const char [28]' to 'LPCWSTR'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\YWSound.cpp(69,21):
+      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\debugapi.h(61,1):
+      see declaration of 'OutputDebugStringW'
+      C:\Users\ShadowEvil\source\Helbreath_dev\HelbreathServer\Sources\Client\YWSound.cpp(69,3):
+      while trying to match the argument list '(const char [28])'
+  
+  Generating Code...
