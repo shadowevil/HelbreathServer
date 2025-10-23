@@ -1,14 +1,4 @@
-// Sprite.h: interface for the CSprite class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_SPRITE_H__0089D9E2_74E6_11D2_A8E6_00001C7030A6__INCLUDED_)
-#define AFX_SPRITE_H__0089D9E2_74E6_11D2_A8E6_00001C7030A6__INCLUDED_
-
-#if _MSC_VER >= 1000
 #pragma once
-#endif // _MSC_VER >= 1000
-
 #include <windows.h>
 #include <stdio.h>
 #include <io.h>
@@ -48,10 +38,8 @@ public:
 	void PutSpriteFast(int sX, int sY, int sFrame, DWORD dwTime);
 	void PutShiftSpriteFast(int sX, int sY, int shX, int shY, int sFrame, DWORD dwTime);
 	void PutShiftTransSprite2(int sX, int sY, int shX, int shY, int sFrame, DWORD dwTime);
-	void PutSpriteFastFrontBuffer(int sX, int sY, int sFrame, DWORD dwTime);
 	void PutSpriteFastWidth(int sX, int sY, int sFrame, int sWidth, DWORD dwTime, bool bVertical = false);
 	void PutSpriteFastNoColorKey(int sX, int sY, int sFrame, DWORD dwTime);
-	void PutSpriteFastDst(LPDIRECTDRAWSURFACE7 lpDstS, int sX, int sY, int sFrame, DWORD dwTime);
 	void PutSpriteFastNoColorKeyDst(LPDIRECTDRAWSURFACE7 lpDstS, int sX, int sY, int sFrame, DWORD dwTime);
 
 	void PutTransSprite(int sX, int sY, int sFrame, DWORD dwTime, int alphaDepth = 30);
@@ -101,5 +89,3 @@ public:
 	stBrush* m_stBrush;
 	LPDIRECTDRAWSURFACE7 m_lpSurface;
 };
-
-#endif // !defined(AFX_SPRITE_H__0089D9E2_74E6_11D2_A8E6_00001C7030A6__INCLUDED_)

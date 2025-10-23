@@ -1,15 +1,5 @@
-// Item.h: interface for the CItem class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_ITEM_H__211A1360_91B9_11D2_B143_00001C7030A6__INCLUDED_)
-#define AFX_ITEM_H__211A1360_91B9_11D2_B143_00001C7030A6__INCLUDED_
-
-#include <windows.h>
-
-#if _MSC_VER >= 1000
 #pragma once
-#endif // _MSC_VER >= 1000
+#include <windows.h>
 
 #define DEF_MAXITEMEQUIPPOS		15
 #define DEF_EQUIPPOS_NONE		0
@@ -95,5 +85,3 @@ public:
 	// e: 특수 아이템 추가 성질 Flag
 	// f: 특수 아이템 추가 성질 정도 
 };
-
-#endif // !defined(AFX_ITEM_H__211A1360_91B9_11D2_B143_00001C7030A6__INCLUDED_)

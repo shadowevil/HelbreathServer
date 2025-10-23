@@ -13,9 +13,7 @@
 #include <winbase.h>
 #include <mmsystem.h>
 #include <process.h>
-#include "resource.h"
 #include "XSocket.h"
-#include "winmain.h"
 #include "Game.h"
 #include "GlobalDef.h"
 
@@ -48,6 +46,20 @@ DWORD G_dwCalcSocketTime = 0, G_dwCalcSocketSendTime = 0;
 
 char G_cCmdLine[256], G_cCmdLineTokenA[120], G_cCmdLineTokenA_Lowercase[120], G_cCmdLineTokenB[120], G_cCmdLineTokenC[120], G_cCmdLineTokenD[120], G_cCmdLineTokenE[120];
 
+// --------------------------------------------------------------
+BOOL InitApplication(HINSTANCE hInstance);
+bool InitInstance(HINSTANCE hInstance, int nCmdShow);
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+void EventLoop();
+void OnDestroy();
+void Initialize(char* pCmdLine);
+void CALLBACK _TimerFunc(UINT wID, UINT wUser, DWORD dwUSer, DWORD dw1, DWORD dw2);
+MMRESULT _StartTimer(DWORD dwTime);
+
+void _StopTimer(MMRESULT timerid);
+void CPSocketConnet();
+LONG GetRegKey(HKEY key, LPCTSTR subkey, LPTSTR retdata);
+void GoHomepage();
 
 // --------------------------------------------------------------
 

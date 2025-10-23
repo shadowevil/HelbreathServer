@@ -1,17 +1,7 @@
-// Msg.h: interface for the CMsg class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_MSG_H__4A385380_AADF_11D2_B143_00001C7030A6__INCLUDED_)
-#define AFX_MSG_H__4A385380_AADF_11D2_B143_00001C7030A6__INCLUDED_
-
+#pragma once
 #include <windows.h>
 #include <string.h>
 #include <winbase.h>
-
-#if _MSC_VER >= 1000
-#pragma once
-#endif // _MSC_VER >= 1000
 
 class CMsg  
 {
@@ -38,5 +28,3 @@ public:
 	int    m_iObjectID;
 
 };
-
-#endif // !defined(AFX_MSG_H__4A385380_AADF_11D2_B143_00001C7030A6__INCLUDED_)

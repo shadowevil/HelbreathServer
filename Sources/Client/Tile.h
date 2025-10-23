@@ -1,14 +1,4 @@
-// Tile.h: interface for the CTile class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_TILE_H__DA7A0761_758B_11D2_A8E6_00001C7030A6__INCLUDED_)
-#define AFX_TILE_H__DA7A0761_758B_11D2_A8E6_00001C7030A6__INCLUDED_
-
-#if _MSC_VER >= 1000
 #pragma once
-#endif // _MSC_VER >= 1000
-
 #include <windows.h>
 #include <mmsystem.h>
 
@@ -70,5 +60,3 @@ public:
 	char  m_cOwnerName[12];
 	char  m_cDeadOwnerName[12];
 };
-
-#endif // !defined(AFX_TILE_H__DA7A0761_758B_11D2_A8E6_00001C7030A6__INCLUDED_)

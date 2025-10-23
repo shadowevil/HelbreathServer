@@ -1,14 +1,4 @@
-// Game.h: interface for the CGame class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_GAME_H__0089D9E3_74E6_11D2_A8E6_00001C7030A6__INCLUDED_)
-#define AFX_GAME_H__0089D9E3_74E6_11D2_A8E6_00001C7030A6__INCLUDED_
-
-#if _MSC_VER >= 1000
 #pragma once
-#endif // _MSC_VER >= 1000
-
 #include <windows.h>
 #include <windowsx.h>
 #include <stdio.h>
@@ -27,8 +17,6 @@
 #include <iosfwd>
 #include <vector>
 #include <sstream>
-using namespace std;
-
 #include "GlobalDef.h"
 #include "DXC_ddraw.h"
 #include "DXC_dinput.h"
@@ -184,14 +172,14 @@ typedef signed short i16;
 typedef unsigned char u8;
 typedef signed char i8;
 
-template <typename T, class = typename enable_if<!is_pointer<T>::value>::type >
+template <typename T, class = typename std::enable_if<!std::is_pointer<T>::value>::type >
 static void Push(char*& cp, T value) {
 	auto p = (T*)cp;
 	*p = (T)value;
 	cp += sizeof(T);
 }
 
-template <typename T, class = typename enable_if<!is_pointer<T>::value>::type >
+template <typename T, class = typename std::enable_if<!std::is_pointer<T>::value>::type >
 static void Pop(char*& cp, T& v) {
 	T* p = (T*)cp;
 	v = *p;
@@ -209,7 +197,7 @@ static void Push(char*& dest, const char* src) {
 	dest += strlen(src) + 1;
 }
 
-static void Push(char*& dest, const string& str) {
+static void Push(char*& dest, const std::string& str) {
 	strcpy(dest, str.c_str());
 	dest += str.length() + 1;
 }
@@ -225,7 +213,7 @@ static void Pop(char*& src, char* dest) {
 	src += len;
 }
 
-static void Pop(char*& src, string& str) {
+static void Pop(char*& src, std::string& str) {
 	str = src;
 	src += str.length() + 1;
 }
@@ -692,7 +680,7 @@ public:
 	//Snoopy: added function:
 	void DebugLog(const char * cStr);
 	bool bReadLoginConfigFile(char * cFn);
-	int bHasHeroSet( short Appr3, short Appr4, char OwnerType);
+	int bHasHeroSet( short Appr3, short Appr4, short OwnerType);
 	void ShowHeldenianVictory(short sSide);
 	void DrawDialogBox_Resurect(short msX, short msY);
 	void DlgBoxClick_Resurect(short msX, short msY);
@@ -747,7 +735,7 @@ public:
 		bool  bIsScrollSelected;
 	} m_stDialogBoxInfo[61];	 // Snoopy passé à 61 (origine 41, Alastor 60), j'ai mis +20 car plus pratique.
 	char m_cDialogBoxOrder[61];
-	int m_bIsDialogEnabled[61];//was bool
+	bool m_bIsDialogEnabled[61];//was bool
 //Snoopy=>>>>>>>>>>>>>>>>>>>>>
 	struct {
 		int   sV1, sV2, sV3, sV4, sV5, sV6, sV7, sItemID;
@@ -890,39 +878,39 @@ public:
 
 	bool m_bZoomMap;
 	bool m_bIsProgramActive;
-	int m_bCommandAvailable;//was bool
+	bool m_bCommandAvailable;//was bool
 	bool m_bSoundFlag;
 	bool m_bSoundStat, m_bMusicStat; // On/Off
-	int m_bIsItemEquipped[DEF_MAXITEMS];//was bool
-	int m_bIsItemDisabled[DEF_MAXITEMS];//was bool
-	int m_bIsGetPointingMode;//was bool
+	bool m_bIsItemEquipped[DEF_MAXITEMS];//was bool
+	bool m_bIsItemDisabled[DEF_MAXITEMS];//was bool
+	bool m_bIsGetPointingMode;//was bool
 	bool m_bEnterPressed, m_bEscPressed, m_bCtrlPressed, m_bRunningMode, m_bShiftPressed;
 
 	bool m_bDialogTrans;
 	bool m_bIsCombatMode;
 	bool m_bIsSafeAttackMode;
-	int m_bSkillUsingStatus;//was bool
-	int m_bItemUsingStatus;//was bool
+	bool m_bSkillUsingStatus;//was bool
+	bool m_bItemUsingStatus;//was bool
 	bool m_bIsWhetherEffect;
 	bool m_bSuperAttackMode;	//
 	bool m_bIsObserverMode, m_bIsObserverCommanded;
-	int m_bIsPoisoned;//was bool
+	bool m_bIsPoisoned;//was bool
 	bool m_bIsFirstConn;
 	bool m_bIsConfusion;
 	bool m_bIsRedrawPDBGS;
 	bool m_bDrawFlagDir;
 	bool m_bIsCrusadeMode;
-	int m_bIsSpecialAbilityEnabled;//was bool
+	bool m_bIsSpecialAbilityEnabled;//was bool
 	bool m_bInputStatus;
 	bool m_bToggleScreen;
 	bool m_bIsSpecial;
 
 	bool m_bIsF1HelpWindowEnabled;
-	int m_bIsTeleportRequested;//was bool
+	bool m_bIsTeleportRequested;//was bool
 	bool m_bIsPrevMoveBlocked;
 	bool m_bIsHideLocalCursor;
 
-	int m_bForceDisconn;//was bool
+	bool m_bForceDisconn;//was bool
 	bool m_bForceAttack;
 	bool m_bParalyze;
 
@@ -1124,5 +1112,3 @@ public:
 	short iMaxStats;
 	int iMaxLevel;
 };
-
-#endif // !defined(AFX_GAME_H__0089D9E3_74E6_11D2_A8E6_00001C7030A6__INCLUDED_)

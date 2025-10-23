@@ -1,15 +1,5 @@
-// Magic.h: interface for the CMagic class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_MAGIC_H__15121CC0_F3E3_11D2_9B6C_00001C7030A6__INCLUDED_)
-#define AFX_MAGIC_H__15121CC0_F3E3_11D2_9B6C_00001C7030A6__INCLUDED_
-
-#include <windows.h>
-
-#if _MSC_VER >= 1000
 #pragma once
-#endif // _MSC_VER >= 1000
+#include <windows.h>
 
 #define DEF_MAGICTYPE_DAMAGE_SPOT		1
 #define DEF_MAGICTYPE_HPUP_SPOT			2
@@ -45,5 +35,3 @@ public:
 	int m_sValue4;
 	bool m_bIsVisible;
 };
-
-#endif // !defined(AFX_MAGIC_H__15121CC0_F3E3_11D2_9B6C_00001C7030A6__INCLUDED_)

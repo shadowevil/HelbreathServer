@@ -1,15 +1,5 @@
-// Effect.h: interface for the CEffect class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_EFFECT_H__E57B4FA0_ABC0_11D2_B143_00001C7030A6__INCLUDED_)
-#define AFX_EFFECT_H__E57B4FA0_ABC0_11D2_B143_00001C7030A6__INCLUDED_
-
-#include <windows.h>
-
-#if _MSC_VER >= 1000
 #pragma once
-#endif // _MSC_VER >= 1000
+#include <windows.h>
 
 class CEffect  
 {
@@ -27,5 +17,3 @@ public:
 	int   m_rX, m_rY;
 	int   m_iV1;	
 };
-
-#endif // !defined(AFX_EFFECT_H__E57B4FA0_ABC0_11D2_B143_00001C7030A6__INCLUDED_)

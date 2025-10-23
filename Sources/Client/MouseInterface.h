@@ -1,14 +1,4 @@
-// MouseInterface.h: interface for the CMouseInterface class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_MOUSEINTERFACE_H__8EB34B20_7FC7_11D2_A8E6_00001C7030A6__INCLUDED_)
-#define AFX_MOUSEINTERFACE_H__8EB34B20_7FC7_11D2_A8E6_00001C7030A6__INCLUDED_
-
-#if _MSC_VER >= 1000
 #pragma once
-#endif // _MSC_VER >= 1000
-
 #include <windows.h>
 #include <time.h>
 
@@ -29,5 +19,3 @@ public:
 	char   m_cPrevPress;
 	DWORD  m_dwTime;
 };
-
-#endif // !defined(AFX_MOUSEINTERFACE_H__8EB34B20_7FC7_11D2_A8E6_00001C7030A6__INCLUDED_)

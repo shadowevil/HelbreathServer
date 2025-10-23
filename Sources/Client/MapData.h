@@ -1,14 +1,4 @@
-// MapData.h: interface for the CMapData class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_MAPDATA_H__DA7A0760_758B_11D2_A8E6_00001C7030A6__INCLUDED_)
-#define AFX_MAPDATA_H__DA7A0760_758B_11D2_A8E6_00001C7030A6__INCLUDED_
-
-#if _MSC_VER >= 1000
 #pragma once
-#endif // _MSC_VER >= 1000
-
 #include <windows.h>
 #include <winbase.h>
 #include <stdio.h>
@@ -79,5 +69,3 @@ public:
 	short m_sRectX, m_sRectY;
 	short m_sPivotX, m_sPivotY;
 };
-
-#endif // !defined(AFX_MAPDATA_H__DA7A0760_758B_11D2_A8E6_00001C7030A6__INCLUDED_)

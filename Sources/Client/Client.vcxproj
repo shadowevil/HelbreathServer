@@ -142,24 +142,19 @@
     <ClInclude Include="ActionID.h" />
     <ClInclude Include="BuildItem.h" />
     <ClInclude Include="CharInfo.h" />
-    <ClInclude Include="Cint.h" />
-    <ClInclude Include="CNTREVNT.H" />
     <ClInclude Include="Curse.h" />
     <ClInclude Include="DDRAW.H" />
     <ClInclude Include="DINPUT.H" />
     <ClInclude Include="DSOUND.H" />
     <ClInclude Include="DXC_ddraw.h" />
     <ClInclude Include="DXC_dinput.h" />
-    <ClInclude Include="DXC_dsound.h" />
     <ClInclude Include="DynamicObjectID.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameMonitor.h" />
     <ClInclude Include="GlobalDef.h" />
-    <ClInclude Include="GlobalVal.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemName.h" />
-    <ClInclude Include="JPEGLIB.H" />
     <ClInclude Include="LAN_ENG.H" />
     <ClInclude Include="Magic.h" />
     <ClInclude Include="MapData.h" />
@@ -169,7 +164,6 @@
     <ClInclude Include="Msg.h" />
     <ClInclude Include="Mydib.h" />
     <ClInclude Include="NetMessages.h" />
-    <ClInclude Include="RESOURCE.H" />
     <ClInclude Include="Skill.h" />
     <ClInclude Include="SoundBuffer.h" />
     <ClInclude Include="SoundID.h" />
@@ -178,7 +172,6 @@
     <ClInclude Include="StrTok.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TileSpr.h" />
-    <ClInclude Include="Winmain.h" />
     <ClInclude Include="XSocket.h" />
     <ClInclude Include="YWSound.h" />
   </ItemGroup>
@@ -188,7 +181,6 @@
     <ClCompile Include="Curse.cpp" />
     <ClCompile Include="DXC_ddraw.cpp" />
     <ClCompile Include="DXC_dinput.cpp" />
-    <ClCompile Include="DXC_dsound.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameMonitor.cpp" />

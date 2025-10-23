@@ -1,13 +1,4 @@
-// DXC_ddraw.h: interface for the DXC_ddraw class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_DXC_DDRAW_H__C52EBA83_6D9E_11D2_A8E6_00001C7030A6__INCLUDED_)
-#define AFX_DXC_DDRAW_H__C52EBA83_6D9E_11D2_A8E6_00001C7030A6__INCLUDED_
-
-#if _MSC_VER >= 1000
 #pragma once
-#endif // _MSC_VER >= 1000
 
 #include <math.h>
 #include <stdio.h>
@@ -81,5 +72,3 @@ public:
 	int res_x_mid;
 	int res_y_mid;
 };
-
-#endif // !defined(AFX_DXC_DDRAW_H__C52EBA83_6D9E_11D2_A8E6_00001C7030A6__INCLUDED_)

@@ -1,20 +1,8 @@
-// XSocket.h: interface for the XSocket class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_XSOCKET_H__F9D1BA42_7338_11D2_A8E6_00001C7030A6__INCLUDED_)
-#define AFX_XSOCKET_H__F9D1BA42_7338_11D2_A8E6_00001C7030A6__INCLUDED_
-
-#if _MSC_VER >= 1000
 #pragma once
-#endif // _MSC_VER >= 1000
-
 #define _WINSOCK2API_
-//#define  FD_SETSIZE 2000
 #include <windows.h>
 #include <windowsx.h>
 #include <winsock2.h>
-//#include <winsock.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <memory.h>
@@ -106,5 +94,3 @@ public:
 
 	int			 m_iBlockLimit;
 };
-
-#endif // !defined(AFX_XSOCKET_H__F9D1BA42_7338_11D2_A8E6_00001C7030A6__INCLUDED_)
