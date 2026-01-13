@@ -1,202 +1,292 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="source">
-      <UniqueIdentifier>{c7ae280e-8533-4af2-bbc7-d6330c3e897a}</UniqueIdentifier>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{A1B2C3D4-1111-1111-1111-111111111111}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Entities">
+      <UniqueIdentifier>{A1B2C3D4-2222-2222-2222-222222222222}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Systems">
+      <UniqueIdentifier>{A1B2C3D4-3333-3333-3333-333333333333}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\World">
+      <UniqueIdentifier>{A1B2C3D4-4444-4444-4444-444444444444}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Network">
+      <UniqueIdentifier>{A1B2C3D4-5555-5555-5555-555555555555}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utils">
+      <UniqueIdentifier>{A1B2C3D4-6666-6666-6666-666666666666}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core">
+      <UniqueIdentifier>{B2C3D4E5-1111-1111-1111-111111111111}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entities">
+      <UniqueIdentifier>{B2C3D4E5-2222-2222-2222-222222222222}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Systems">
+      <UniqueIdentifier>{B2C3D4E5-3333-3333-3333-333333333333}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\World">
+      <UniqueIdentifier>{B2C3D4E5-4444-4444-4444-444444444444}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Network">
+      <UniqueIdentifier>{B2C3D4E5-5555-5555-5555-555555555555}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utils">
+      <UniqueIdentifier>{B2C3D4E5-6666-6666-6666-666666666666}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <!-- Source Files -->
   <ItemGroup>
-    <ClInclude Include="ActionID.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="BuildItem.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="Client.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="DelayEvent.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="DynamicObject.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="DynamicObjectID.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="Fish.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="GuildsMan.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="Item.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="Magic.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="MessageIndex.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="Mineral.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="Misc.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="Msg.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="NetMessages.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="Npc.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="OccupyFlag.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="Portion.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="Quest.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="Skill.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="SkillNum.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="StrTok.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="StrategicPoint.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="TeleportLoc.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="Tile.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="UserMessages.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="XSocket.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="version.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="winmain.h">
-      <Filter>source</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugDialog.h" />
-    <ClInclude Include="GlobalDef.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="LoginServer.h" />
-    <ClInclude Include="PartyManager.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="BuildItem.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="Client.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="DelayEvent.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="DynamicObject.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="Fish.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
+    <!-- Core -->
     <ClCompile Include="Game.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="GuildsMan.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="Item.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="Magic.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="Mineral.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="Misc.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="Msg.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="Npc.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="OccupyFlag.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="Portion.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="Quest.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="Skill.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="StrTok.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="StrategicPoint.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="TeleportLoc.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="Tile.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="XSocket.cpp">
-      <Filter>source</Filter>
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="wmain.cpp">
-      <Filter>source</Filter>
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="DebugDialog.cpp" />
-    <ClCompile Include="LoginServer.cpp" />
-    <ClCompile Include="PartyManager.cpp" />
+    <ClCompile Include="DebugDialog.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <!-- Entities -->
+    <ClCompile Include="Client.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Npc.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicObject.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="GuildsMan.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="PartyManager.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <!-- Systems -->
+    <ClCompile Include="Magic.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Skill.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Quest.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="DelayEvent.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Enchanting.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Portion.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildItem.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="CrusadeCore.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <!-- World -->
+    <ClCompile Include="Map.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Tile.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Fish.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Mineral.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="TeleportLoc.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="StrategicPoint.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="OccupyFlag.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <!-- Network -->
+    <ClCompile Include="XSocket.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="LoginServer.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Msg.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <!-- Utils -->
+    <ClCompile Include="Misc.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="StrTok.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="MobCounter.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <!-- Header Files -->
+  <ItemGroup>
+    <!-- Core -->
+    <ClInclude Include="Game.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="winmain.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugDialog.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalDef.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="version.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <!-- Entities -->
+    <ClInclude Include="Client.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Npc.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicObject.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicObjectID.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="GuildsMan.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="PartyManager.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <!-- Systems -->
+    <ClInclude Include="Magic.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Skill.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillNum.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Quest.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="DelayEvent.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Enchanting.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Portion.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildItem.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionID.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="CrusadeCore.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <!-- World -->
+    <ClInclude Include="Map.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Tile.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Fish.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Mineral.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="TeleportLoc.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="StrategicPoint.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="OccupyFlag.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <!-- Network -->
+    <ClInclude Include="XSocket.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="LoginServer.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Msg.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="NetMessages.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageIndex.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="UserMessages.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <!-- Utils -->
+    <ClInclude Include="Misc.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="StrTok.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="MobCounter.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <!-- Resource Files -->
+  <ItemGroup>
+    <ResourceCompile Include="HGserver.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="Winmm.lib">
-      <Filter>source</Filter>
-    </Library>
-    <Library Include="Ws2_32.lib">
-      <Filter>source</Filter>
-    </Library>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="HGserver.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="logo.bmp" />
+    <Image Include="logo.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
