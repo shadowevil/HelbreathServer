@@ -65,7 +65,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
     </ClCompile>
     <Midl>
       <TypeLibraryName>$(IntDir)$(TargetName).tlb</TypeLibraryName>
@@ -99,7 +99,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
     </ClCompile>
     <Midl>
       <TypeLibraryName>$(IntDir)$(TargetName).tlb</TypeLibraryName>
