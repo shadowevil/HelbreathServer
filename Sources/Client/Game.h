@@ -59,10 +59,6 @@ using namespace std;
 	#include <RICHEDIT.H>
 #endif
 
-//Snoopy: Implementation JPG sreenshots
-#include "cximage/ximage.h" // Snoopy
-#include "cximage/ximajpg.h" // Snoopy
-
 //v2.18
 #define DEF_BTNSZX				74
 #define DEF_BTNSZY				20
