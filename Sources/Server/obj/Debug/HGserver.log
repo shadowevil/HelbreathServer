@@ -19,42 +19,52 @@
   OccupyFlag.cpp
   PartyManager.cpp
   Portion.cpp
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\DebugDialog.cpp(85,10): warning C4018: '<': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\DebugDialog.cpp(88,26): warning C4018: '<': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\DebugDialog.cpp(97,26): warning C4018: '<': signed/unsigned mismatch
   Quest.cpp
   Skill.cpp
   StrategicPoint.cpp
   StrTok.cpp
   TeleportLoc.cpp
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\DebugDialog.cpp(39,13): error C2664: 'HANDLE CreateFileW(LPCWSTR,DWORD,DWORD,LPSECURITY_ATTRIBUTES,DWORD,DWORD,HANDLE)': cannot convert argument 1 from 'const char [15]' to 'LPCWSTR'
   Tile.cpp
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\DebugDialog.cpp(39,24):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\fileapi.h(93,1):
-      see declaration of 'CreateFileW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\DebugDialog.cpp(39,13):
-      while trying to match the argument list '(const char [15], unsigned long, int, int, int, int, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\DebugDialog.cpp(78,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char *' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\DebugDialog.cpp(78,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\DebugDialog.cpp(78,3):
-      while trying to match the argument list '(char *, const char [23], DWORD, char)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\DebugDialog.cpp(85,10): warning C4018: '<': signed/unsigned mismatch
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\DebugDialog.cpp(88,26): warning C4018: '<': signed/unsigned mismatch
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\DebugDialog.cpp(89,5): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char *' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\DebugDialog.cpp(89,14):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\DebugDialog.cpp(89,5):
-      while trying to match the argument list '(char *, const char [6], unsigned char)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\DebugDialog.cpp(97,26): warning C4018: '<': signed/unsigned mismatch
   wmain.cpp
   XSocket.cpp
   CrusadeCore.cpp
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(449,18): error C2664: 'std::string CClient::getvalue(std::string,char *)': cannot convert argument 2 from 'const char [5]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(449,35):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(424,17):
+      see declaration of 'CClient::getvalue'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(449,18):
+      while trying to match the argument list '(char [512], const char [5])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(522,19): error C2664: 'std::string CClient::getvalue(std::string,char *)': cannot convert argument 2 from 'const char [7]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(522,36):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(424,17):
+      see declaration of 'CClient::getvalue'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(522,19):
+      while trying to match the argument list '(char [512], const char [7])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(603,19): error C2664: 'std::string CClient::getvalue(std::string,char *)': cannot convert argument 2 from 'const char [10]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(603,36):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(424,17):
+      see declaration of 'CClient::getvalue'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(603,19):
+      while trying to match the argument list '(char [512], const char [10])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(220,14): error C2039: 'any_of': is not a member of 'std'
+  (compiling source file 'PartyManager.cpp')
+      C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.44.35207\include\fstream(20,1):
+      see declaration of 'std'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(220,14): error C2039: 'any_of': is not a member of 'std'
+  (compiling source file 'Map.cpp')
+      C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.44.35207\include\fstream(20,1):
+      see declaration of 'std'
+  
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(220,14): error C2039: 'any_of': is not a member of 'std'
   (compiling source file 'Game.cpp')
       C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.44.35207\include\fstream(20,1):
@@ -68,22 +78,6 @@ C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(326,3):
       while trying to match the argument list '(const char [35])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(399,4): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(399,13):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(399,4):
-      while trying to match the argument list '(char [512], const char [21], int, char [21])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(414,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(414,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(414,3):
-      while trying to match the argument list '(char [512], const char [28], int, char [21])'
-  
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(468,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [16]' to 'char *'
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(468,14):
       Conversion from string literal loses const qualifier (see /Zc:strictStrings)
@@ -91,30 +85,6 @@ C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game
       see declaration of 'PutLogList'
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(468,3):
       while trying to match the argument list '(const char [16])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(472,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(472,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(472,3):
-      while trying to match the argument list '(char [512], const char [27], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(480,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(480,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(480,3):
-      while trying to match the argument list '(char [512], const char [31], int, char [21])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(485,6): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(485,15):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(485,6):
-      while trying to match the argument list '(char [512], const char [98], char [21], char [11])'
   
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(509,2): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [32]' to 'char *'
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(509,13):
@@ -364,22 +334,6 @@ C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(935,3):
       while trying to match the argument list '(const char [44])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(945,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [350]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(945,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(945,2):
-      while trying to match the argument list '(char [350], const char [53], char [11], int, int, int, int, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(946,2): error C2664: 'BOOL TextOutW(HDC,int,int,LPCWSTR,int)': cannot convert argument 4 from 'char [350]' to 'LPCWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(946,22):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\wingdi.h(5225,25):
-      see declaration of 'TextOutW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(946,2):
-      while trying to match the argument list '(HDC, int, int, char [350], size_t)'
-  
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(954,2): error C2664: 'void CGame::GayDave(char [],char [])': cannot convert argument 2 from 'const char [8]' to 'char []'
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(954,17):
       Conversion from string literal loses const qualifier (see /Zc:strictStrings)
@@ -387,38 +341,6 @@ C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game
       see declaration of 'CGame::GayDave'
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(954,2):
       while trying to match the argument list '(char [350], const char [8])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(955,2): error C2664: 'BOOL TextOutW(HDC,int,int,LPCWSTR,int)': cannot convert argument 4 from 'char [350]' to 'LPCWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(955,22):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\wingdi.h(5225,25):
-      see declaration of 'TextOutW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(955,2):
-      while trying to match the argument list '(HDC, int, int, char [350], size_t)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(963,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(963,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(963,3):
-      while trying to match the argument list '(char [512], const char [87], char [11], int, int, int, int, int, int, int, int, int, int, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(968,3): error C2664: 'BOOL TextOutW(HDC,int,int,LPCWSTR,int)': cannot convert argument 4 from 'char [512]' to 'LPCWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(968,35):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\wingdi.h(5225,25):
-      see declaration of 'TextOutW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(968,3):
-      while trying to match the argument list '(HDC, int, int, char [512], size_t)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(1203,6): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(1203,15):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(1203,6):
-      while trying to match the argument list '(char [512], const char [62], char [21], char [11])'
   
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(1555,25): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [21]' to 'char *'
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(1555,36):
@@ -428,53 +350,8 @@ C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(1555,25):
       while trying to match the argument list '(const char [21])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(1581,4): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(1581,13):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(1581,4):
-      while trying to match the argument list '(char [512], const char [90], int, char [11], char [11], char [21])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(1599,4): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(1599,13):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(1599,4):
-      while trying to match the argument list '(char [512], const char [68], int, char [11], char [21])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(1821,4): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(1821,13):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(1821,4):
-      while trying to match the argument list '(char [512], const char [50], char [11], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(1879,4): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(1879,13):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(1879,4):
-      while trying to match the argument list '(char [512], const char [55], char [11], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(220,14): error C2039: 'any_of': is not a member of 'std'
-  (compiling source file 'Map.cpp')
-      C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.44.35207\include\fstream(20,1):
-      see declaration of 'std'
-  
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2207,60): warning C4305: '=': truncation from 'int' to 'char'
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2207,60): warning C4309: '=': truncation of constant value
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2247,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2247,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2247,3):
-      while trying to match the argument list '(char [512], const char [32], char [11], char [11], bool)'
-  
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2262,3): error C2664: 'void CGame::RequestTeleportHandler(int,char *,char *,int,int)': cannot convert argument 2 from 'const char [5]' to 'char *'
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2262,36):
       Conversion from string literal loses const qualifier (see /Zc:strictStrings)
@@ -507,69 +384,10 @@ C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2276,2):
       while trying to match the argument list '(int, const char [22])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2336,17): error C2664: 'HANDLE CreateFileW(LPCWSTR,DWORD,DWORD,LPSECURITY_ATTRIBUTES,DWORD,DWORD,HANDLE)': cannot convert argument 1 from 'char *' to 'LPCWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2336,28):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\fileapi.h(93,1):
-      see declaration of 'CreateFileW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2336,17):
-      while trying to match the argument list '(char *, unsigned long, int, int, int, int, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2339,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2339,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2339,3):
-      while trying to match the argument list '(char [512], const char [56], char *)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2366,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2366,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2366,3):
-      while trying to match the argument list '(char [512], const char [62], char *, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2434,7): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2434,16):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2434,7):
-      while trying to match the argument list '(char [512], const char [24], short)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2709,4): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2709,13):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2709,4):
-      while trying to match the argument list '(char [512], const char [18], char [11], char [11])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2954,5): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2954,14):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2954,5):
-      while trying to match the argument list '(char [512], const char [42], int, int, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Map.cpp(472,10): error C2664: 'HANDLE CreateFileW(LPCWSTR,DWORD,DWORD,LPSECURITY_ATTRIBUTES,DWORD,DWORD,HANDLE)': cannot convert argument 1 from 'char [256]' to 'LPCWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Map.cpp(472,21):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\fileapi.h(93,1):
-      see declaration of 'CreateFileW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Map.cpp(472,10):
-      while trying to match the argument list '(char [256], unsigned long, int, int, int, int, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(3826,6): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(3826,15):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(3826,6):
-      while trying to match the argument list '(char [512], const char [19], char [21])'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(220,14): error C2039: 'any_of': is not a member of 'std'
+  (compiling source file 'LoginServer.cpp')
+      C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.44.35207\include\fstream(20,1):
+      see declaration of 'std'
   
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(3906,45): warning C4018: '<': signed/unsigned mismatch
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(3938,74): warning C4018: '>': signed/unsigned mismatch
@@ -604,14 +422,6 @@ C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game
       see declaration of 'CGame::RequestTeleportHandler'
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4015,8):
       while trying to match the argument list '(int, const char [5], const char [7], int, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4026,6): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4026,15):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4026,6):
-      while trying to match the argument list '(char [512], const char [79], char [21], char [11])'
   
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4035,9): error C2664: 'void CGame::RequestTeleportHandler(int,char *,char *,int,int)': cannot convert argument 2 from 'const char [5]' to 'char *'
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4035,35):
@@ -677,102 +487,6 @@ C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4193,3):
       while trying to match the argument list '(const char [44])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4697,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4697,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4697,3):
-      while trying to match the argument list '(char [112], const char [32], WORD, WORD, WORD)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4704,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4704,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4704,3):
-      while trying to match the argument list '(char [112], const char [30], WORD, WORD, WORD)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4769,5): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4769,14):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4769,5):
-      while trying to match the argument list '(char [512], const char [59], char [11])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4784,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [120]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4784,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4784,2):
-      while trying to match the argument list '(char [120], const char [67], char [11])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4821,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4821,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4821,2):
-      while trying to match the argument list '(char [112], const char [8], char)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4830,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4830,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4830,3):
-      while trying to match the argument list '(char [512], const char [34], char [11])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4873,4): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4873,13):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4873,4):
-      while trying to match the argument list '(char [512], const char [77], char [21], char [11], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4891,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4891,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4891,3):
-      while trying to match the argument list '(char [112], const char [22], char, char [21])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4892,19): error C2664: 'HANDLE CreateFileW(LPCWSTR,DWORD,DWORD,LPSECURITY_ATTRIBUTES,DWORD,DWORD,HANDLE)': cannot convert argument 1 from 'char [112]' to 'LPCWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4892,30):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\fileapi.h(93,1):
-      see declaration of 'CreateFileW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4892,19):
-      while trying to match the argument list '(char [112], unsigned long, int, int, int, int, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4916,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [256]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4916,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4916,3):
-      while trying to match the argument list '(char [256], const char [56], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4934,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [256]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4934,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4934,3):
-      while trying to match the argument list '(char [256], const char [50], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4986,10): error C2664: 'HANDLE CreateFileW(LPCWSTR,DWORD,DWORD,LPSECURITY_ATTRIBUTES,DWORD,DWORD,HANDLE)': cannot convert argument 1 from 'char *' to 'LPCWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4986,21):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\fileapi.h(93,1):
-      see declaration of 'CreateFileW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4986,10):
-      while trying to match the argument list '(char *, unsigned long, int, int, int, int, int)'
-  
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4996,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [34]' to 'char *'
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4996,14):
       Conversion from string literal loses const qualifier (see /Zc:strictStrings)
@@ -781,240 +495,65 @@ C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4996,3):
       while trying to match the argument list '(const char [34])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5011,7): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [120]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5011,16):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5011,7):
-      while trying to match the argument list '(char [120], const char [49], char *)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5016,6): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [120]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5016,15):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5016,6):
-      while trying to match the argument list '(char [120], const char [26], char [11])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5023,6): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [120]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5023,15):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5023,6):
-      while trying to match the argument list '(char [120], const char [26], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5032,7): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [120]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5032,16):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5032,7):
-      while trying to match the argument list '(char [120], const char [51], char *)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5037,6): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [120]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5037,15):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5037,6):
-      while trying to match the argument list '(char [120], const char [28], char [16])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5045,6): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [120]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5045,15):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5045,6):
-      while trying to match the argument list '(char [120], const char [25], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5052,7): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [120]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5052,16):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5052,7):
-      while trying to match the argument list '(char [120], const char [57], char *)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5066,7): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [120]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5066,16):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5066,7):
-      while trying to match the argument list '(char [120], const char [52], char *)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5071,6): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [120]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5071,15):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5071,6):
-      while trying to match the argument list '(char [120], const char [29], char [16])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5079,6): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [120]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5079,15):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5079,6):
-      while trying to match the argument list '(char [120], const char [26], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5087,7): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [120]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5087,16):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5087,7):
-      while trying to match the argument list '(char [120], const char [67], char *)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5092,6): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [120]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5092,15):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5092,6):
-      while trying to match the argument list '(char [120], const char [44], char [16])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5092,6): error C1003: error count exceeds 100; stopping compilation
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(220,14): error C2039: 'any_of': is not a member of 'std'
-  (compiling source file 'LoginServer.cpp')
-      C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.44.35207\include\fstream(20,1):
-      see declaration of 'std'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(432,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(432,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(432,2):
-      while trying to match the argument list '(char [112], const char [8], unsigned char)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(220,14): error C2039: 'any_of': is not a member of 'std'
-  (compiling source file 'PartyManager.cpp')
-      C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.44.35207\include\fstream(20,1):
-      see declaration of 'std'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(448,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(448,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(448,3):
-      while trying to match the argument list '(char [512], const char [10], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(449,18): error C2664: 'std::string CClient::getvalue(std::string,char *)': cannot convert argument 2 from 'const char [5]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(449,35):
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5226,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [29]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5226,18):
       Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(424,17):
-      see declaration of 'CClient::getvalue'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(449,18):
-      while trying to match the argument list '(char [512], const char [5])'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5226,7):
+      while trying to match the argument list '(const char [29])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(481,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(481,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(481,2):
-      while trying to match the argument list '(char [112], const char [8], unsigned char)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(521,4): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(521,13):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(521,4):
-      while trying to match the argument list '(char [512], const char [15], int, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(522,19): error C2664: 'std::string CClient::getvalue(std::string,char *)': cannot convert argument 2 from 'const char [7]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(522,36):
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5388,25): warning C4305: '=': truncation from 'int' to 'bool'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5394,25): warning C4305: '=': truncation from 'int' to 'bool'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5400,25): warning C4305: '=': truncation from 'int' to 'bool'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5444,19): warning C4267: '=': conversion from 'size_t' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5515,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [44]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5515,14):
       Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(424,17):
-      see declaration of 'CClient::getvalue'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(522,19):
-      while trying to match the argument list '(char [512], const char [7])'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5515,3):
+      while trying to match the argument list '(const char [44])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(555,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(555,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(555,2):
-      while trying to match the argument list '(char [112], const char [8], unsigned char)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\PartyManager.cpp(64,4): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [120]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\PartyManager.cpp(64,13):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\PartyManager.cpp(64,4):
-      while trying to match the argument list '(char [120], const char [27], int, char *)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\PartyManager.cpp(106,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [120]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\PartyManager.cpp(106,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\PartyManager.cpp(106,2):
-      while trying to match the argument list '(char [120], const char [20], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(602,4): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(602,13):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(602,4):
-      while trying to match the argument list '(char [512], const char [18], int, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\PartyManager.cpp(144,4): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [120]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\PartyManager.cpp(144,13):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\PartyManager.cpp(144,4):
-      while trying to match the argument list '(char [120], const char [31], int, char *)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(69,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(69,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(69,2):
-      while trying to match the argument list '(char [512], const char [30], char [11])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(603,19): error C2664: 'std::string CClient::getvalue(std::string,char *)': cannot convert argument 2 from 'const char [10]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(603,36):
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5519,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [42]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5519,14):
       Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(424,17):
-      see declaration of 'CClient::getvalue'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(603,19):
-      while trying to match the argument list '(char [512], const char [10])'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5519,3):
+      while trying to match the argument list '(const char [42])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\PartyManager.cpp(168,4): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [120]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\PartyManager.cpp(168,13):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\PartyManager.cpp(168,4):
-      while trying to match the argument list '(char [120], const char [34], int, char *)'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5534,8): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [80]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5534,19):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5534,8):
+      while trying to match the argument list '(const char [80])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\PartyManager.cpp(251,4): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [120]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\PartyManager.cpp(251,13):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\PartyManager.cpp(251,4):
-      while trying to match the argument list '(char [120], const char [41], char [12])'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5542,8): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [84]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5542,19):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5542,8):
+      while trying to match the argument list '(const char [84])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(636,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(636,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(636,2):
-      while trying to match the argument list '(char [112], const char [8], unsigned char)'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5560,8): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [77]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5560,19):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5560,8):
+      while trying to match the argument list '(const char [77])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5571,8): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [77]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5571,19):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5571,8):
+      while trying to match the argument list '(const char [77])'
   
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(89,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [7]' to 'char *'
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(89,14):
@@ -1032,72 +571,24 @@ C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Logi
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(94,3):
       while trying to match the argument list '(const char [8])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(101,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(111,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(111,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(111,3):
-      while trying to match the argument list '(char [112], const char [8], char)'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5582,8): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [77]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5582,19):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5582,8):
+      while trying to match the argument list '(const char [77])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(119,19): error C2664: 'HANDLE CreateFileW(LPCWSTR,DWORD,DWORD,LPSECURITY_ATTRIBUTES,DWORD,DWORD,HANDLE)': cannot convert argument 1 from 'char [112]' to 'LPCWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(119,30):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\fileapi.h(93,1):
-      see declaration of 'CreateFileW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(119,19):
-      while trying to match the argument list '(char [112], unsigned long, int, int, int, int, int)'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(101,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5612,4): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [75]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5612,15):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5612,4):
+      while trying to match the argument list '(const char [75])'
   
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(106,3): warning C4996: 'mkdir': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _mkdir. See online help for details.
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(208,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [50]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(208,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(208,2):
-      while trying to match the argument list '(char [50], const char [18])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(221,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [63]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(221,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(221,2):
-      while trying to match the argument list '(char [63], const char [8], char)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(229,23): error C2664: 'HANDLE CreateFileW(LPCWSTR,DWORD,DWORD,LPSECURITY_ATTRIBUTES,DWORD,DWORD,HANDLE)': cannot convert argument 1 from 'char [255]' to 'LPCWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(229,34):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\fileapi.h(93,1):
-      see declaration of 'CreateFileW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(229,23):
-      while trying to match the argument list '(char [255], unsigned long, int, int, int, int, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(234,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(234,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(234,3):
-      while trying to match the argument list '(char [512], const char [49], char [255])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(244,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(244,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(244,3):
-      while trying to match the argument list '(char [512], const char [27], char [255])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(252,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(252,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(252,3):
-      while trying to match the argument list '(char [512], const char [32], char [255])'
-  
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(287,6): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [19]' to 'char *'
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(287,17):
       Conversion from string literal loses const qualifier (see /Zc:strictStrings)
@@ -1130,350 +621,41 @@ C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Logi
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(356,2):
       while trying to match the argument list '(const char [15])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(390,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(390,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(390,2):
-      while trying to match the argument list '(char [512], const char [37], char [11])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(412,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(412,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(412,2):
-      while trying to match the argument list '(char [112], const char [8], char)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(421,18): error C2664: 'HANDLE CreateFileW(LPCWSTR,DWORD,DWORD,LPSECURITY_ATTRIBUTES,DWORD,DWORD,HANDLE)': cannot convert argument 1 from 'char [112]' to 'LPCWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(421,29):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\fileapi.h(93,1):
-      see declaration of 'CreateFileW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(421,18):
-      while trying to match the argument list '(char [112], unsigned long, int, int, int, int, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(452,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(452,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(452,2):
-      while trying to match the argument list '(char [112], const char [32], WORD, WORD, WORD, WORD, WORD)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(460,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(460,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(460,2):
-      while trying to match the argument list '(char [112], const char [21], char [11])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(464,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(464,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(464,2):
-      while trying to match the argument list '(char [112], const char [19], char [11])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(471,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(471,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(471,2):
-      while trying to match the argument list '(char [112], const char [27])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(475,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(475,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(475,2):
-      while trying to match the argument list '(char [112], const char [29])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(479,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(479,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(479,2):
-      while trying to match the argument list '(char [112], const char [27])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(483,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(483,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(483,2):
-      while trying to match the argument list '(char [112], const char [29])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(486,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(486,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(486,2):
-      while trying to match the argument list '(char [112], const char [22])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(489,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(489,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(489,2):
-      while trying to match the argument list '(char [112], const char [22])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(494,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(494,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(494,2):
-      while trying to match the argument list '(char [112], const char [19], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(499,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(499,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(499,2):
-      while trying to match the argument list '(char [112], const char [19], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(504,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(504,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(504,2):
-      while trying to match the argument list '(char [112], const char [19], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(509,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(509,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(509,2):
-      while trying to match the argument list '(char [112], const char [29], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(513,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(513,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(513,2):
-      while trying to match the argument list '(char [112], const char [21])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(517,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(517,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(517,2):
-      while trying to match the argument list '(char [112], const char [20], char)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(521,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(521,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(521,2):
-      while trying to match the argument list '(char [112], const char [20], char)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(525,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(525,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(525,2):
-      while trying to match the argument list '(char [112], const char [20], char)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(529,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(529,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(529,2):
-      while trying to match the argument list '(char [112], const char [20], char)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(533,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(533,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(533,2):
-      while trying to match the argument list '(char [112], const char [20], char)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(537,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(537,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(537,2):
-      while trying to match the argument list '(char [112], const char [25], char)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(541,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(541,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(541,2):
-      while trying to match the argument list '(char [112], const char [21], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(545,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(545,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(545,2):
-      while trying to match the argument list '(char [112], const char [20], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(549,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(549,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(549,2):
-      while trying to match the argument list '(char [112], const char [24], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(553,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(553,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(553,2):
-      while trying to match the argument list '(char [112], const char [25], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(557,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(557,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(557,2):
-      while trying to match the argument list '(char [112], const char [25], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(561,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(561,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(561,2):
-      while trying to match the argument list '(char [112], const char [17], char)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(565,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(565,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(565,2):
-      while trying to match the argument list '(char [112], const char [18], char)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(569,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(569,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(569,2):
-      while trying to match the argument list '(char [112], const char [23], char)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(573,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(573,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(573,2):
-      while trying to match the argument list '(char [112], const char [23], char)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(577,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(577,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(577,2):
-      while trying to match the argument list '(char [112], const char [23], char)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(581,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(581,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(581,2):
-      while trying to match the argument list '(char [112], const char [12], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(585,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(585,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(585,2):
-      while trying to match the argument list '(char [112], const char [12], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(589,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(589,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(589,2):
-      while trying to match the argument list '(char [112], const char [12], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(593,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(593,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(593,2):
-      while trying to match the argument list '(char [112], const char [12], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(620,4): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [120]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(620,13):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(620,4):
-      while trying to match the argument list '(char [120], const char [63], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(623,4): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [120]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(623,13):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(623,4):
-      while trying to match the argument list '(char [120], const char [63], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(685,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(685,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(685,2):
-      while trying to match the argument list '(char [512], const char [33], char [11])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(702,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(702,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(702,2):
-      while trying to match the argument list '(char [112], const char [8], char)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(710,2): error C2664: 'BOOL DeleteFileW(LPCWSTR)': cannot convert argument 1 from 'char [112]' to 'LPCWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(710,13):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\fileapi.h(144,1):
-      see declaration of 'DeleteFileW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(710,2):
-      while trying to match the argument list '(char [112])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(717,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(717,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(717,2):
-      while trying to match the argument list '(char [112], const char [8], char)'
-  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7652,2): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7660,2): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7664,2): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7800,2): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7804,2): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7808,2): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7812,2): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7816,2): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7935,2): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7940,2): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7944,2): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7948,2): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7953,2): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7979,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7982,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7985,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7988,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7991,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7994,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7997,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8000,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8003,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8006,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8009,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8030,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8033,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8036,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8039,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8042,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8045,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8048,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8051,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8054,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8057,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8060,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(726,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [19]' to 'char *'
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(726,14):
       Conversion from string literal loses const qualifier (see /Zc:strictStrings)
@@ -1482,37 +664,133 @@ C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Logi
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(726,3):
       while trying to match the argument list '(const char [19])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(804,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(804,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(804,2):
-      while trying to match the argument list '(char [512], const char [32], char [11])'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8178,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [67]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8178,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8178,7):
+      while trying to match the argument list '(const char [67])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(825,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [1024]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(825,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(825,2):
-      while trying to match the argument list '(char [1024], const char [24], char, char [11])'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8209,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [63]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8209,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8209,7):
+      while trying to match the argument list '(const char [63])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(826,18): error C2664: 'HANDLE CreateFileW(LPCWSTR,DWORD,DWORD,LPSECURITY_ATTRIBUTES,DWORD,DWORD,HANDLE)': cannot convert argument 1 from 'char [1024]' to 'LPCWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(826,29):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\fileapi.h(93,1):
-      see declaration of 'CreateFileW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(826,18):
-      while trying to match the argument list '(char [1024], unsigned long, int, int, int, int, int)'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8220,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [63]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8220,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8220,7):
+      while trying to match the argument list '(const char [63])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(842,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [112]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(842,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(842,2):
-      while trying to match the argument list '(char [112], const char [8], char)'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8231,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [69]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8231,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8231,7):
+      while trying to match the argument list '(const char [69])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8242,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [71]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8242,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8242,7):
+      while trying to match the argument list '(const char [71])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8253,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [71]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8253,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8253,7):
+      while trying to match the argument list '(const char [71])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8264,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [71]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8264,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8264,7):
+      while trying to match the argument list '(const char [71])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8275,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [71]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8275,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8275,7):
+      while trying to match the argument list '(const char [71])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8286,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [71]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8286,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8286,7):
+      while trying to match the argument list '(const char [71])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8297,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [71]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8297,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8297,7):
+      while trying to match the argument list '(const char [71])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8308,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [66]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8308,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8308,7):
+      while trying to match the argument list '(const char [66])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8319,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [66]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8319,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8319,7):
+      while trying to match the argument list '(const char [66])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8330,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [61]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8330,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8330,7):
+      while trying to match the argument list '(const char [61])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8341,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [66]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8341,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8341,7):
+      while trying to match the argument list '(const char [66])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8352,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [60]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8352,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8352,7):
+      while trying to match the argument list '(const char [60])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8368,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [61]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8368,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8368,7):
+      while trying to match the argument list '(const char [61])'
   
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(851,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [19]' to 'char *'
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(851,14):
@@ -1522,175 +800,71 @@ C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Logi
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(851,3):
       while trying to match the argument list '(const char [19])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(956,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(956,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(956,2):
-      while trying to match the argument list '(char [512], const char [35], char [12])'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8379,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [64]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8379,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8379,7):
+      while trying to match the argument list '(const char [64])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(963,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [1024]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(963,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(963,2):
-      while trying to match the argument list '(char [1024], const char [24], char, char [12])'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8390,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [60]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8390,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8390,7):
+      while trying to match the argument list '(const char [60])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(964,10): error C2664: 'HANDLE CreateFileW(LPCWSTR,DWORD,DWORD,LPSECURITY_ATTRIBUTES,DWORD,DWORD,HANDLE)': cannot convert argument 1 from 'char [1024]' to 'LPCWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(964,21):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\fileapi.h(93,1):
-      see declaration of 'CreateFileW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(964,10):
-      while trying to match the argument list '(char [1024], unsigned long, int, int, int, int, int)'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8402,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [65]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8402,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8402,7):
+      while trying to match the argument list '(const char [65])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(982,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [1024]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(982,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(982,2):
-      while trying to match the argument list '(char [1024], const char [17], char)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(986,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [1024]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(986,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(986,2):
-      while trying to match the argument list '(char [1024], const char [24], char, char [12])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(999,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [1024]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(999,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(999,2):
-      while trying to match the argument list '(char [1024], const char [28], WORD, WORD, WORD, WORD, WORD, char [21])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1020,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [1024]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1020,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1020,2):
-      while trying to match the argument list '(char [1024], const char [3], char [52])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1026,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [1024]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1026,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1026,2):
-      while trying to match the argument list '(char [1024], const char [3], char [47])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1032,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [1024]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1032,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1032,2):
-      while trying to match the argument list '(char [1024], const char [3], char [27])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1038,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [1024]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1038,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1038,2):
-      while trying to match the argument list '(char [1024], const char [9], WORD, WORD, WORD)'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8414,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [66]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8414,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8414,7):
+      while trying to match the argument list '(const char [66])'
   
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(978,2): warning C4996: 'mkdir': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _mkdir. See online help for details.
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1083,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [63]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1083,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1083,2):
-      while trying to match the argument list '(char [63], const char [8], char)'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8426,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [66]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8426,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8426,7):
+      while trying to match the argument list '(const char [66])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1090,10): error C2664: 'HANDLE CreateFileW(LPCWSTR,DWORD,DWORD,LPSECURITY_ATTRIBUTES,DWORD,DWORD,HANDLE)': cannot convert argument 1 from 'char [255]' to 'LPCWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1090,21):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\fileapi.h(93,1):
-      see declaration of 'CreateFileW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1090,10):
-      while trying to match the argument list '(char [255], unsigned long, int, int, int, int, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1100,4): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char *' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1100,13):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1100,4):
-      while trying to match the argument list '(char *, const char [33], char *)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1104,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [50]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1104,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1104,3):
-      while trying to match the argument list '(char [50], const char [24], char *)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1110,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char *' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1110,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1110,3):
-      while trying to match the argument list '(char *, const char [23], char *)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1112,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [50]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1112,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1112,3):
-      while trying to match the argument list '(char [50], const char [22], char *)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1147,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char *' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1147,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1147,3):
-      while trying to match the argument list '(char *, const char [25], char *)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1149,3): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [50]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1149,12):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1149,3):
-      while trying to match the argument list '(char [50], const char [23], char *)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1239,4): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1239,13):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1239,4):
-      while trying to match the argument list '(char [512], const char [39], int)'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8438,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [65]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8438,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8438,7):
+      while trying to match the argument list '(const char [65])'
   
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1231,3): warning C4065: switch statement contains 'default' but no 'case' labels
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1277,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1277,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1277,2):
-      while trying to match the argument list '(char [512], const char [27], char [11])'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8450,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [67]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8450,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8450,7):
+      while trying to match the argument list '(const char [67])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1307,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [21]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1307,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1307,2):
-      while trying to match the argument list '(char [21], const char [3], const char [4])'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8462,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [63]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8462,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8462,7):
+      while trying to match the argument list '(const char [63])'
   
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1311,2): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [34]' to 'char *'
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1311,13):
@@ -1700,70 +874,174 @@ C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Logi
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1311,2):
       while trying to match the argument list '(const char [34])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1334,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [256]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1334,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1334,2):
-      while trying to match the argument list '(char [256], const char [11])'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8474,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [63]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8474,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8474,7):
+      while trying to match the argument list '(const char [63])'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1340,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [256]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1340,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1340,2):
-      while trying to match the argument list '(char [256], const char [8], unsigned char)'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8512,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [62]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8512,14):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8512,3):
+      while trying to match the argument list '(const char [62])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8844,49): warning C4244: '=': conversion from 'DWORD' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8848,39): warning C4244: '=': conversion from 'DWORD' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8870,31): warning C4309: '=': truncation of constant value
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8945,65): warning C4244: 'argument': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9528,10): error C2664: 'DWORD CGame::dwGetItemCount(int,char *)': cannot convert argument 2 from 'const char [5]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9528,35):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(721,8):
+      see declaration of 'CGame::dwGetItemCount'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9528,10):
+      while trying to match the argument list '(int, const char [5])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9529,37): error C2664: 'DWORD CGame::dwGetItemCount(int,char *)': cannot convert argument 2 from 'const char [5]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9529,62):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(721,8):
+      see declaration of 'CGame::dwGetItemCount'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9529,37):
+      while trying to match the argument list '(int, const char [5])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9529,6): error C2665: 'CGame::SetItemCount': no overloaded function could convert all the argument types
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(720,7):
+      could be 'int CGame::SetItemCount(int,int,DWORD)'
+          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9529,6):
+          'int CGame::SetItemCount(int,int,DWORD)': cannot convert argument 2 from 'const char [5]' to 'int'
+              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9529,29):
+              There is no context in which this conversion is possible
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(719,7):
+      or       'int CGame::SetItemCount(int,char *,DWORD)'
+          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9529,6):
+          'int CGame::SetItemCount(int,char *,DWORD)': cannot convert argument 2 from 'const char [5]' to 'char *'
+              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9529,29):
+              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9529,6):
+      while trying to match the argument list '(int, const char [5], _T)'
+          with
+          [
+              _T=DWORD
+          ]
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9679,4): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [60]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9679,15):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9679,4):
+      while trying to match the argument list '(const char [60])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9101,3): warning C4808: case '2' is not a valid value for switch condition of type 'bool'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9110,3): warning C4808: case '3' is not a valid value for switch condition of type 'bool'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9125,3): warning C4808: case '4' is not a valid value for switch condition of type 'bool'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9875,7): warning C4808: case '2' is not a valid value for switch condition of type 'bool'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9883,7): warning C4808: case '3' is not a valid value for switch condition of type 'bool'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9896,7): warning C4808: case '4' is not a valid value for switch condition of type 'bool'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(10086,87): warning C4244: 'argument': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11394,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [35]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11394,14):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11394,3):
+      while trying to match the argument list '(const char [35])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11406,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [60]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11406,14):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11406,3):
+      while trying to match the argument list '(const char [60])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11664,8): error C2664: 'void CGame::RequestTeleportHandler(int,char *,char *,int,int)': cannot convert argument 2 from 'const char [5]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11664,41):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(701,7):
+      see declaration of 'CGame::RequestTeleportHandler'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11664,8):
+      while trying to match the argument list '(int, const char [5], const char [6], int, int)'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11667,7): error C2664: 'void CGame::RequestTeleportHandler(int,char *,char *,int,int)': cannot convert argument 2 from 'const char [5]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11667,40):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(701,7):
+      see declaration of 'CGame::RequestTeleportHandler'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11667,7):
+      while trying to match the argument list '(int, const char [5], const char [6], int, int)'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(12040,3): error C2664: 'void CGame::RequestSetGuildTeleportLocHandler(int,int,int,int,char *)': cannot convert argument 5 from 'const char [11]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(12040,96):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(379,7):
+      see declaration of 'CGame::RequestSetGuildTeleportLocHandler'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(12040,3):
+      while trying to match the argument list '(int, int, int, int, const char [11])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(12578,93): warning C4018: '>': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(12582,78): warning C4018: '>': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13542,18): error C2664: 'DWORD CGame::dwGetItemCount(int,char *)': cannot convert argument 2 from 'const char [5]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13542,43):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(721,8):
+      see declaration of 'CGame::dwGetItemCount'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13542,18):
+      while trying to match the argument list '(int, const char [5])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13651,19): error C2665: 'CGame::SetItemCount': no overloaded function could convert all the argument types
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(720,7):
+      could be 'int CGame::SetItemCount(int,int,DWORD)'
+          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13651,19):
+          'int CGame::SetItemCount(int,int,DWORD)': cannot convert argument 2 from 'const char [5]' to 'int'
+              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13651,42):
+              There is no context in which this conversion is possible
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(719,7):
+      or       'int CGame::SetItemCount(int,char *,DWORD)'
+          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13651,19):
+          'int CGame::SetItemCount(int,char *,DWORD)': cannot convert argument 2 from 'const char [5]' to 'char *'
+              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13651,42):
+              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13651,19):
+      while trying to match the argument list '(int, const char [5], DWORD)'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13715,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [41]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13715,14):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13715,3):
+      while trying to match the argument list '(const char [41])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(14361,9): warning C4244: '=': conversion from 'DWORD' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(14365,9): warning C4244: '=': conversion from 'DWORD' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(14542,9): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(16483,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [72]' to 'char *'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(16483,18):
+      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
+      see declaration of 'PutLogList'
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(16483,7):
+      while trying to match the argument list '(const char [72])'
+  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(16483,7): error C1003: error count exceeds 100; stopping compilation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(220,14): error C2039: 'any_of': is not a member of 'std'
+  (compiling source file 'wmain.cpp')
+      C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.44.35207\include\fstream(20,1):
+      see declaration of 'std'
   
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\XSocket.cpp(436,15): warning C4244: '=': conversion from 'DWORD' to 'WORD', possible loss of data
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\XSocket.cpp(441,17): warning C4018: '<': signed/unsigned mismatch
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\XSocket.cpp(443,43): warning C4244: '=': conversion from 'DWORD' to 'char', possible loss of data
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\XSocket.cpp(565,17): warning C4018: '<': signed/unsigned mismatch
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\XSocket.cpp(566,43): warning C4244: '=': conversion from 'DWORD' to 'char', possible loss of data
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(220,14): error C2039: 'any_of': is not a member of 'std'
-  (compiling source file 'CrusadeCore.cpp')
-      C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.44.35207\include\fstream(20,1):
-      see declaration of 'std'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\CrusadeCore.cpp(12,1): error C2512: 'CGame': no appropriate default constructor available
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(294,7):
-      see declaration of 'CGame'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(220,14): error C2039: 'any_of': is not a member of 'std'
-  (compiling source file 'wmain.cpp')
-      C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.44.35207\include\fstream(20,1):
-      see declaration of 'std'
-  
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(445,23): warning C4477: 'sprintf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'HINSTANCE'
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(469,21): error C2440: '=': cannot convert from 'char [32]' to 'LPCWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(469,21):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(489,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [100]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(489,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(489,2):
-      while trying to match the argument list '(char [100], const char [55], const char [2], const char [4], int, WORD, WORD, WORD)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(491,11): error C2664: 'HWND CreateWindowExW(DWORD,LPCWSTR,LPCWSTR,DWORD,int,int,int,int,HWND,HMENU,HINSTANCE,LPVOID)': cannot convert argument 2 from 'char [32]' to 'LPCWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(492,9):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(4442,1):
-      see declaration of 'CreateWindowExW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(491,11):
-      while trying to match the argument list '(int, char [32], char [100], unsigned long, int, int, int, int, int, int, HINSTANCE, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(542,3): error C2664: 'int MessageBoxW(HWND,LPCWSTR,LPCWSTR,UINT)': cannot convert argument 2 from 'const char [46]' to 'LPCWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(542,22):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(9238,1):
-      see declaration of 'MessageBoxW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(542,3):
-      while trying to match the argument list '(HWND, const char [46], const char [6], long)'
-  
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(549,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [15]' to 'char *'
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(549,14):
       Conversion from string literal loses const qualifier (see /Zc:strictStrings)
@@ -1776,67 +1054,12 @@ C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmai
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(50,7):
       see declaration of 'LoginServer'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(644,3): error C2664: 'BOOL TextOutW(HDC,int,int,LPCWSTR,int)': cannot convert argument 4 from 'char *' to 'LPCWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(644,35):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\wingdi.h(5225,25):
-      see declaration of 'TextOutW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(644,3):
-      while trying to match the argument list '(HDC, int, int, char *, size_t)'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(220,14): error C2039: 'any_of': is not a member of 'std'
+  (compiling source file 'CrusadeCore.cpp')
+      C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.44.35207\include\fstream(20,1):
+      see declaration of 'std'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(716,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(716,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(716,2):
-      while trying to match the argument list '(char [512], const char [25], WORD, WORD, WORD, WORD, WORD)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(735,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(735,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(735,2):
-      while trying to match the argument list '(char [512], const char [25], WORD, WORD, WORD, WORD, WORD)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(755,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(755,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(755,2):
-      while trying to match the argument list '(char [512], const char [25], WORD, WORD, WORD, WORD, WORD)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(775,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(775,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(775,2):
-      while trying to match the argument list '(char [512], const char [25], WORD, WORD, WORD, WORD, WORD)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(795,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(795,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(795,2):
-      while trying to match the argument list '(char [512], const char [25], WORD, WORD, WORD, WORD, WORD)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(815,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(815,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(815,2):
-      while trying to match the argument list '(char [512], const char [25], WORD, WORD, WORD, WORD, WORD)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(835,2): error C2664: 'int wsprintfW(LPWSTR,LPCWSTR,...)': cannot convert argument 1 from 'char [512]' to 'LPWSTR'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(835,11):
-      Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or parenthesized function-style cast
-      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\winuser.h(333,1):
-      see declaration of 'wsprintfW'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(835,2):
-      while trying to match the argument list '(char [512], const char [25], WORD, WORD, WORD, WORD, WORD)'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\CrusadeCore.cpp(12,1): error C2512: 'CGame': no appropriate default constructor available
+      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(294,7):
+      see declaration of 'CGame'
   
