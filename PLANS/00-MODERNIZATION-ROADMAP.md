@@ -6,6 +6,20 @@ This document outlines the phased modernization strategy for the Helbreath MMORP
 
 ---
 
+## Detailed Phase Documents
+
+| Phase | Document | Description |
+|-------|----------|-------------|
+| 0 | [01-PHASE-0-BASELINE.md](01-PHASE-0-BASELINE.md) | Build setup, logging, baseline capture |
+| 1 | [02-PHASE-1-ENGINE-SHELL.md](02-PHASE-1-ENGINE-SHELL.md) | Engine architecture, game loop wrapper |
+| 2 | [03-PHASE-2-VIEWPORT.md](03-PHASE-2-VIEWPORT.md) | Viewport system, coordinate conversion |
+| 3 | [04-PHASE-3-SPLIT-UPDATESCREEN.md](04-PHASE-3-SPLIT-UPDATESCREEN.md) | System decomposition, screen manager |
+| 4 | [05-PHASE-4-NETWORKING.md](05-PHASE-4-NETWORKING.md) | WinSock2, console server, metrics |
+| 5 | [06-PHASE-5-UI-ECS.md](06-PHASE-5-UI-ECS.md) | Widget system, entity-component system |
+| 6 | [07-PHASE-6-TEXT-FONTS.md](07-PHASE-6-TEXT-FONTS.md) | Font management, text rendering |
+
+---
+
 ## Phase 0: Baseline + Guardrails (Current)
 
 ### Completed
