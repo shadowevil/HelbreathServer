@@ -25,7 +25,6 @@
   Wmain.cpp
   XSocket.cpp
   YWSound.cpp
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\StrTok.cpp(27,2): warning C5033: 'register' is no longer a supported storage class
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.cpp(110,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.cpp(111,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.cpp(129,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
@@ -126,950 +125,183 @@ C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Spri
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.cpp(2956,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.cpp(2974,11): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.cpp(2975,13): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\StrTok.cpp(27,2): warning C5033: 'register' is no longer a supported storage class
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\XSocket.cpp(13,2): warning C5033: 'register' is no longer a supported storage class
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\XSocket.cpp(43,2): warning C5033: 'register' is no longer a supported storage class
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\XSocket.cpp(486,2): warning C5033: 'register' is no longer a supported storage class
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\XSocket.cpp(533,2): warning C5033: 'register' is no longer a supported storage class
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(625,5): error C2664: 'bool CGame::bReadLoginConfigFile(char *)': cannot convert argument 1 from 'const char [19]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(625,26):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.h(698,7):
-      see declaration of 'CGame::bReadLoginConfigFile'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(625,5):
-      while trying to match the argument list '(const char [19])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(659,63): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(659,63):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [11]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(659,86):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(659,63):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [11], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(663,65): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(663,65):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [11]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(663,88):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(663,65):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [11], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(664,61): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(664,61):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [11]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(664,84):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(664,61):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [11], int, bool)'
-  
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\MapData.cpp(27,50): warning C4244: '=': conversion from 'double' to 'short', possible loss of data
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(670,64): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(670,64):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [11]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(670,87):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(670,64):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [11], int, bool)'
-  
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\MapData.cpp(31,49): warning C4244: '=': conversion from 'double' to 'short', possible loss of data
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\MapData.cpp(33,52): warning C4244: '=': conversion from 'double' to 'short', possible loss of data
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(671,67): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(671,67):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [11]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(671,90):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(671,67):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [11], int, bool)'
-  
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\MapData.cpp(50,69): warning C4244: '=': conversion from 'double' to 'short', possible loss of data
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(677,60): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(677,60):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [9]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(677,83):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(677,60):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [9], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(678,59): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(678,59):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [9]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(678,82):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(678,59):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [9], int, bool)'
-  
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\MapData.cpp(343,51): warning C4244: '=': conversion from 'double' to 'short', possible loss of data
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\MapData.cpp(352,51): warning C4244: '=': conversion from 'double' to 'short', possible loss of data
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\MapData.cpp(361,51): warning C4244: '=': conversion from 'double' to 'short', possible loss of data
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\MapData.cpp(370,51): warning C4244: '=': conversion from 'double' to 'short', possible loss of data
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(1069,7): error C2664: 'void CGame::SetTopMsg(char *,unsigned char)': cannot convert argument 1 from 'const char [89]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(1069,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.h(335,7):
-      see declaration of 'CGame::SetTopMsg'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(1069,7):
-      while trying to match the argument list '(const char [89], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(1086,7): error C2664: 'void CGame::SetTopMsg(char *,unsigned char)': cannot convert argument 1 from 'const char [89]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(1086,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.h(335,7):
-      see declaration of 'CGame::SetTopMsg'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(1086,7):
-      while trying to match the argument list '(const char [89], int)'
-  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\MapData.cpp(1821,85): warning C4244: '-=': conversion from 'double' to 'int', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\MapData.cpp(2339,103): warning C4244: 'argument': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\MapData.cpp(3237,102): warning C4244: 'argument': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\MapData.cpp(1626,26): warning C4101: 'iSkipFrame': unreferenced local variable
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(1585,33): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(1616,33): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(1849,33): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(2557,30): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(2559,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(2982,2): error C2664: 'void CGame::PutString_SprFont(int,int,char *,short,short,short)': cannot convert argument 3 from 'const char [16]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(2982,38):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.h(660,7):
-      see declaration of 'CGame::PutString_SprFont'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(2982,2):
-      while trying to match the argument list '(int, int, const char [16], int, int, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(2984,2): error C2664: 'void CGame::PutString2(int,int,char *,short,short,short)': cannot convert argument 3 from 'const char [5]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(2984,36):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.h(658,7):
-      see declaration of 'CGame::PutString2'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(2984,2):
-      while trying to match the argument list '(int, int, const char [5], int, int, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(2985,2): error C2664: 'void CGame::PutString2(int,int,char *,short,short,short)': cannot convert argument 3 from 'const char [9]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(2985,37):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.h(658,7):
-      see declaration of 'CGame::PutString2'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(2985,2):
-      while trying to match the argument list '(int, int, const char [9], int, int, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(2986,2): error C2664: 'void CGame::PutString2(int,int,char *,short,short,short)': cannot convert argument 3 from 'const char [6]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(2986,47):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.h(658,7):
-      see declaration of 'CGame::PutString2'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(2986,2):
-      while trying to match the argument list '(int, int, const char [6], int, int, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\MapData.cpp(1821,85): warning C4244: '-=': conversion from 'double' to 'int', possible loss of data
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3399,57): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3399,57):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [10]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3399,80):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3399,57):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [10], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3400,64): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3400,64):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [10]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3400,87):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3400,64):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [10], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3406,64): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3406,64):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [8]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3406,87):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3406,64):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [8], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3407,64): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3407,64):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [8]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3407,87):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3407,64):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [8], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3408,64): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3408,64):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [8]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3408,87):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3408,64):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [8], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\MapData.cpp(2339,103): warning C4244: 'argument': conversion from 'short' to 'char', possible loss of data
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3409,64): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3409,64):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [8]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3409,87):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3409,64):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [8], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3410,64): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3410,64):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [8]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3410,87):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3410,64):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [8], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3416,64): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3416,64):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [12]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3416,87):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3416,64):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [12], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3418,69): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3418,69):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [12]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3418,92):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3418,69):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [12], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3419,68): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3419,68):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [12]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3419,91):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3419,68):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [12], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3426,69): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3426,69):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [13]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3426,92):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3426,69):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [13], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3430,69): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3430,69):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [11]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3430,92):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3430,69):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [11], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3436,67): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3436,67):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [11]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3436,90):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3436,67):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [11], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3437,63): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3437,63):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [11]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3437,86):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3437,63):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [11], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3443,69): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3443,69):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [11]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3443,92):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3443,69):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [11], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3444,69): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3444,69):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [11]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3444,92):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3444,69):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [11], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3445,69): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3445,69):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [11]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3445,92):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3445,69):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [11], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3446,69): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3446,69):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [11]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3446,92):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3446,69):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [11], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3447,69): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3447,69):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [11]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3447,92):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3447,69):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [11], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\MapData.cpp(3237,102): warning C4244: 'argument': conversion from 'short' to 'char', possible loss of data
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3449,69): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3449,69):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [11]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3449,92):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3449,69):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [11], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3450,69): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3450,69):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [11]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3450,92):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3450,69):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [11], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3451,69): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3451,69):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [11]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3451,92):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3451,69):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [11], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3452,69): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3452,69):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [11]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3452,92):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3452,69):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [11], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3453,70): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3453,70):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [11]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3453,93):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3453,70):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [11], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3459,70): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3459,70):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [12]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3459,93):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3459,70):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [12], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3465,70): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3465,70):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [12]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3465,93):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3465,70):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [12], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3471,63): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3471,63):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [11]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3471,86):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3471,63):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [11], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3472,65): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3472,65):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [11]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3472,88):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3472,65):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [11], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3475,4): error C2664: 'void CGame::MakeSprite(char *,short,short,bool)': cannot convert argument 1 from 'const char [10]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3475,16):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3345,13):
-      see declaration of 'CGame::MakeSprite'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3475,4):
-      while trying to match the argument list '(const char [10], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3476,4): error C2664: 'void CGame::MakeSprite(char *,short,short,bool)': cannot convert argument 1 from 'const char [11]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3476,16):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3345,13):
-      see declaration of 'CGame::MakeSprite'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3476,4):
-      while trying to match the argument list '(const char [11], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3477,4): error C2664: 'void CGame::MakeSprite(char *,short,short,bool)': cannot convert argument 1 from 'const char [8]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3477,16):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3345,13):
-      see declaration of 'CGame::MakeSprite'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3477,4):
-      while trying to match the argument list '(const char [8], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3482,5): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [10]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3482,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3482,5):
-      while trying to match the argument list '(const char [10], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3485,43): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3485,43):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [12]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3485,66):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3485,43):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [12], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3486,43): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3486,43):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [12]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3486,66):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3486,43):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [12], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3489,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [9]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3489,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3489,4):
-      while trying to match the argument list '(const char [9], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3490,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [7]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3490,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3490,4):
-      while trying to match the argument list '(const char [7], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3491,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3491,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3491,4):
-      while trying to match the argument list '(const char [12], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3492,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [9]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3492,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3492,4):
-      while trying to match the argument list '(const char [9], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3493,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [9]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3493,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3493,4):
-      while trying to match the argument list '(const char [9], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3494,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [9]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3494,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3494,4):
-      while trying to match the argument list '(const char [9], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3495,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [9]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3495,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3495,4):
-      while trying to match the argument list '(const char [9], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3500,5): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3500,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3500,5):
-      while trying to match the argument list '(const char [12], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3501,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3501,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3501,4):
-      while trying to match the argument list '(const char [12], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3502,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [9]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3502,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3502,4):
-      while trying to match the argument list '(const char [9], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3503,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [9]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3503,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3503,4):
-      while trying to match the argument list '(const char [9], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3504,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [9]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3504,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3504,4):
-      while trying to match the argument list '(const char [9], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3505,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [10]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3505,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3505,4):
-      while trying to match the argument list '(const char [10], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3506,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [10]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3506,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3506,4):
-      while trying to match the argument list '(const char [10], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3507,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [10]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3507,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3507,4):
-      while trying to match the argument list '(const char [10], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3508,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [10]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3508,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3508,4):
-      while trying to match the argument list '(const char [10], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3509,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [16]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3509,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3509,4):
-      while trying to match the argument list '(const char [16], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3510,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3510,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3510,4):
-      while trying to match the argument list '(const char [12], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3511,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3511,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3511,4):
-      while trying to match the argument list '(const char [12], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3512,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3512,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3512,4):
-      while trying to match the argument list '(const char [12], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3513,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3513,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3513,4):
-      while trying to match the argument list '(const char [12], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3514,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3514,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3514,4):
-      while trying to match the argument list '(const char [12], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\MapData.cpp(1626,26): warning C4101: 'iSkipFrame': unreferenced local variable
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3520,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3520,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3520,4):
-      while trying to match the argument list '(const char [12], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3521,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3521,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3521,4):
-      while trying to match the argument list '(const char [12], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3522,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3522,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3522,4):
-      while trying to match the argument list '(const char [12], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3523,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3523,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3523,4):
-      while trying to match the argument list '(const char [12], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3524,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3524,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3524,4):
-      while trying to match the argument list '(const char [12], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3525,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3525,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3525,4):
-      while trying to match the argument list '(const char [12], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3526,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3526,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3526,4):
-      while trying to match the argument list '(const char [12], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3527,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3527,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3527,4):
-      while trying to match the argument list '(const char [12], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3528,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3528,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3528,4):
-      while trying to match the argument list '(const char [12], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3529,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3529,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3529,4):
-      while trying to match the argument list '(const char [12], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3530,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3530,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3530,4):
-      while trying to match the argument list '(const char [12], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3531,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3531,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3531,4):
-      while trying to match the argument list '(const char [12], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3532,4): error C2664: 'void CGame::MakeTileSpr(char *,short,short,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3532,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3360,13):
-      see declaration of 'CGame::MakeTileSpr'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3532,4):
-      while trying to match the argument list '(const char [12], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3535,4): error C2664: 'void CGame::MakeSprite(char *,short,short,bool)': cannot convert argument 1 from 'const char [10]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3535,16):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3345,13):
-      see declaration of 'CGame::MakeSprite'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3535,4):
-      while trying to match the argument list '(const char [10], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3538,68): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3538,68):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [10]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3538,91):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3538,68):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [10], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3539,68): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3539,68):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [10]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3539,91):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3539,68):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [10], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3540,68): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3540,68):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [10]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3540,91):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3540,68):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [10], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3545,4): error C2664: 'void CGame::MakeSprite(char *,short,short,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3545,16):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3345,13):
-      see declaration of 'CGame::MakeSprite'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3545,4):
-      while trying to match the argument list '(const char [12], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3548,71): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3548,71):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [12]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3548,94):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3548,71):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [12], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3549,70): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3549,70):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [12]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3549,93):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3549,70):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [12], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3550,70): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3550,70):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [12]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3550,93):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3550,70):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [12], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3553,4): error C2664: 'void CGame::MakeSprite(char *,short,short,bool)': cannot convert argument 1 from 'const char [13]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3553,16):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3345,13):
-      see declaration of 'CGame::MakeSprite'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3553,4):
-      while trying to match the argument list '(const char [13], int, int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3561,70): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3561,70):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [12]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3561,93):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3561,70):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [12], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3562,70): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3562,70):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [12]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3562,93):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3562,70):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [12], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3563,70): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3563,70):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [12]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3563,93):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3563,70):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [12], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3564,70): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3564,70):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [12]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3564,93):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3564,70):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [12], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3565,70): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3565,70):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [12]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3565,93):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3565,70):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [12], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3566,70): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3566,70):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [12]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3566,93):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3566,70):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [12], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3567,70): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3567,70):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [12]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3567,93):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3567,70):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [12], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3568,70): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3568,70):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [12]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3568,93):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3568,70):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [12], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3569,70): error C2665: 'CSprite::CSprite': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Sprite.h(43,2):
-      could be 'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3569,70):
-          'CSprite::CSprite(HANDLE,DXC_ddraw *,char *,short,bool)': cannot convert argument 3 from 'const char [12]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3569,93):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3569,70):
-      while trying to match the argument list '(HANDLE, DXC_ddraw *, const char [12], int, bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(3569,70): error C1003: error count exceeds 100; stopping compilation
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Wmain.cpp(122,8): error C2664: 'int __FindHackingDll__(char *)': cannot convert argument 1 from 'const char [9]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Wmain.cpp(122,27):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Wmain.cpp(22,39):
-      see declaration of '__FindHackingDll__'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Wmain.cpp(122,8):
-      while trying to match the argument list '(const char [9])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Wmain.cpp(182,25): error C2664: 'WinMain::MYPROC': cannot convert argument 1 from 'const char [9]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Wmain.cpp(182,25):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(1927,8): warning C4101: 'sItemSprite': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(1927,21): warning C4101: 'sItemSpriteFrame': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(2573,28): warning C4101: 'cTxt': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(4390,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(4391,31): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(4411,38): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(4517,36): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(6677,6): warning C4101: 'iStatus': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(6676,8): warning C4101: 'cName': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(6675,8): warning C4101: 'sObjectType': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(7505,39): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(10727,6): warning C4101: 'randFrame': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(13442,69): warning C4101: 'sItemSpr': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(13442,79): warning C4101: 'sItemSprFrame': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(13707,7): warning C4101: 'wServerUpperVersion': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(13707,28): warning C4101: 'wServerLowerVersion': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(14520,54): warning C4805: '!=': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(16342,31): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(16376,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(17372,67): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(17502,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(17510,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(17518,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(17526,33): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(17536,33): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(17544,33): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(19485,2): warning C4996: 'ltoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _ltoa. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(19499,2): warning C4996: 'strrev': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strrev. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(19516,103): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(19519,48): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(20190,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(20196,58): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(20763,36): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(20997,56): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(21003,56): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(25073,35): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(25139,34): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(25179,29): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(25183,33): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(25188,58): warning C4805: '!=': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(25197,58): warning C4805: '!=': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(25208,29): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(25212,33): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(25218,58): warning C4805: '!=': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(25227,58): warning C4805: '!=': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(25237,35): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(25238,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(25284,33): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(25397,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(25408,37): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(26572,33): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(26608,35): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(26613,35): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(28301,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(28309,57): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(28481,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(28484,59): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(28496,19): warning C4244: 'initializing': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(28558,28): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(28637,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(28655,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(28674,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(28716,36): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(28721,36): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(28727,36): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(29751,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(29752,36): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(29763,33): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(29768,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(29773,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(29778,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(29783,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(29788,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(29793,31): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(29803,29): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(30479,33): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(30491,39): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(30496,31): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(30501,38): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(30507,35): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(30507,71): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(30507,107): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(30732,35): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(30733,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(31208,38): warning C4805: '!=': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(31250,36): warning C4805: '!=': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(31251,36): warning C4805: '!=': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(31425,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(32058,31): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(32777,58): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(34095,76): warning C4305: 'argument': truncation from 'int' to 'bool'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(34095,65): warning C4305: 'argument': truncation from 'int' to 'bool'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(34576,31): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Wmain.cpp(186,23): warning C4477: 'sprintf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'HINSTANCE'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(35694,14): warning C4018: '<': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(35730,13): warning C4018: '<': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(36871,30): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(36871,92): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(36875,58): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(36904,58): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(36916,18): warning C4244: 'initializing': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(36940,36): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(36989,36): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(37014,54): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(37015,33): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(37019,34): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(37023,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(37027,31): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(37057,36): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(37059,33): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(37064,36): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(37070,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(37233,36): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(37234,33): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(37239,34): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(37245,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(37407,32): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(37679,34): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(37687,34): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(38144,39): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(38375,39): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(38521,39): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(39004,33): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(39356,29): warning C4101: 'iReqStr': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(40029,29): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(41897,31): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(41944,30): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(41950,29): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(41971,17): warning C4244: 'initializing': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(41991,36): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(42008,29): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43427,31): warning C4101: 'cStr2': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43427,7): warning C4101: 'cItemColor': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43427,19): warning C4101: 'cStr1': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43427,43): warning C4101: 'cStr3': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43429,12): warning C4101: 'iLenSize': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43426,6): warning C4101: 'i': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43429,6): warning C4101: 'iLoc': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43430,7): warning C4101: 'cTxt': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43465,31): warning C4101: 'cStr2': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43465,7): warning C4101: 'cItemColor': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43465,19): warning C4101: 'cStr1': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43468,16): warning C4101: 'cDesc': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43465,43): warning C4101: 'cStr3': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43467,12): warning C4101: 'iLenSize': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43464,6): warning C4101: 'i': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43467,6): warning C4101: 'iLoc': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43468,7): warning C4101: 'cTxt': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43513,12): warning C4101: 'iLenSize': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43513,6): warning C4101: 'iLoc': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43514,7): warning C4101: 'cTxt': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43814,31): warning C4101: 'cStr2': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43814,7): warning C4101: 'cItemColor': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43814,19): warning C4101: 'cStr1': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43814,43): warning C4101: 'cStr3': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43816,12): warning C4101: 'iLenSize': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\Game.cpp(43816,6): warning C4101: 'iLoc': unreferenced local variable
+LINK : fatal error LNK1104: cannot open file 'C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Client\CxImage\Debug\CxImage.lib'

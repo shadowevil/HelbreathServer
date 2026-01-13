@@ -160,7 +160,6 @@
     <ClInclude Include="version.h" />
     <ClInclude Include="winmain.h" />
     <ClInclude Include="XSocket.h" />
-    <ClInclude Include="CrusadeCore.h" />
   </ItemGroup>
   <!-- Source Files -->
   <ItemGroup>
@@ -193,7 +192,6 @@
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="wmain.cpp" />
     <ClCompile Include="XSocket.cpp" />
-    <ClCompile Include="CrusadeCore.cpp" />
   </ItemGroup>
   <!-- Resource Files -->
   <ItemGroup>

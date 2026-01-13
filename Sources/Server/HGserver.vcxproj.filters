@@ -103,9 +103,6 @@
     <ClCompile Include="BuildItem.cpp">
       <Filter>Source Files\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="CrusadeCore.cpp">
-      <Filter>Source Files\Systems</Filter>
-    </ClCompile>
     <!-- World -->
     <ClCompile Include="Map.cpp">
       <Filter>Source Files\World</Filter>
@@ -221,9 +218,6 @@
       <Filter>Header Files\Systems</Filter>
     </ClInclude>
     <ClInclude Include="ActionID.h">
-      <Filter>Header Files\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="CrusadeCore.h">
       <Filter>Header Files\Systems</Filter>
     </ClInclude>
     <!-- World -->

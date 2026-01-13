@@ -30,597 +30,39 @@ C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Debu
   Tile.cpp
   wmain.cpp
   XSocket.cpp
-  CrusadeCore.cpp
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(449,18): error C2664: 'std::string CClient::getvalue(std::string,char *)': cannot convert argument 2 from 'const char [5]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(449,35):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(424,17):
-      see declaration of 'CClient::getvalue'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(449,18):
-      while trying to match the argument list '(char [512], const char [5])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(522,19): error C2664: 'std::string CClient::getvalue(std::string,char *)': cannot convert argument 2 from 'const char [7]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(522,36):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(424,17):
-      see declaration of 'CClient::getvalue'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(522,19):
-      while trying to match the argument list '(char [512], const char [7])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(603,19): error C2664: 'std::string CClient::getvalue(std::string,char *)': cannot convert argument 2 from 'const char [10]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(603,36):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(424,17):
-      see declaration of 'CClient::getvalue'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Client.cpp(603,19):
-      while trying to match the argument list '(char [512], const char [10])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(220,14): error C2039: 'any_of': is not a member of 'std'
-  (compiling source file 'PartyManager.cpp')
-      C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.44.35207\include\fstream(20,1):
-      see declaration of 'std'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(220,14): error C2039: 'any_of': is not a member of 'std'
-  (compiling source file 'Map.cpp')
-      C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.44.35207\include\fstream(20,1):
-      see declaration of 'std'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(220,14): error C2039: 'any_of': is not a member of 'std'
-  (compiling source file 'Game.cpp')
-      C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.44.35207\include\fstream(20,1):
-      see declaration of 'std'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(326,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [35]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(326,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(326,3):
-      while trying to match the argument list '(const char [35])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(468,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [16]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(468,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(468,3):
-      while trying to match the argument list '(const char [16])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(509,2): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [32]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(509,13):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(509,2):
-      while trying to match the argument list '(const char [32])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(796,6): error C2664: 'bool CGame::bReadProgramConfigFile(char *,bool)': cannot convert argument 1 from 'const char [12]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(796,29):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(767,7):
-      see declaration of 'CGame::bReadProgramConfigFile'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(796,6):
-      while trying to match the argument list '(const char [12], bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(797,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [2]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(797,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(797,3):
-      while trying to match the argument list '(const char [2])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(798,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [78]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(798,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(798,3):
-      while trying to match the argument list '(const char [78])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(801,6): error C2664: 'bool CGame::bReadProgramConfigFile(char *,bool)': cannot convert argument 1 from 'const char [10]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(801,29):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(767,7):
-      see declaration of 'CGame::bReadProgramConfigFile'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(801,6):
-      while trying to match the argument list '(const char [10], bool)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(802,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [2]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(802,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(802,3):
-      while trying to match the argument list '(const char [2])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(803,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [76]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(803,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(803,3):
-      while trying to match the argument list '(const char [76])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(806,6): error C2664: 'bool CGame::bReadSettingsConfigFile(char *)': cannot convert argument 1 from 'const char [25]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(806,30):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(420,7):
-      see declaration of 'CGame::bReadSettingsConfigFile'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(806,6):
-      while trying to match the argument list '(const char [25])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(807,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [2]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(807,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(807,3):
-      while trying to match the argument list '(const char [2])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(808,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [79]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(808,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(808,3):
-      while trying to match the argument list '(const char [79])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(811,6): error C2664: 'bool CGame::bReadAdminListConfigFile(char *)': cannot convert argument 1 from 'const char [26]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(811,31):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(358,7):
-      see declaration of 'CGame::bReadAdminListConfigFile'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(811,6):
-      while trying to match the argument list '(const char [26])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(812,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [2]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(812,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(812,3):
-      while trying to match the argument list '(const char [2])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(813,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [80]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(813,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(813,3):
-      while trying to match the argument list '(const char [80])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(816,6): error C2664: 'bool CGame::bReadBannedListConfigFile(char *)': cannot convert argument 1 from 'const char [27]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(816,32):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(357,7):
-      see declaration of 'CGame::bReadBannedListConfigFile'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(816,6):
-      while trying to match the argument list '(const char [27])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(817,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [2]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(817,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(817,3):
-      while trying to match the argument list '(const char [2])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(818,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [81]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(818,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(818,3):
-      while trying to match the argument list '(const char [81])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(821,6): error C2664: 'bool CGame::bReadAdminSetConfigFile(char *)': cannot convert argument 1 from 'const char [30]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(821,30):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(426,7):
-      see declaration of 'CGame::bReadAdminSetConfigFile'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(821,6):
-      while trying to match the argument list '(const char [30])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(822,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [2]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(822,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(822,3):
-      while trying to match the argument list '(const char [2])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(823,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [84]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(823,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(823,3):
-      while trying to match the argument list '(const char [84])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(860,2): error C2664: 'bool CGame::bReadNotifyMsgListFile(char *)': cannot convert argument 1 from 'const char [23]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(860,25):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(612,7):
-      see declaration of 'CGame::bReadNotifyMsgListFile'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(860,2):
-      while trying to match the argument list '(const char [23])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(911,23): error C2664: 'bool CGame::_bDecodeItemConfigFileContents(char *,DWORD)': cannot convert argument 1 from 'const char [21]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(911,54):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(864,7):
-      see declaration of 'CGame::_bDecodeItemConfigFileContents'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(911,23):
-      while trying to match the argument list '(const char [21], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(912,23): error C2664: 'bool CGame::_bDecodeItemConfigFileContents(char *,DWORD)': cannot convert argument 1 from 'const char [22]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(912,54):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(864,7):
-      see declaration of 'CGame::_bDecodeItemConfigFileContents'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(912,23):
-      while trying to match the argument list '(const char [22], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(913,23): error C2664: 'bool CGame::_bDecodeItemConfigFileContents(char *,DWORD)': cannot convert argument 1 from 'const char [22]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(913,54):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(864,7):
-      see declaration of 'CGame::_bDecodeItemConfigFileContents'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(913,23):
-      while trying to match the argument list '(const char [22], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(914,28): error C2664: 'bool CGame::_bDecodeBuildItemConfigFileContents(char *,DWORD)': cannot convert argument 1 from 'const char [26]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(914,64):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(527,7):
-      see declaration of 'CGame::_bDecodeBuildItemConfigFileContents'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(914,28):
-      while trying to match the argument list '(const char [26], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(915,22): error C2664: 'bool CGame::_bDecodeNpcConfigFileContents(char *,DWORD)': cannot convert argument 1 from 'const char [20]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(915,52):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(716,7):
-      see declaration of 'CGame::_bDecodeNpcConfigFileContents'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(915,22):
-      while trying to match the argument list '(const char [20], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(916,24): error C2664: 'bool CGame::_bDecodeMagicConfigFileContents(char *,DWORD)': cannot convert argument 1 from 'const char [22]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(916,56):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(698,7):
-      see declaration of 'CGame::_bDecodeMagicConfigFileContents'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(916,24):
-      while trying to match the argument list '(const char [22], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(917,24): error C2664: 'bool CGame::_bDecodeSkillConfigFileContents(char *,DWORD)': cannot convert argument 1 from 'const char [22]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(917,56):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(697,7):
-      see declaration of 'CGame::_bDecodeSkillConfigFileContents'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(917,24):
-      while trying to match the argument list '(const char [22], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(918,24): error C2664: 'bool CGame::_bDecodeQuestConfigFileContents(char *,DWORD)': cannot convert argument 1 from 'const char [22]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(918,56):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(550,7):
-      see declaration of 'CGame::_bDecodeQuestConfigFileContents'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(918,24):
-      while trying to match the argument list '(const char [22], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(919,26): error C2664: 'bool CGame::_bDecodePortionConfigFileContents(char *,DWORD)': cannot convert argument 1 from 'const char [23]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(919,60):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(579,7):
-      see declaration of 'CGame::_bDecodePortionConfigFileContents'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(919,26):
-      while trying to match the argument list '(const char [23], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(920,2): error C2664: 'bool CGame::_bDecodeDupItemIDFileContents(char *,DWORD)': cannot convert argument 1 from 'const char [26]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(920,32):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(521,7):
-      see declaration of 'CGame::_bDecodeDupItemIDFileContents'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(920,2):
-      while trying to match the argument list '(const char [26], int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(935,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [44]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(935,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(935,3):
-      while trying to match the argument list '(const char [44])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(954,2): error C2664: 'void CGame::GayDave(char [],char [])': cannot convert argument 2 from 'const char [8]' to 'char []'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(954,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(454,7):
-      see declaration of 'CGame::GayDave'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(954,2):
-      while trying to match the argument list '(char [350], const char [8])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(1555,25): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [21]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(1555,36):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(1555,25):
-      while trying to match the argument list '(const char [21])'
-  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\PartyManager.cpp(78,9): warning C4101: 'dwp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\PartyManager.cpp(181,9): warning C4101: 'dwp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\PartyManager.cpp(179,9): warning C4101: 'iRet': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\PartyManager.cpp(212,9): warning C4101: 'dwp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\PartyManager.cpp(210,9): warning C4101: 'iRet': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\PartyManager.cpp(276,9): warning C4101: 'dwp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(501,10): warning C4101: 'dwp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(500,9): warning C4101: 'cp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(502,9): warning C4101: 'wp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(500,13): warning C4101: 'cTxt': unreferenced local variable
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2207,60): warning C4305: '=': truncation from 'int' to 'char'
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2207,60): warning C4309: '=': truncation of constant value
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2262,3): error C2664: 'void CGame::RequestTeleportHandler(int,char *,char *,int,int)': cannot convert argument 2 from 'const char [5]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2262,36):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(701,7):
-      see declaration of 'CGame::RequestTeleportHandler'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2262,3):
-      while trying to match the argument list '(int, const char [5])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2274,2): error C2664: 'bool CGame::bSendClientConfig(int,char *)': cannot convert argument 2 from 'const char [21]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2274,30):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(301,7):
-      see declaration of 'CGame::bSendClientConfig'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2274,2):
-      while trying to match the argument list '(int, const char [21])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2275,2): error C2664: 'bool CGame::bSendClientConfig(int,char *)': cannot convert argument 2 from 'const char [22]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2275,30):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(301,7):
-      see declaration of 'CGame::bSendClientConfig'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2275,2):
-      while trying to match the argument list '(int, const char [22])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2276,2): error C2664: 'bool CGame::bSendClientConfig(int,char *)': cannot convert argument 2 from 'const char [22]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2276,30):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(301,7):
-      see declaration of 'CGame::bSendClientConfig'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2276,2):
-      while trying to match the argument list '(int, const char [22])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(220,14): error C2039: 'any_of': is not a member of 'std'
-  (compiling source file 'LoginServer.cpp')
-      C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.44.35207\include\fstream(20,1):
-      see declaration of 'std'
-  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(2703,10): warning C4101: 'dwp': unreferenced local variable
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(3906,45): warning C4018: '<': signed/unsigned mismatch
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(3938,74): warning C4018: '>': signed/unsigned mismatch
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(3973,7): error C2664: 'void CGame::RequestTeleportHandler(int,char *,char *,int,int)': cannot convert argument 2 from 'const char [5]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(3973,33):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(701,7):
-      see declaration of 'CGame::RequestTeleportHandler'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(3973,7):
-      while trying to match the argument list '(int, const char [5])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4000,6): error C2664: 'void CGame::RequestTeleportHandler(int,char *,char *,int,int)': cannot convert argument 2 from 'const char [5]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4000,32):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(701,7):
-      see declaration of 'CGame::RequestTeleportHandler'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4000,6):
-      while trying to match the argument list '(int, const char [5])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4011,8): error C2664: 'void CGame::RequestTeleportHandler(int,char *,char *,int,int)': cannot convert argument 2 from 'const char [5]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4011,34):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(701,7):
-      see declaration of 'CGame::RequestTeleportHandler'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4011,8):
-      while trying to match the argument list '(int, const char [5], const char [8], int, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4015,8): error C2664: 'void CGame::RequestTeleportHandler(int,char *,char *,int,int)': cannot convert argument 2 from 'const char [5]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4015,34):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(701,7):
-      see declaration of 'CGame::RequestTeleportHandler'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4015,8):
-      while trying to match the argument list '(int, const char [5], const char [7], int, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4035,9): error C2664: 'void CGame::RequestTeleportHandler(int,char *,char *,int,int)': cannot convert argument 2 from 'const char [5]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4035,35):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(701,7):
-      see declaration of 'CGame::RequestTeleportHandler'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4035,9):
-      while trying to match the argument list '(int, const char [5])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4064,6): error C2664: 'void CGame::RequestTeleportHandler(int,char *,char *,int,int)': cannot convert argument 2 from 'const char [5]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4064,32):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(701,7):
-      see declaration of 'CGame::RequestTeleportHandler'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4064,6):
-      while trying to match the argument list '(int, const char [5])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4081,8): error C2664: 'void CGame::RequestTeleportHandler(int,char *,char *,int,int)': cannot convert argument 2 from 'const char [5]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4081,34):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(701,7):
-      see declaration of 'CGame::RequestTeleportHandler'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4081,8):
-      while trying to match the argument list '(int, const char [5], const char [11], int, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4088,6): error C2664: 'void CGame::RequestTeleportHandler(int,char *,char *,int,int)': cannot convert argument 2 from 'const char [5]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4088,32):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(701,7):
-      see declaration of 'CGame::RequestTeleportHandler'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4088,6):
-      while trying to match the argument list '(int, const char [5])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4095,6): error C2664: 'void CGame::RequestTeleportHandler(int,char *,char *,int,int)': cannot convert argument 2 from 'const char [5]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4095,32):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(701,7):
-      see declaration of 'CGame::RequestTeleportHandler'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4095,6):
-      while trying to match the argument list '(int, const char [5])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4103,6): error C2664: 'void CGame::RequestTeleportHandler(int,char *,char *,int,int)': cannot convert argument 2 from 'const char [5]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4103,32):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(701,7):
-      see declaration of 'CGame::RequestTeleportHandler'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4103,6):
-      while trying to match the argument list '(int, const char [5])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4112,7): error C2664: 'void CGame::RequestTeleportHandler(int,char *,char *,int,int)': cannot convert argument 2 from 'const char [5]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4112,33):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(701,7):
-      see declaration of 'CGame::RequestTeleportHandler'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4112,7):
-      while trying to match the argument list '(int, const char [5])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4193,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [44]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4193,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4193,3):
-      while trying to match the argument list '(const char [44])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4996,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [34]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4996,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4996,3):
-      while trying to match the argument list '(const char [34])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5226,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [29]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5226,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5226,7):
-      while trying to match the argument list '(const char [29])'
-  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4200,10): warning C4101: 'dwp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4203,108): warning C4101: 'cp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4205,10): warning C4101: 'ip': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4201,10): warning C4101: 'wp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4202,19): warning C4101: 'iSize': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4202,10): warning C4101: 'iRet': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4202,16): warning C4101: 'i': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4204,25): warning C4101: 'cTemp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4205,14): warning C4101: 'iSendSize': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4203,95): warning C4101: 'cTxt': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4790,10): warning C4101: 'cp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(4790,14): warning C4101: 'cName': unreferenced local variable
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5388,25): warning C4305: '=': truncation from 'int' to 'bool'
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5394,25): warning C4305: '=': truncation from 'int' to 'bool'
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5400,25): warning C4305: '=': truncation from 'int' to 'bool'
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5444,19): warning C4267: '=': conversion from 'size_t' to 'char', possible loss of data
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5515,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [44]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5515,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5515,3):
-      while trying to match the argument list '(const char [44])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5519,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [42]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5519,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5519,3):
-      while trying to match the argument list '(const char [42])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5534,8): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [80]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5534,19):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5534,8):
-      while trying to match the argument list '(const char [80])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5542,8): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [84]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5542,19):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5542,8):
-      while trying to match the argument list '(const char [84])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5560,8): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [77]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5560,19):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5560,8):
-      while trying to match the argument list '(const char [77])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5571,8): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [77]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5571,19):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5571,8):
-      while trying to match the argument list '(const char [77])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(89,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [7]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(89,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(89,3):
-      while trying to match the argument list '(const char [7])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(94,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [8]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(94,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(94,3):
-      while trying to match the argument list '(const char [8])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5582,8): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [77]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5582,19):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5582,8):
-      while trying to match the argument list '(const char [77])'
-  
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(101,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5612,4): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [75]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5612,15):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(5612,4):
-      while trying to match the argument list '(const char [75])'
-  
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(106,3): warning C4996: 'mkdir': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _mkdir. See online help for details.
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(287,6): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [19]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(287,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(287,6):
-      while trying to match the argument list '(const char [19])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(307,6): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [15]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(307,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(307,6):
-      while trying to match the argument list '(const char [15])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(325,6): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [35]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(325,17):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(325,6):
-      while trying to match the argument list '(const char [35])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(356,2): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [15]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(356,13):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(356,2):
-      while trying to match the argument list '(const char [15])'
-  
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7652,2): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7660,2): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(7664,2): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
@@ -656,410 +98,295 @@ C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8054,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8057,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8060,3): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(726,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [19]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(726,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(726,3):
-      while trying to match the argument list '(const char [19])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8178,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [67]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8178,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8178,7):
-      while trying to match the argument list '(const char [67])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8209,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [63]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8209,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8209,7):
-      while trying to match the argument list '(const char [63])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8220,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [63]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8220,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8220,7):
-      while trying to match the argument list '(const char [63])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8231,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [69]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8231,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8231,7):
-      while trying to match the argument list '(const char [69])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8242,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [71]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8242,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8242,7):
-      while trying to match the argument list '(const char [71])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8253,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [71]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8253,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8253,7):
-      while trying to match the argument list '(const char [71])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8264,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [71]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8264,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8264,7):
-      while trying to match the argument list '(const char [71])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8275,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [71]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8275,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8275,7):
-      while trying to match the argument list '(const char [71])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8286,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [71]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8286,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8286,7):
-      while trying to match the argument list '(const char [71])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8297,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [71]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8297,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8297,7):
-      while trying to match the argument list '(const char [71])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8308,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [66]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8308,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8308,7):
-      while trying to match the argument list '(const char [66])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8319,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [66]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8319,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8319,7):
-      while trying to match the argument list '(const char [66])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8330,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [61]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8330,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8330,7):
-      while trying to match the argument list '(const char [61])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8341,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [66]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8341,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8341,7):
-      while trying to match the argument list '(const char [66])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8352,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [60]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8352,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8352,7):
-      while trying to match the argument list '(const char [60])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8368,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [61]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8368,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8368,7):
-      while trying to match the argument list '(const char [61])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(851,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [19]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(851,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(851,3):
-      while trying to match the argument list '(const char [19])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8379,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [64]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8379,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8379,7):
-      while trying to match the argument list '(const char [64])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8390,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [60]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8390,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8390,7):
-      while trying to match the argument list '(const char [60])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8402,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [65]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8402,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8402,7):
-      while trying to match the argument list '(const char [65])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8414,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [66]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8414,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8414,7):
-      while trying to match the argument list '(const char [66])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(978,2): warning C4996: 'mkdir': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _mkdir. See online help for details.
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8426,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [66]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8426,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8426,7):
-      while trying to match the argument list '(const char [66])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8438,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [65]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8438,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8438,7):
-      while trying to match the argument list '(const char [65])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1231,3): warning C4065: switch statement contains 'default' but no 'case' labels
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8450,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [67]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8450,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8450,7):
-      while trying to match the argument list '(const char [67])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8462,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [63]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8462,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8462,7):
-      while trying to match the argument list '(const char [63])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1311,2): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [34]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1311,13):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1311,2):
-      while trying to match the argument list '(const char [34])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8474,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [63]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8474,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8474,7):
-      while trying to match the argument list '(const char [63])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8512,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [62]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8512,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8512,3):
-      while trying to match the argument list '(const char [62])'
-  
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8844,49): warning C4244: '=': conversion from 'DWORD' to 'char', possible loss of data
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8848,39): warning C4244: '=': conversion from 'DWORD' to 'char', possible loss of data
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8870,31): warning C4309: '=': truncation of constant value
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(8945,65): warning C4244: 'argument': conversion from 'short' to 'char', possible loss of data
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9528,10): error C2664: 'DWORD CGame::dwGetItemCount(int,char *)': cannot convert argument 2 from 'const char [5]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9528,35):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(721,8):
-      see declaration of 'CGame::dwGetItemCount'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9528,10):
-      while trying to match the argument list '(int, const char [5])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9529,37): error C2664: 'DWORD CGame::dwGetItemCount(int,char *)': cannot convert argument 2 from 'const char [5]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9529,62):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(721,8):
-      see declaration of 'CGame::dwGetItemCount'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9529,37):
-      while trying to match the argument list '(int, const char [5])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9529,6): error C2665: 'CGame::SetItemCount': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(720,7):
-      could be 'int CGame::SetItemCount(int,int,DWORD)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9529,6):
-          'int CGame::SetItemCount(int,int,DWORD)': cannot convert argument 2 from 'const char [5]' to 'int'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9529,29):
-              There is no context in which this conversion is possible
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(719,7):
-      or       'int CGame::SetItemCount(int,char *,DWORD)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9529,6):
-          'int CGame::SetItemCount(int,char *,DWORD)': cannot convert argument 2 from 'const char [5]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9529,29):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9529,6):
-      while trying to match the argument list '(int, const char [5], _T)'
-          with
-          [
-              _T=DWORD
-          ]
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9679,4): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [60]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9679,15):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9679,4):
-      while trying to match the argument list '(const char [60])'
-  
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9101,3): warning C4808: case '2' is not a valid value for switch condition of type 'bool'
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9110,3): warning C4808: case '3' is not a valid value for switch condition of type 'bool'
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9125,3): warning C4808: case '4' is not a valid value for switch condition of type 'bool'
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9875,7): warning C4808: case '2' is not a valid value for switch condition of type 'bool'
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9883,7): warning C4808: case '3' is not a valid value for switch condition of type 'bool'
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9896,7): warning C4808: case '4' is not a valid value for switch condition of type 'bool'
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9061,15): warning C4101: 'cp2': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(9060,9): warning C4101: 'ip': unreferenced local variable
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(10086,87): warning C4244: 'argument': conversion from 'short' to 'char', possible loss of data
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11394,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [35]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11394,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11394,3):
-      while trying to match the argument list '(const char [35])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11406,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [60]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11406,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11406,3):
-      while trying to match the argument list '(const char [60])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11664,8): error C2664: 'void CGame::RequestTeleportHandler(int,char *,char *,int,int)': cannot convert argument 2 from 'const char [5]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11664,41):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(701,7):
-      see declaration of 'CGame::RequestTeleportHandler'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11664,8):
-      while trying to match the argument list '(int, const char [5], const char [6], int, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11667,7): error C2664: 'void CGame::RequestTeleportHandler(int,char *,char *,int,int)': cannot convert argument 2 from 'const char [5]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11667,40):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(701,7):
-      see declaration of 'CGame::RequestTeleportHandler'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11667,7):
-      while trying to match the argument list '(int, const char [5], const char [6], int, int)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(12040,3): error C2664: 'void CGame::RequestSetGuildTeleportLocHandler(int,int,int,int,char *)': cannot convert argument 5 from 'const char [11]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(12040,96):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(379,7):
-      see declaration of 'CGame::RequestSetGuildTeleportLocHandler'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(12040,3):
-      while trying to match the argument list '(int, int, int, int, const char [11])'
-  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(978,2): warning C4996: 'mkdir': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _mkdir. See online help for details.
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\LoginServer.cpp(1231,3): warning C4065: switch statement contains 'default' but no 'case' labels
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11014,11): warning C4101: 'cp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11014,15): warning C4101: 'cData': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11012,11): warning C4101: 'ip': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11390,9): warning C4101: 'm_msgBuff': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11388,11): warning C4101: 'wpMsgType': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(11388,24): warning C4101: 'wp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(12418,14): warning C4101: 'sRemainItemSprite': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(12418,33): warning C4101: 'sRemainItemSpriteFrame': unreferenced local variable
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(12578,93): warning C4018: '>': signed/unsigned mismatch
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(12582,78): warning C4018: '>': signed/unsigned mismatch
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13542,18): error C2664: 'DWORD CGame::dwGetItemCount(int,char *)': cannot convert argument 2 from 'const char [5]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13542,43):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(721,8):
-      see declaration of 'CGame::dwGetItemCount'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13542,18):
-      while trying to match the argument list '(int, const char [5])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13651,19): error C2665: 'CGame::SetItemCount': no overloaded function could convert all the argument types
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(720,7):
-      could be 'int CGame::SetItemCount(int,int,DWORD)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13651,19):
-          'int CGame::SetItemCount(int,int,DWORD)': cannot convert argument 2 from 'const char [5]' to 'int'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13651,42):
-              There is no context in which this conversion is possible
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(719,7):
-      or       'int CGame::SetItemCount(int,char *,DWORD)'
-          C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13651,19):
-          'int CGame::SetItemCount(int,char *,DWORD)': cannot convert argument 2 from 'const char [5]' to 'char *'
-              C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13651,42):
-              Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13651,19):
-      while trying to match the argument list '(int, const char [5], DWORD)'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13715,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [41]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13715,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13715,3):
-      while trying to match the argument list '(const char [41])'
-  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13205,10): warning C4101: 'cp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(13403,10): warning C4101: 'cp': unreferenced local variable
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(14361,9): warning C4244: '=': conversion from 'DWORD' to 'char', possible loss of data
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(14365,9): warning C4244: '=': conversion from 'DWORD' to 'char', possible loss of data
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(14542,9): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(16483,7): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [72]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(16483,18):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(16483,7):
-      while trying to match the argument list '(const char [72])'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(16483,7): error C1003: error count exceeds 100; stopping compilation
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(220,14): error C2039: 'any_of': is not a member of 'std'
-  (compiling source file 'wmain.cpp')
-      C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.44.35207\include\fstream(20,1):
-      see declaration of 'std'
-  
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(15968,10): warning C4101: 'cp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(15968,33): warning C4101: 'cData': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(15970,10): warning C4101: 'ip': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(17039,16): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(19304,41): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(19305,41): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(17533,54): warning C4101: 'sRemainItemSprite': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(17533,73): warning C4101: 'sRemainItemSpriteFrame': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(25384,47): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(26615,22): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(26776,23): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(26889,85): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(27291,110): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(27291,90): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(27302,41): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(27303,41): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(27305,97): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(27305,77): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(27307,49): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(27307,29): warning C4244: 'argument': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(27322,40): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(27323,40): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(27348,41): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(27349,41): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(28412,23): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(28473,27): warning C4244: '=': conversion from 'DWORD' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(28491,27): warning C4244: '=': conversion from 'DWORD' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(28577,50): warning C4018: '>': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(28898,23): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(29022,50): warning C4018: '>': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(29350,23): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(29518,50): warning C4018: '>': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(30449,24): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(30450,27): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(30496,24): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(30497,27): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(30555,28): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(30595,28): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(30652,21): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(30699,22): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(30729,22): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(30779,21): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(30821,44): warning C4244: '=': conversion from 'DWORD' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(31061,63): warning C4018: '<': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(31093,84): warning C4018: '>': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(31213,85): warning C4018: '>': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(31250,63): warning C4018: '<': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(31580,69): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(31591,75): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(31609,69): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(31620,75): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(31664,69): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(31675,75): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(31843,8): warning C4101: 'cp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(31844,8): warning C4101: 'wp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(32467,101): warning C4244: '=': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(32468,101): warning C4244: '=': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(32469,101): warning C4244: '=': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(32470,101): warning C4244: '=': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(32471,101): warning C4244: '=': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(32472,101): warning C4244: '=': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(32785,102): warning C4244: '=': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(32786,102): warning C4244: '=': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(32787,102): warning C4244: '=': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(32788,102): warning C4244: '=': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(32789,102): warning C4244: '=': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(32790,102): warning C4244: '=': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(33130,19): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34093,8): warning C4101: 'wp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34094,6): warning C4101: 'iRet': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34202,9): warning C4101: 'dwp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34203,8): warning C4101: 'wp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34207,6): warning C4101: 'iRet': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34722,70): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34723,72): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34724,71): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34726,75): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34727,74): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34728,69): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34729,73): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34737,31): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34743,31): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34748,31): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34753,31): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34758,31): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34763,31): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34768,31): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34773,31): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34778,31): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34783,31): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34846,46): warning C4244: '=': conversion from 'DWORD' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(34854,49): warning C4244: '=': conversion from 'DWORD' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(35743,70): warning C4018: '<': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(36347,71): warning C4018: '<': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(36442,20): warning C4018: '>': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(36463,25): warning C4018: '<': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(36543,39): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(36544,39): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(37160,8): warning C4101: 'sSpr': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(37160,14): warning C4101: 'sSprFrame': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(37360,120): warning C4244: '=': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(37380,120): warning C4244: '=': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(37398,120): warning C4244: '=': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(37435,63): warning C4805: '!=': unsafe mix of type 'bool' and type 'char' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(38412,66): warning C4018: '<': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(38533,68): warning C4018: '<': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(38654,63): warning C4018: '>': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(38686,59): warning C4018: '>': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(39836,90): warning C4018: '>': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(39915,16): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(39916,16): warning C4244: '=': conversion from 'LONG' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(40592,76): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(40649,40): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(40650,40): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(40651,46): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(40694,40): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(40695,40): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(40696,46): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(40924,14): warning C4244: '=': conversion from 'DWORD' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(41024,20): warning C4101: 'cp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(41025,10): warning C4101: 'wp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(41097,20): warning C4101: 'cp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(41098,10): warning C4101: 'wp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(41845,15): warning C4267: '=': conversion from 'size_t' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(42005,38): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(42006,38): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(43013,9): warning C4101: 'cp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(43013,13): warning C4101: 'cData': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(43015,7): warning C4101: 'ip': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(44300,9): warning C4101: 'cp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(44301,10): warning C4101: 'sp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(44423,9): warning C4101: 'cp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(44423,13): warning C4101: 'cData': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(44424,9): warning C4101: 'ip': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(44646,9): warning C4101: 'cp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(44646,13): warning C4101: 'cData': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(44647,9): warning C4101: 'wp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(45016,28): warning C4244: 'argument': conversion from 'long' to 'WORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(46054,8): warning C4101: 'cp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(46055,8): warning C4101: 'wp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(46154,31): warning C4101: 'cp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(46155,9): warning C4101: 'wp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(46431,19): warning C4018: '<': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(46529,38): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(46530,38): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(47381,10): warning C4101: 'dwp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(47380,9): warning C4101: 'cp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(47380,13): warning C4101: 'cData': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(47570,9): warning C4101: 'cp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(47570,13): warning C4101: 'cData': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(47572,7): warning C4101: 'ip': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(47810,84): warning C4244: 'argument': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(47809,96): warning C4244: 'argument': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48073,32): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48089,25): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48090,25): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48091,25): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48092,25): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48099,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48100,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48101,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48102,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48103,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48104,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48112,26): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48113,26): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48114,26): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48115,26): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48116,26): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48117,26): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48118,26): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48125,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48126,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48127,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48128,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48129,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48130,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48131,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48132,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48133,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48143,25): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48144,25): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48145,25): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48146,25): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48147,25): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48148,25): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48155,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48156,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48157,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48158,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48159,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48160,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48161,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48162,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48163,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48164,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48165,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48166,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48167,27): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48177,26): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48178,26): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48179,26): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48183,26): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48185,26): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48188,26): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48191,26): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48194,26): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48196,26): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48197,26): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48198,26): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48199,26): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48200,26): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(48263,21): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(49013,38): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(49014,38): warning C4244: '=': conversion from 'DWORD' to 'short', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(50001,9): warning C4101: 'cp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(50001,13): warning C4101: 'cData': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(50002,9): warning C4101: 'wp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(50063,9): warning C4101: 'cp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(50063,20): warning C4101: 'cData': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(50414,19): warning C4267: '=': conversion from 'size_t' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(50483,19): warning C4267: '=': conversion from 'size_t' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(50666,49): warning C5056: operator '!=': deprecated for array types
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(50627,8): warning C4101: 'cp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(50628,8): warning C4101: 'wp': unreferenced local variable
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\XSocket.cpp(436,15): warning C4244: '=': conversion from 'DWORD' to 'WORD', possible loss of data
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\XSocket.cpp(441,17): warning C4018: '<': signed/unsigned mismatch
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\XSocket.cpp(443,43): warning C4244: '=': conversion from 'DWORD' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(51209,10): warning C4101: 'dwp': unreferenced local variable
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\XSocket.cpp(565,17): warning C4018: '<': signed/unsigned mismatch
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\XSocket.cpp(566,43): warning C4244: '=': conversion from 'DWORD' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(51400,10): warning C4101: 'dwp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(51632,10): warning C4101: 'dwp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(51693,10): warning C4101: 'dwp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(51724,10): warning C4101: 'dwp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(51762,10): warning C4101: 'dwp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(51792,10): warning C4101: 'dwp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(54288,25): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(54341,27): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(54546,29): warning C4244: '=': conversion from 'DWORD' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(54565,29): warning C4244: '=': conversion from 'DWORD' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(54620,51): warning C4018: '>': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(55454,32): warning C4244: '=': conversion from 'time_t' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(55816,18): warning C4101: 'dwp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(55815,21): warning C4101: 'cp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(55815,7): warning C4101: 'cData': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(55817,9): warning C4101: 'wp': unreferenced local variable
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(55860,92): warning C4244: '=': conversion from 'short' to 'char', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(55971,41): warning C4804: '>': unsafe use of type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(55971,55): warning C4804: '<': unsafe use of type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(55986,31): warning C4244: '=': conversion from 'time_t' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(56087,15): warning C4244: '=': conversion from 'time_t' to 'DWORD', possible loss of data
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(56104,14): warning C4018: '>': signed/unsigned mismatch
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(56276,17): warning C4805: '!=': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.cpp(56336,10): warning C4101: 'dwp': unreferenced local variable
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(445,23): warning C4477: 'sprintf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'HINSTANCE'
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(549,3): error C2664: 'void PutLogList(char *)': cannot convert argument 1 from 'const char [15]' to 'char *'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(549,14):
-      Conversion from string literal loses const qualifier (see /Zc:strictStrings)
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\winmain.h(11,6):
-      see declaration of 'PutLogList'
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(549,3):
-      while trying to match the argument list '(const char [15])'
-  
 C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(579,3): warning C4150: deletion of pointer to incomplete type 'LoginServer'; no destructor called
       C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\wmain.cpp(50,7):
       see declaration of 'LoginServer'
   
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(220,14): error C2039: 'any_of': is not a member of 'std'
-  (compiling source file 'CrusadeCore.cpp')
-      C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.44.35207\include\fstream(20,1):
-      see declaration of 'std'
-  
-C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\CrusadeCore.cpp(12,1): error C2512: 'CGame': no appropriate default constructor available
-      C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Sources\Server\Game.h(294,7):
-      see declaration of 'CGame'
-  
+BuildItem.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+  HGserver.vcxproj -> C:\Users\ShadowEvil\source\repos2\New folder\HelbreathServer\Binaries\Server\Debug\HGserver_d.exe
